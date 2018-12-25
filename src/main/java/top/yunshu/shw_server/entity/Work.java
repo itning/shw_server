@@ -8,6 +8,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
+ * 作业
  * @author shulu
  */
 @Entity
@@ -42,6 +43,11 @@ public class Work implements Serializable {
     @CreationTimestamp
     private Date createTime;
     /**
+     * 文件名规范
+     */
+    @Column(nullable = false)
+    private String fileNameFormat;
+    /**
      * 更新时间
      */
     @Column(nullable = false)
@@ -51,12 +57,13 @@ public class Work implements Serializable {
     public Work() {
     }
 
-    public Work(String id, String groupId, String workName, boolean isEnabled, Date createTime, Date updateTime) {
+    public Work(String id, String groupId, String workName, boolean isEnabled, Date createTime, String fileNameFormat, Date updateTime) {
         this.id = id;
         this.groupId = groupId;
         this.workName = workName;
         this.isEnabled = isEnabled;
         this.createTime = createTime;
+        this.fileNameFormat = fileNameFormat;
         this.updateTime = updateTime;
     }
 
@@ -84,12 +91,12 @@ public class Work implements Serializable {
         this.workName = workName;
     }
 
-    public boolean getEnabled() {
+    public boolean isEnabled() {
         return isEnabled;
     }
 
     public void setEnabled(boolean enabled) {
-        this.isEnabled = enabled;
+        isEnabled = enabled;
     }
 
     public Date getCreateTime() {
@@ -98,6 +105,14 @@ public class Work implements Serializable {
 
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
+    }
+
+    public String getFileNameFormat() {
+        return fileNameFormat;
+    }
+
+    public void setFileNameFormat(String fileNameFormat) {
+        this.fileNameFormat = fileNameFormat;
     }
 
     public Date getUpdateTime() {
@@ -116,6 +131,7 @@ public class Work implements Serializable {
                 ", workName='" + workName + '\'' +
                 ", isEnabled=" + isEnabled +
                 ", createTime=" + createTime +
+                ", fileNameFormat='" + fileNameFormat + '\'' +
                 ", updateTime=" + updateTime +
                 '}';
     }

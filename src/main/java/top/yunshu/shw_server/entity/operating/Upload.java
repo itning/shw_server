@@ -12,7 +12,6 @@ import java.util.Date;
 
 /**
  * 上传
- *
  * @author shulu
  */
 @Entity

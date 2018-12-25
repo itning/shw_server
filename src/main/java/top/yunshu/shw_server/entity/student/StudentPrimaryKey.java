@@ -3,7 +3,7 @@ package top.yunshu.shw_server.entity.student;
 import java.io.Serializable;
 
 /**
- * Student Complex ID
+ * Student Complex Key
  *
  * @author shulu
  */

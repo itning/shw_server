@@ -3,6 +3,7 @@ package top.yunshu.shw_server.entity.operating;
 import java.io.Serializable;
 
 /**
+ * 上传 双主键
  * @author shulu
  */
 public class UploadPrimaryKey implements Serializable {

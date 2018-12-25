@@ -8,12 +8,14 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
+ * 群组
+ *
  * @author shulu
  */
 @Entity
 @Table(name = "group_", indexes = {
         @Index(name = "teacher_number_index", columnList = "teacher_number"),
-        @Index(name = "code_index", columnList = "code")
+        @Index(name = "code_index", columnList = "code", unique = true)
 })
 public class Group implements Serializable {
     /**
@@ -39,7 +41,7 @@ public class Group implements Serializable {
     /**
      * 邀请码
      */
-    @Column(name = "code", nullable = false)
+    @Column(name = "code", nullable = false, unique = true)
     private String code;
     /**
      * 创建时间
