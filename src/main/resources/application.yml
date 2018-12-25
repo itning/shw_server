@@ -1,3 +1,11 @@
 spring:
   profiles:
     active: dev
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    hibernate:
+      ddl-auto: update
+    open-in-view: true
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+datasource_url_end: ?createDatabaseIfNotExist=true&useUnicode=true&characterEncoding=utf-8&useSSL=false&autoReconnect=true&failOverReadOnly=false&connectTimeout=0&serverTimezone=UTC
