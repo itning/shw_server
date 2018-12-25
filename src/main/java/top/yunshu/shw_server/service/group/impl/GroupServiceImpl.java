@@ -3,36 +3,38 @@ package top.yunshu.shw_server.service.group.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import top.yunshu.shw_server.dao.GroupDao;
-import top.yunshu.shw_server.dao.StudentDao;
-import top.yunshu.shw_server.entity.group.Group;
-import top.yunshu.shw_server.entity.student.Student;
-import top.yunshu.shw_server.entity.student.StudentPrimaryKey;
+import top.yunshu.shw_server.dao.StudentGroupDao;
+import top.yunshu.shw_server.entity.Group;
+import top.yunshu.shw_server.entity.StudentGroup;
+import top.yunshu.shw_server.entity.StudentGroupPrimaryKey;
 import top.yunshu.shw_server.exception.NoCodeException;
+import top.yunshu.shw_server.exception.NoSuchIdException;
 import top.yunshu.shw_server.service.group.GroupService;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
+ * 群组服务实现类
+ *
  * @author shulu
  */
 @Service
 public class GroupServiceImpl implements GroupService {
-    private final StudentDao studentDao;
+    private final StudentGroupDao studentGroupDao;
     private final GroupDao groupDao;
 
     @Autowired
-    public GroupServiceImpl(GroupDao groupDao, StudentDao studentDao) {
+    public GroupServiceImpl(GroupDao groupDao, StudentGroupDao studentGroupDao) {
         this.groupDao = groupDao;
-        this.studentDao = studentDao;
+        this.studentGroupDao = studentGroupDao;
     }
 
     @Override
     public List<Group> findStudentAllGroups(String id) {
-        return studentDao.findAllByStudentNumber(id).parallelStream()
+        return studentGroupDao.findAllByStudentNumber(id).parallelStream()
                 .map(s -> groupDao.findById(s.getGroupID()))
                 .filter(Optional::isPresent)
                 .map(Optional::get)
@@ -49,9 +51,7 @@ public class GroupServiceImpl implements GroupService {
         return new Group(UUID.randomUUID().toString().replace("-", "")
                 , groupName
                 , teacherName
-                , teacherId, UUID.randomUUID().toString().replace("-", "")
-                , new Date()
-                , new Date());
+                , teacherId, UUID.randomUUID().toString().replace("-", ""));
     }
 
     @Override
@@ -60,15 +60,15 @@ public class GroupServiceImpl implements GroupService {
             throw new NoCodeException("NO CODE");
         }
         Group group = groupDao.findByCode(code);
-        Student student = new Student(studentId, group.getId(), new Date());
-        studentDao.save(student);
+        StudentGroup studentGroup = new StudentGroup(studentId, group.getId());
+        studentGroupDao.save(studentGroup);
         return group;
     }
 
     @Override
     public void dropOutGroup(String groupId, String studentId) {
-        StudentPrimaryKey studentPrimaryKey = new StudentPrimaryKey(groupId, studentId);
-        studentDao.deleteById(studentPrimaryKey);
+        StudentGroupPrimaryKey studentGroupPrimaryKey = new StudentGroupPrimaryKey(groupId, studentId);
+        studentGroupDao.deleteById(studentGroupPrimaryKey);
     }
 
 
@@ -79,7 +79,7 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public Group updateGroup(String id, String name) {
-        Group group = groupDao.findById(id).get();
+        Group group = groupDao.findById(id).orElseThrow(() -> new NoSuchIdException("id: " + id + " not found"));
         group.setGroupName(name);
         return groupDao.save(group);
     }

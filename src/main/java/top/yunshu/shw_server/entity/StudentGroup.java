@@ -1,6 +1,7 @@
-package top.yunshu.shw_server.entity.student;
+package top.yunshu.shw_server.entity;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,13 +12,14 @@ import java.util.Date;
 
 /**
  * 学生群组
+ *
  * @author shulu
  */
 @Entity
-@IdClass(StudentPrimaryKey.class)
-public class Student implements Serializable {
+@IdClass(StudentGroupPrimaryKey.class)
+public class StudentGroup implements Serializable {
     /**
-     * Student ID
+     * StudentGroup ID
      */
     @Id
     private String studentNumber;
@@ -31,15 +33,20 @@ public class Student implements Serializable {
      */
     @Column(nullable = false)
     @CreationTimestamp
-    private Date createTime;
+    private Date gmtCreate;
+    /**
+     * 更新时间
+     */
+    @Column(nullable = false)
+    @UpdateTimestamp
+    private Date gmtModified;
 
-    public Student() {
+    public StudentGroup() {
     }
 
-    public Student(String studentNumber, String groupID, Date createTime) {
+    public StudentGroup(String studentNumber, String groupID) {
         this.studentNumber = studentNumber;
         this.groupID = groupID;
-        this.createTime = createTime;
     }
 
     public String getStudentNumber() {
@@ -58,20 +65,29 @@ public class Student implements Serializable {
         this.groupID = groupID;
     }
 
-    public Date getCreateTime() {
-        return createTime;
+    public Date getGmtCreate() {
+        return gmtCreate;
     }
 
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
+    public void setGmtCreate(Date gmtCreate) {
+        this.gmtCreate = gmtCreate;
+    }
+
+    public Date getGmtModified() {
+        return gmtModified;
+    }
+
+    public void setGmtModified(Date gmtModified) {
+        this.gmtModified = gmtModified;
     }
 
     @Override
     public String toString() {
-        return "Student{" +
+        return "StudentGroup{" +
                 "studentNumber='" + studentNumber + '\'' +
                 ", groupID='" + groupID + '\'' +
-                ", createTime=" + createTime +
+                ", gmtCreate=" + gmtCreate +
+                ", gmtModified=" + gmtModified +
                 '}';
     }
 }

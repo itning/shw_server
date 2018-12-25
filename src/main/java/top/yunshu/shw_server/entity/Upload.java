@@ -1,6 +1,7 @@
-package top.yunshu.shw_server.entity.operating;
+package top.yunshu.shw_server.entity;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 
 import javax.persistence.Column;
@@ -38,21 +39,26 @@ public class Upload implements Serializable {
     @Column(nullable = false)
     private Double size;
     /**
-     * 上传时间
+     * 创建时间
      */
     @Column(nullable = false)
     @CreationTimestamp
-    private Date createTime;
+    private Date gmtCreate;
+    /**
+     * 更新时间
+     */
+    @Column(nullable = false)
+    @UpdateTimestamp
+    private Date gmtModified;
 
     public Upload() {
     }
 
-    public Upload(String studentId, String workId, String mime, Double size, Date createTime) {
+    public Upload(String studentId, String workId, String mime, Double size) {
         this.studentId = studentId;
         this.workId = workId;
         this.mime = mime;
         this.size = size;
-        this.createTime = createTime;
     }
 
     public String getStudentId() {
@@ -87,12 +93,20 @@ public class Upload implements Serializable {
         this.size = size;
     }
 
-    public Date getCreateTime() {
-        return createTime;
+    public Date getGmtCreate() {
+        return gmtCreate;
     }
 
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
+    public void setGmtCreate(Date gmtCreate) {
+        this.gmtCreate = gmtCreate;
+    }
+
+    public Date getGmtModified() {
+        return gmtModified;
+    }
+
+    public void setGmtModified(Date gmtModified) {
+        this.gmtModified = gmtModified;
     }
 
     @Override
@@ -102,7 +116,8 @@ public class Upload implements Serializable {
                 ", workId='" + workId + '\'' +
                 ", mime='" + mime + '\'' +
                 ", size=" + size +
-                ", createTime=" + createTime +
+                ", gmtCreate=" + gmtCreate +
+                ", gmtModified=" + gmtModified +
                 '}';
     }
 }

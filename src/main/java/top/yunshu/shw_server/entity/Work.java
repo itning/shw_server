@@ -9,6 +9,7 @@ import java.util.Date;
 
 /**
  * 作业
+ *
  * @author shulu
  */
 @Entity
@@ -37,34 +38,32 @@ public class Work implements Serializable {
     @Column(nullable = false)
     private boolean isEnabled = true;
     /**
-     * 创建时间
-     */
-    @Column(nullable = false)
-    @CreationTimestamp
-    private Date createTime;
-    /**
      * 文件名规范
      */
     @Column(nullable = false)
     private String fileNameFormat;
     /**
+     * 创建时间
+     */
+    @Column(nullable = false)
+    @CreationTimestamp
+    private Date gmtCreate;
+    /**
      * 更新时间
      */
     @Column(nullable = false)
     @UpdateTimestamp
-    private Date updateTime;
+    private Date gmtModified;
 
     public Work() {
     }
 
-    public Work(String id, String groupId, String workName, boolean isEnabled, Date createTime, String fileNameFormat, Date updateTime) {
+    public Work(String id, String groupId, String workName, boolean isEnabled, String fileNameFormat) {
         this.id = id;
         this.groupId = groupId;
         this.workName = workName;
         this.isEnabled = isEnabled;
-        this.createTime = createTime;
         this.fileNameFormat = fileNameFormat;
-        this.updateTime = updateTime;
     }
 
     public String getId() {
@@ -99,14 +98,6 @@ public class Work implements Serializable {
         isEnabled = enabled;
     }
 
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
     public String getFileNameFormat() {
         return fileNameFormat;
     }
@@ -115,12 +106,20 @@ public class Work implements Serializable {
         this.fileNameFormat = fileNameFormat;
     }
 
-    public Date getUpdateTime() {
-        return updateTime;
+    public Date getGmtCreate() {
+        return gmtCreate;
     }
 
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
+    public void setGmtCreate(Date gmtCreate) {
+        this.gmtCreate = gmtCreate;
+    }
+
+    public Date getGmtModified() {
+        return gmtModified;
+    }
+
+    public void setGmtModified(Date gmtModified) {
+        this.gmtModified = gmtModified;
     }
 
     @Override
@@ -130,9 +129,9 @@ public class Work implements Serializable {
                 ", groupId='" + groupId + '\'' +
                 ", workName='" + workName + '\'' +
                 ", isEnabled=" + isEnabled +
-                ", createTime=" + createTime +
                 ", fileNameFormat='" + fileNameFormat + '\'' +
-                ", updateTime=" + updateTime +
+                ", gmtCreate=" + gmtCreate +
+                ", gmtModified=" + gmtModified +
                 '}';
     }
 }

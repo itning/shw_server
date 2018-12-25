@@ -6,17 +6,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import top.yunshu.shw_server.ShwServerApplication;
-import top.yunshu.shw_server.dao.StudentDao;
+import top.yunshu.shw_server.dao.StudentGroupDao;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = ShwServerApplication.class)
-public class StudentDaoTest {
+public class StudentGroupDaoTest {
     @Autowired
-    private StudentDao studentDao;
+    private StudentGroupDao studentGroupDao;
 
     @Test
     public void test() {
-        studentDao.findAllByStudentNumber("1").forEach(System.out::println);
+        studentGroupDao.findAllByStudentNumber("1").forEach(System.out::println);
     }
 
 }

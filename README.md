@@ -28,8 +28,8 @@
 | :------------: | :----: | :------: | :--------: |
 | student_number | string |  学生ID  | 非空，主键 |
 |    group_id    | string |  群组ID  | 非空，主键 |
-|  create_time   |  data  | 创建时间 |    非空    |
-|                |        |          |            |
+|  create_time   |  date  | 创建时间 |    非空    |
+|  update_time   |  date  | 更新时间 |    非空    |
 |                |        |          |            |
 |                |        |          |            |
 |                |        |          |            |
@@ -59,7 +59,7 @@
 |      mime      | string | 文件类型 |    非空    |
 |      size      | double | 文件大小 |    非空    |
 |  create_time   |  date  | 上传时间 |    非空    |
-|                |        |          |            |
+|  update_time   |  date  | 修改时间 |    非空    |
 |                |        |          |            |
 |                |        |          |            |
 |                |        |          |            |
@@ -72,8 +72,8 @@
 | invite_people_name | string |      邀请人      |    非空    |
 |  invite_group_id   | string | 邀请加入的群组ID |    非空    |
 |   student_number   | string |   被邀请人学号   | 非空，索引 |
-|    create_time     |  data  |     创建时间     |    非空    |
-|                    |        |                  |            |
+|    create_time     |  date  |     创建时间     |    非空    |
+|    update_time     |  date  |     修改时间     |    非空    |
 |                    |        |                  |            |
 |                    |        |                  |            |
 |                    |        |                  |            |

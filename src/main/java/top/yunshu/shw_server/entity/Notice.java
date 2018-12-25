@@ -1,52 +1,63 @@
-package top.yunshu.shw_server.entity.operating;
+package top.yunshu.shw_server.entity;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * 通知
+ *
  * @author shulu
  */
 @Entity
 @Table(name = "notice", indexes = {
         @Index(name = "student_number_index", columnList = "student_number")
 })
-public class Notice {
+public class Notice implements Serializable {
+    /**
+     * 标识通知
+     */
     @Id
     private String id;
     /**
-     * Inviter information
+     * 邀请人
      */
     @Column(nullable = false)
     private String invitePeopleName;
     /**
-     * Invitee information
+     * 邀请加入的群组ID
      */
     @Column(nullable = false)
-    private String inviteesName;
+    private String inviteGroupId;
     /**
-     * Invitee information ID
+     * 被邀请人学号
      */
     @Column(name = "student_number", nullable = false)
     private String studentNumber;
     /**
-     * Creation time
+     * 创建时间
      */
     @Column(nullable = false)
     @CreationTimestamp
-    private Date createTime;
+    private Date gmtCreate;
+    /**
+     * 更新时间
+     */
+    @Column(nullable = false)
+    @UpdateTimestamp
+    private Date gmtModified;
 
     public Notice() {
     }
 
-    public Notice(String id, String invitePeopleName, String inviteesName, String studentNumber, Date createTime) {
+    public Notice(String id, String invitePeopleName, String inviteGroupId, String studentNumber) {
         this.id = id;
         this.invitePeopleName = invitePeopleName;
-        this.inviteesName = inviteesName;
+        this.inviteGroupId = inviteGroupId;
         this.studentNumber = studentNumber;
-        this.createTime = createTime;
     }
 
     public String getId() {
@@ -65,12 +76,12 @@ public class Notice {
         this.invitePeopleName = invitePeopleName;
     }
 
-    public String getInviteesName() {
-        return inviteesName;
+    public String getInviteGroupId() {
+        return inviteGroupId;
     }
 
-    public void setInviteesName(String inviteesName) {
-        this.inviteesName = inviteesName;
+    public void setInviteGroupId(String inviteGroupId) {
+        this.inviteGroupId = inviteGroupId;
     }
 
     public String getStudentNumber() {
@@ -81,12 +92,20 @@ public class Notice {
         this.studentNumber = studentNumber;
     }
 
-    public Date getCreateTime() {
-        return createTime;
+    public Date getGmtCreate() {
+        return gmtCreate;
     }
 
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
+    public void setGmtCreate(Date gmtCreate) {
+        this.gmtCreate = gmtCreate;
+    }
+
+    public Date getGmtModified() {
+        return gmtModified;
+    }
+
+    public void setGmtModified(Date gmtModified) {
+        this.gmtModified = gmtModified;
     }
 
     @Override
@@ -94,9 +113,10 @@ public class Notice {
         return "Notice{" +
                 "id='" + id + '\'' +
                 ", invitePeopleName='" + invitePeopleName + '\'' +
-                ", inviteesName='" + inviteesName + '\'' +
+                ", inviteGroupId='" + inviteGroupId + '\'' +
                 ", studentNumber='" + studentNumber + '\'' +
-                ", createTime=" + createTime +
+                ", gmtCreate=" + gmtCreate +
+                ", gmtModified=" + gmtModified +
                 '}';
     }
 }

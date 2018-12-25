@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import top.yunshu.shw_server.ShwServerApplication;
-import top.yunshu.shw_server.entity.group.Group;
+import top.yunshu.shw_server.entity.Group;
 import top.yunshu.shw_server.service.group.GroupService;
 
 import java.util.List;

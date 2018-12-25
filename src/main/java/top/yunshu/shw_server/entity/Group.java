@@ -1,4 +1,4 @@
-package top.yunshu.shw_server.entity.group;
+package top.yunshu.shw_server.entity;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -8,9 +8,12 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * 群组
+ * 群组实体<br>
+ * 教师可以创建群组，删除群组，修改群组<br>
+ * 学生可以选择加入群组<br>
  *
  * @author shulu
+ * @author itning
  */
 @Entity
 @Table(name = "group_", indexes = {
@@ -19,17 +22,17 @@ import java.util.Date;
 })
 public class Group implements Serializable {
     /**
-     * Group Id
+     * 群组ID
      */
     @Id
     private String id;
     /**
-     * Group Name
+     * 群组名
      */
     @Column(nullable = false)
     private String groupName;
     /**
-     * Teacher Name
+     * 教师名
      */
     @Column(nullable = false)
     private String teacherName;
@@ -48,25 +51,23 @@ public class Group implements Serializable {
      */
     @Column(nullable = false)
     @CreationTimestamp
-    private Date createTime;
+    private Date gmtCreate;
     /**
      * 更新时间
      */
     @Column(nullable = false)
     @UpdateTimestamp
-    private Date updateTime;
+    private Date gmtModified;
 
     public Group() {
     }
 
-    public Group(String id, String groupName, String teacherName, String teacherNumber, String code, Date createTime, Date updateTime) {
+    public Group(String id, String groupName, String teacherName, String teacherNumber, String code) {
         this.id = id;
         this.groupName = groupName;
         this.teacherName = teacherName;
         this.teacherNumber = teacherNumber;
         this.code = code;
-        this.createTime = createTime;
-        this.updateTime = updateTime;
     }
 
     public String getId() {
@@ -109,20 +110,20 @@ public class Group implements Serializable {
         this.code = code;
     }
 
-    public Date getCreateTime() {
-        return createTime;
+    public Date getGmtCreate() {
+        return gmtCreate;
     }
 
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
+    public void setGmtCreate(Date gmtCreate) {
+        this.gmtCreate = gmtCreate;
     }
 
-    public Date getUpdateTime() {
-        return updateTime;
+    public Date getGmtModified() {
+        return gmtModified;
     }
 
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
+    public void setGmtModified(Date gmtModified) {
+        this.gmtModified = gmtModified;
     }
 
     @Override
@@ -133,8 +134,8 @@ public class Group implements Serializable {
                 ", teacherName='" + teacherName + '\'' +
                 ", teacherNumber='" + teacherNumber + '\'' +
                 ", code='" + code + '\'' +
-                ", createTime=" + createTime +
-                ", updateTime=" + updateTime +
+                ", gmtCreate=" + gmtCreate +
+                ", gmtModified=" + gmtModified +
                 '}';
     }
 }
