@@ -27,6 +27,10 @@ public class GlobalConstants {
      * CAS接口网址
      */
     private String url;
+    /**
+     * 登陆成功后跳转的网址
+     */
+    private String loginSuccessUrl;
 
     public String getAppId() {
         return appId;
@@ -58,5 +62,13 @@ public class GlobalConstants {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public String getLoginSuccessUrl() {
+        return loginSuccessUrl;
+    }
+
+    public void setLoginSuccessUrl(String loginSuccessUrl) {
+        this.loginSuccessUrl = loginSuccessUrl;
     }
 }

@@ -30,7 +30,7 @@ public class AutoSetUserAdapterFilter implements Filter {
 
     @Override
     public final void doFilter(final ServletRequest servletRequest, final ServletResponse servletResponse, final FilterChain filterChain) throws IOException, ServletException {
-
+        //TODO 每次请求Api都会Filter需要优化
         final HttpServletRequest request = (HttpServletRequest) servletRequest;
         final HttpServletResponse response = (HttpServletResponse) servletResponse;
         final HttpSession session = request.getSession();
