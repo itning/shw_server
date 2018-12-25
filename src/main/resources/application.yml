@@ -8,4 +8,14 @@ spring:
     open-in-view: true
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-datasource_url_end: ?createDatabaseIfNotExist=true&useUnicode=true&characterEncoding=utf-8&useSSL=false&autoReconnect=true&failOverReadOnly=false&connectTimeout=0&serverTimezone=UTC
+greathiit:
+  app-id: 1
+  private-key: MIICeAIBADANBgkqhkiG9w0BAQEFAASCAmIwggJeAgEAAoGBAKJCbQe+96CYcxvvAGJZGIfNSNnRD946ktrjeMbmVZ4dHm41hUwaVM465XjyFzi36DWgOYY8jWapiRO8LuuGsYnKZY4ofviGqRQXTtQnmE6jChBwMa8T2PTKRqQuToQF2SqrnTQyCgTtJXVFqwh0rW4NgG3fI7G63klY/I8Z9T1JAgMBAAECgYEAjZLjyuRm72rU1MSeUzFl4+fL7rEo5T+6Lt5W3UTP41uI16Q/H/3BjQd6fSLN/CEKrO+WAXgH8FFwVxXU4o/tit/r+IkUTMPq5clQb+j4CzWOJeU6J+frAgtkf+yfF7t5Hue7VuZ9WoiD8MFmIsGdZ7tkcKkJEfgexkXpdyhO5mECQQD3rAz+1h+lIBnJ0eUbNE6ADENLSL8VerzB8omv5GJ+reTdYRGq5S5ukhGe0LxAHu0VHHTXl4WCPWARtKgnl0VlAkEAp7clyvNl1PBAwny47Mifj+QmplsRPS8s6Pg7Hd6TDTIVun2Ta0T1swHo/Jve4TRSyFx4HTL/Jqw33QtehIecFQJBAMzNP93G0FoqRkjmQQ6S3UrzWP47BI/Nc6LpXUPOlkfsofESIJrxcsjKDroGH3TiXef0JQZV7He7KuLZQaejZiUCQGXChjfBvsOYknJu4nUotUfFEn5VOvx4pzMjihrxdR/Ih86DavLnAH0AZ7D9khnqeWAAWxC8ZHu+epav00VuUpECQQCUmEXF+Ar78x0i/SMXn+SW3qrxN6RptL3DkUay/9ATxQ9NMmyRg1MYqdr+9JMiTi5DOLDQ2K9ChtQ07TQXHPyL
+  public-key: MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQFE1wHAH9LcGdF5Mx3CtqzVJ1p/oszTGF2no8ifjA5U8VKwDIQMPGnM9P6xbElRTiNgkAE5n3EBwCOgy6u4SIOf3nOtSnVYTMNNDVP2R/fSWqgV/J0M0sF3XkjQlKvn95L6uF6T09jOfV+VukNMzCq+o2lGM/LLmvaPjCRXR3yRLQIDAQAB
+  url: http://www.greathiit.com
+cas:
+  server-url-prefix: http://login.greathiit.com/
+  server-login-url: http://login.greathiit.com/login
+  #登陆成功后的跳转路径
+  client-host-url: http://localhost:${server.port}
+datasource_url_end_str: ?createDatabaseIfNotExist=true&useUnicode=true&characterEncoding=utf-8&useSSL=false&autoReconnect=true&failOverReadOnly=false&connectTimeout=0&serverTimezone=UTC
