@@ -48,10 +48,8 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public Group createGroup(String groupName, String teacherName, String teacherId) {
-        return new Group(UUID.randomUUID().toString().replace("-", "")
-                , groupName
-                , teacherName
-                , teacherId, UUID.randomUUID().toString().replace("-", ""));
+        String id = UUID.randomUUID().toString().replace("-", "");
+        return groupDao.save(new Group(id, groupName, teacherName, teacherId, id));
     }
 
     @Override
