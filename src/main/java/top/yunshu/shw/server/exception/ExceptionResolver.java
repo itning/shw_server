@@ -32,14 +32,13 @@ public class ExceptionResolver {
     @ExceptionHandler(value = Exception.class)
     @ResponseBody
     public RestModel jsonErrorHandler(HttpServletRequest req, HttpServletResponse response, Exception e) {
-        logger.error("jsonErrorHandler->" + e.getClass().getSimpleName() + ":" + e.getMessage());
+        logger.error("jsonErrorHandler->" + e.getClass().getSimpleName() + ":" + e.getMessage(), e);
         RestModel restModel = new RestModel();
         restModel.setCode(HttpStatus.SERVICE_UNAVAILABLE.value());
         restModel.setMsg(e.getMessage());
         restModel.setUrl(req.getRequestURL().toString());
         restModel.setData("");
         response.setStatus(HttpStatus.SERVICE_UNAVAILABLE.value());
-        e.printStackTrace();
         return restModel;
     }
 
@@ -54,7 +53,7 @@ public class ExceptionResolver {
     @ExceptionHandler(value = BaseException.class)
     @ResponseBody
     public RestModel baseErrorHandler(HttpServletRequest req, HttpServletResponse response, BaseException e) {
-        logger.error("baseErrorHandler->" + e.getClass().getSimpleName() + ":" + e.getMessage());
+        logger.error("baseErrorHandler->" + e.getClass().getSimpleName() + ":" + e.getMessage(), e);
         RestModel restModel = new RestModel();
         restModel.setCode(e.getCode().value());
         restModel.setMsg(e.getMessage());
@@ -75,7 +74,7 @@ public class ExceptionResolver {
     @ExceptionHandler(value = NoHandlerFoundException.class)
     @ResponseBody
     public RestModel noHandlerFoundErrorHandler(HttpServletRequest req, HttpServletResponse response, NoHandlerFoundException e) {
-        logger.error("noHandlerFoundErrorHandler->" + e.getClass().getSimpleName() + ":" + e.getMessage());
+        logger.error("noHandlerFoundErrorHandler->" + e.getClass().getSimpleName() + ":" + e.getMessage(), e);
         RestModel restModel = new RestModel();
         restModel.setCode(HttpStatus.NOT_FOUND.value());
         restModel.setMsg(e.getMessage());
