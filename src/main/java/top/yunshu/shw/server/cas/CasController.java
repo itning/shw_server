@@ -4,11 +4,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-
-import javax.servlet.http.HttpServletResponse;
+import top.yunshu.shw.server.util.SessionUtils;
 
 /**
  * CAS Controller
@@ -27,9 +26,16 @@ public class CasController {
     }
 
     @GetMapping("/login")
-    @ResponseStatus(value = HttpStatus.FOUND)
-    public void casLogin(HttpServletResponse response) {
+    public ResponseEntity<Void> casLogin() {
         logger.debug("302 Found Location: " + globalConstants.getLoginSuccessUrl());
-        response.setHeader("Location", globalConstants.getLoginSuccessUrl());
+        return ResponseEntity.status(HttpStatus.FOUND).location(globalConstants.getLoginSuccessUrl()).build();
+    }
+
+    @GetMapping("/logout")
+    public ResponseEntity<Void> casLogout() {
+        logger.debug("cas Logout");
+        logger.debug("302 Found Location: " + globalConstants.getLogoutUrl());
+        SessionUtils.invalidateSession();
+        return ResponseEntity.status(HttpStatus.FOUND).location(globalConstants.getLogoutUrl()).build();
     }
 }

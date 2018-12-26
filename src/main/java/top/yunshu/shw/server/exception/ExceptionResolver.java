@@ -35,9 +35,7 @@ public class ExceptionResolver {
         logger.error("jsonErrorHandler->" + e.getClass().getSimpleName() + ":" + e.getMessage(), e);
         RestModel restModel = new RestModel();
         restModel.setCode(HttpStatus.SERVICE_UNAVAILABLE.value());
-        restModel.setMsg(e.getMessage());
-        restModel.setUrl(req.getRequestURL().toString());
-        restModel.setData("");
+        restModel.setMsg(req.getRequestURL().toString() + " " + e.getMessage());
         response.setStatus(HttpStatus.SERVICE_UNAVAILABLE.value());
         return restModel;
     }
@@ -56,9 +54,7 @@ public class ExceptionResolver {
         logger.error("baseErrorHandler->" + e.getClass().getSimpleName() + ":" + e.getMessage(), e);
         RestModel restModel = new RestModel();
         restModel.setCode(e.getCode().value());
-        restModel.setMsg(e.getMessage());
-        restModel.setUrl(req.getRequestURL().toString());
-        restModel.setData("");
+        restModel.setMsg(req.getRequestURL().toString() + " " + e.getMessage());
         response.setStatus(e.getCode().value());
         return restModel;
     }
@@ -77,9 +73,7 @@ public class ExceptionResolver {
         logger.error("noHandlerFoundErrorHandler->" + e.getClass().getSimpleName() + ":" + e.getMessage(), e);
         RestModel restModel = new RestModel();
         restModel.setCode(HttpStatus.NOT_FOUND.value());
-        restModel.setMsg(e.getMessage());
-        restModel.setUrl(req.getRequestURL().toString());
-        restModel.setData("");
+        restModel.setMsg(req.getRequestURL().toString() + " " + e.getMessage());
         response.setStatus(HttpStatus.NOT_FOUND.value());
         return restModel;
     }

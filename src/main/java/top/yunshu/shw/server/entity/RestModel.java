@@ -7,19 +7,17 @@ import java.io.Serializable;
  *
  * @author itning
  */
-public class RestModel implements Serializable {
+public class RestModel<T> implements Serializable {
     private int code;
     private String msg;
-    private String url;
-    private Object data;
+    private T data;
 
     public RestModel() {
     }
 
-    public RestModel(int code, String msg, String url, Object data) {
+    public RestModel(int code, String msg, T data) {
         this.code = code;
         this.msg = msg;
-        this.url = url;
         this.data = data;
     }
 
@@ -39,19 +37,11 @@ public class RestModel implements Serializable {
         this.msg = msg;
     }
 
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
-    public Object getData() {
+    public T getData() {
         return data;
     }
 
-    public void setData(Object data) {
+    public void setData(T data) {
         this.data = data;
     }
 }

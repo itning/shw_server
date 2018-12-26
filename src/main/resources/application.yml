@@ -18,6 +18,7 @@ greathiit:
   public-key: MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQFE1wHAH9LcGdF5Mx3CtqzVJ1p/oszTGF2no8ifjA5U8VKwDIQMPGnM9P6xbElRTiNgkAE5n3EBwCOgy6u4SIOf3nOtSnVYTMNNDVP2R/fSWqgV/J0M0sF3XkjQlKvn95L6uF6T09jOfV+VukNMzCq+o2lGM/LLmvaPjCRXR3yRLQIDAQAB
   url: http://www.greathiit.com
   login-success-url: http://localhost:8090
+  logout-url: http://login.greathiit.com/logout
 cas:
   server-url-prefix: http://login.greathiit.com/
   server-login-url: http://login.greathiit.com/login
