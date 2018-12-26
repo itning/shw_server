@@ -41,6 +41,6 @@ public class StudentController {
         logger.debug("get all student groups");
         LoginUser loginUser = SessionUtils.getAttributeValueFromSession("loginUser", LoginUser.class);
         logger.info("get login user: " + loginUser);
-        return ResponseEntity.ok(new RestModel<>(HttpStatus.OK.value(), "查询成功", groupService.findStudentAllGroups(loginUser.getId())));
+        return ResponseEntity.ok(new RestModel<>(HttpStatus.OK.value(), "查询成功", groupService.findStudentAllGroups(loginUser.getNo())));
     }
 }

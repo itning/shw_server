@@ -70,7 +70,7 @@ public class ExceptionResolver {
     @ExceptionHandler(value = NoHandlerFoundException.class)
     @ResponseBody
     public RestModel noHandlerFoundErrorHandler(HttpServletRequest req, HttpServletResponse response, NoHandlerFoundException e) {
-        logger.error("noHandlerFoundErrorHandler->" + e.getClass().getSimpleName() + ":" + e.getMessage(), e);
+        logger.info("noHandlerFoundErrorHandler->" + e.getClass().getSimpleName() + ":" + e.getMessage());
         RestModel restModel = new RestModel();
         restModel.setCode(HttpStatus.NOT_FOUND.value());
         restModel.setMsg(req.getRequestURL().toString() + " " + e.getMessage());
