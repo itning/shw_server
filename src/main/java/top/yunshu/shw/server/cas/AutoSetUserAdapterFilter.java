@@ -61,6 +61,7 @@ public class AutoSetUserAdapterFilter implements Filter {
             session.setAttribute(LOGIN_USER, loginUser);
             logger.debug("success set session attribute: " + loginUser);
         } catch (Exception e) {
+            logger.error("login name: " + loginName);
             logger.error("doFilter method invoke error: ", e);
             throw new CasException(e.getMessage(), HttpStatus.SERVICE_UNAVAILABLE);
         }
