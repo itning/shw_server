@@ -11,9 +11,9 @@ public class LoginUser implements Serializable {
 
     /**
      * id : ID
-     * no : 学号
-     * loginName : 身份证号码
-     * userType : 99
+     * no : 学号或教师编号
+     * loginName : 身份证号码或登录名
+     * userType : 99(学生) 13(教师)
      * name : 姓名
      * phone :
      * email :

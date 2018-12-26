@@ -1,14 +1,14 @@
 package top.yunshu.shw.server.service.group.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import top.yunshu.shw.server.dao.GroupDao;
 import top.yunshu.shw.server.dao.StudentGroupDao;
+import top.yunshu.shw.server.entity.Group;
 import top.yunshu.shw.server.entity.StudentGroup;
 import top.yunshu.shw.server.entity.StudentGroupPrimaryKey;
-import top.yunshu.shw.server.entity.Group;
-import top.yunshu.shw.server.exception.NoCodeException;
-import top.yunshu.shw.server.exception.NoSuchIdException;
+import top.yunshu.shw.server.exception.NullFiledException;
 import top.yunshu.shw.server.service.group.GroupService;
 
 import java.util.List;
@@ -55,9 +55,9 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public Group joinGroup(String code, String studentId) throws NoCodeException {
+    public Group joinGroup(String code, String studentId) {
         if (!groupDao.existsAllByCode(code)) {
-            throw new NoCodeException("NO CODE");
+            throw new NullFiledException("NO CODE", HttpStatus.NOT_FOUND);
         }
         Group group = groupDao.findByCode(code);
         StudentGroup studentGroup = new StudentGroup(studentId, group.getId());
@@ -79,7 +79,7 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public Group updateGroup(String id, String name) {
-        Group group = groupDao.findById(id).orElseThrow(() -> new NoSuchIdException("id: " + id + " not found"));
+        Group group = groupDao.findById(id).orElseThrow(() -> new NullFiledException("id: " + id + " not found", HttpStatus.NOT_FOUND));
         group.setGroupName(name);
         return groupDao.save(group);
     }

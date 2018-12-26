@@ -27,13 +27,17 @@ import java.util.Map;
 public class AutoSetUserAdapterFilter implements Filter {
     private static final Logger logger = LoggerFactory.getLogger(AutoSetUserAdapterFilter.class);
     private static final Gson GSON = new Gson();
+    private static final String LOGIN_USER = "loginUser";
 
     @Override
     public final void doFilter(final ServletRequest servletRequest, final ServletResponse servletResponse, final FilterChain filterChain) throws IOException, ServletException {
-        //TODO 每次请求Api都会Filter需要优化
         final HttpServletRequest request = (HttpServletRequest) servletRequest;
         final HttpServletResponse response = (HttpServletResponse) servletResponse;
         final HttpSession session = request.getSession();
+        if (session.getAttribute(LOGIN_USER) != null) {
+            filterChain.doFilter(request, response);
+            return;
+        }
         Assertion assertion = (Assertion) session.getAttribute(AbstractCasFilter.CONST_CAS_ASSERTION);
         String loginName = assertion.getPrincipal().getName();
         logger.debug("login name: " + loginName);
@@ -52,7 +56,7 @@ public class AutoSetUserAdapterFilter implements Filter {
             String retVal = SecureUtil.decryptTradeInfo(appId, secureRequest.getCER(), secureRequest.getDATA(), secureRequest.getSIGN(), ourPrivateKey, otherPublicKey);
             logger.debug("return str: " + retVal);
             LoginUser loginUser = GSON.fromJson(retVal, LoginUser.class);
-            session.setAttribute("loginUser", loginUser);
+            session.setAttribute(LOGIN_USER, loginUser);
             logger.debug("success set session attribute: " + loginUser);
         } catch (Exception e) {
             //TODO 登陆后获取用户信息失败，反馈给用户

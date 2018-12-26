@@ -1,8 +1,6 @@
 package top.yunshu.shw.server.service.group;
 
-import top.yunshu.shw.server.exception.NoSuchIdException;
 import top.yunshu.shw.server.entity.Group;
-import top.yunshu.shw.server.exception.NoCodeException;
 
 import java.util.List;
 
@@ -27,9 +25,9 @@ public interface GroupService {
      * @param code      邀请码
      * @param studentId 学生ID
      * @return 返回加入成功的群组
-     * @throws NoCodeException NO CODE
+     * @throws top.yunshu.shw.server.exception.NullFiledException NO CODE
      */
-    Group joinGroup(String code, String studentId) throws NoCodeException;
+    Group joinGroup(String code, String studentId);
 
     /**
      * 学生退出群组
@@ -68,7 +66,7 @@ public interface GroupService {
      * @param id   需要修改的群组ID
      * @param name 新群组名
      * @return 修改后的群组
-     * @throws NoSuchIdException Id不存在
+     * @throws top.yunshu.shw.server.exception.NullFiledException Id不存在
      */
     Group updateGroup(String id, String name);
 
