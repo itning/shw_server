@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.NoHandlerFoundException;
 import top.yunshu.shw.server.entity.RestModel;
 
 import javax.servlet.http.HttpServletRequest;
@@ -38,6 +39,7 @@ public class ExceptionResolver {
         restModel.setUrl(req.getRequestURL().toString());
         restModel.setData("");
         response.setStatus(HttpStatus.SERVICE_UNAVAILABLE.value());
+        e.printStackTrace();
         return restModel;
     }
 
@@ -59,6 +61,27 @@ public class ExceptionResolver {
         restModel.setUrl(req.getRequestURL().toString());
         restModel.setData("");
         response.setStatus(e.getCode().value());
+        return restModel;
+    }
+
+    /**
+     * BaseException 错误
+     *
+     * @param req      HttpServletRequest
+     * @param response HttpServletResponse
+     * @param e        BaseException
+     * @return 异常消息
+     */
+    @ExceptionHandler(value = NoHandlerFoundException.class)
+    @ResponseBody
+    public RestModel noHandlerFoundErrorHandler(HttpServletRequest req, HttpServletResponse response, NoHandlerFoundException e) {
+        logger.error("noHandlerFoundErrorHandler->" + e.getClass().getSimpleName() + ":" + e.getMessage());
+        RestModel restModel = new RestModel();
+        restModel.setCode(HttpStatus.NOT_FOUND.value());
+        restModel.setMsg(e.getMessage());
+        restModel.setUrl(req.getRequestURL().toString());
+        restModel.setData("");
+        response.setStatus(HttpStatus.NOT_FOUND.value());
         return restModel;
     }
 }

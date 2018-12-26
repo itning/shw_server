@@ -8,8 +8,10 @@ import org.jasig.cas.client.util.AbstractCasFilter;
 import org.jasig.cas.client.validation.Assertion;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import top.yunshu.shw.server.entity.LoginUser;
+import top.yunshu.shw.server.exception.CasException;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
@@ -59,8 +61,8 @@ public class AutoSetUserAdapterFilter implements Filter {
             session.setAttribute(LOGIN_USER, loginUser);
             logger.debug("success set session attribute: " + loginUser);
         } catch (Exception e) {
-            //TODO 登陆后获取用户信息失败，反馈给用户
             logger.error("doFilter method invoke error: ", e);
+            throw new CasException(e.getMessage(), HttpStatus.SERVICE_UNAVAILABLE);
         }
         filterChain.doFilter(request, response);
     }
