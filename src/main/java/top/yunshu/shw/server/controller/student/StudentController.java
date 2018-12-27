@@ -5,11 +5,9 @@ import org.modelmapper.TypeToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import top.yunshu.shw.server.entity.LoginUser;
 import top.yunshu.shw.server.entity.RestModel;
 import top.yunshu.shw.server.model.WorkModel;
@@ -55,11 +53,6 @@ public class StudentController {
      */
     @GetMapping("/groups")
     public ResponseEntity<RestModel> getAllGroups() {
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
         logger.debug("get all student groups");
         LoginUser loginUser = SessionUtils.getAttributeValueFromSession("loginUser", LoginUser.class);
         logger.info("get login user: " + loginUser);
@@ -73,11 +66,6 @@ public class StudentController {
      */
     @GetMapping("/works/un_done")
     public ResponseEntity<RestModel> getAllUnDoneWorks() {
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
         logger.debug("get all un done works");
         LoginUser loginUser = SessionUtils.getAttributeValueFromSession("loginUser", LoginUser.class);
         logger.info("get login user: " + loginUser);
@@ -93,11 +81,6 @@ public class StudentController {
      */
     @GetMapping("/works/done")
     public ResponseEntity<RestModel> getAllDoneWorks() {
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
         logger.debug("get all done works");
         LoginUser loginUser = SessionUtils.getAttributeValueFromSession("loginUser", LoginUser.class);
         logger.info("get login user: " + loginUser);
@@ -106,16 +89,27 @@ public class StudentController {
         return ResponseEntity.ok(new RestModel<>(workModels));
     }
 
+    /**
+     * 根据作业ID获取上传信息
+     *
+     * @param workId 作业ID
+     * @return ResponseEntity
+     */
     @GetMapping("/upload/{workId}")
     public ResponseEntity<RestModel> getUpLoadInfoByWorkId(@PathVariable String workId) {
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
         logger.debug("get upload info by work id");
         LoginUser loginUser = SessionUtils.getAttributeValueFromSession("loginUser", LoginUser.class);
         logger.info("get login user: " + loginUser);
         return ResponseEntity.ok(new RestModel<>(uploadService.getUploadInfoByWorkId(loginUser.getNo(), workId)));
     }
+
+    @PostMapping("/group")
+    public ResponseEntity<Void> addGroup(String code) {
+        logger.debug("add group , code: " + code);
+        LoginUser loginUser = SessionUtils.getAttributeValueFromSession("loginUser", LoginUser.class);
+        logger.info("get login user: " + loginUser);
+        groupService.joinGroup(code, loginUser.getNo());
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
 }

@@ -55,7 +55,7 @@ public class GroupServiceImpl implements GroupService {
     @Override
     public Group joinGroup(String code, String studentId) {
         if (!groupDao.existsAllByCode(code)) {
-            throw new NullFiledException("NO CODE", HttpStatus.NOT_FOUND);
+            throw new NullFiledException("群ID不存在", HttpStatus.NOT_FOUND);
         }
         Group group = groupDao.findByCode(code);
         StudentGroup studentGroup = new StudentGroup(studentId, group.getId());
