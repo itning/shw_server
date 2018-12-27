@@ -24,6 +24,5 @@ greathiit:
 cas:
   server-url-prefix: http://login.greathiit.com/
   server-login-url: http://login.greathiit.com/login
-  #登陆成功后的跳转路径(必须跳转到 /login )
   client-host-url: http://localhost:${server.port}/login
 datasource_url_end_str: ?createDatabaseIfNotExist=true&useUnicode=true&characterEncoding=utf-8&useSSL=false&autoReconnect=true&failOverReadOnly=false&connectTimeout=0&serverTimezone=Asia/Shanghai&useLegacyDatetimeCode=false
