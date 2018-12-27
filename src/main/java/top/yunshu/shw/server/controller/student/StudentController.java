@@ -103,6 +103,12 @@ public class StudentController {
         return ResponseEntity.ok(new RestModel<>(uploadService.getUploadInfoByWorkId(loginUser.getNo(), workId)));
     }
 
+    /**
+     * 学生加入群组
+     *
+     * @param code 邀请码
+     * @return ResponseEntity
+     */
     @PostMapping("/group")
     public ResponseEntity<Void> addGroup(String code) {
         logger.debug("add group , code: " + code);
@@ -110,6 +116,21 @@ public class StudentController {
         logger.info("get login user: " + loginUser);
         groupService.joinGroup(code, loginUser.getNo());
         return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    /**
+     * 退出群组
+     *
+     * @param groupId 群组ID
+     * @return ResponseEntity
+     */
+    @DeleteMapping("/group/{groupId}")
+    public ResponseEntity<Void> dropOutGroup(@PathVariable String groupId) {
+        logger.debug("del group , id: " + groupId);
+        LoginUser loginUser = SessionUtils.getAttributeValueFromSession("loginUser", LoginUser.class);
+        logger.info("get login user: " + loginUser);
+        groupService.dropOutGroup(groupId, loginUser.getNo());
+        return ResponseEntity.noContent().build();
     }
 
 }

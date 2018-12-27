@@ -28,13 +28,23 @@ public class BeansConfig {
     }
 
     @Bean
+    public FilterRegistrationBean corsFilterRegistration() {
+        FilterRegistrationBean registration = new FilterRegistrationBean();
+        registration.setFilter(new CorsFilter());
+        registration.addUrlPatterns("*");
+        registration.setName("CorsFilter");
+        registration.setOrder(1);
+        return registration;
+    }
+
+    @Bean
     public FilterRegistrationBean httpServletRequestWrapperFilterRegistration() {
 
         FilterRegistrationBean registration = new FilterRegistrationBean();
         registration.setFilter(new HttpServletRequestWrapperFilter());
         registration.addUrlPatterns("*");
         registration.setName("httpServletRequest");
-        registration.setOrder(1);
+        registration.setOrder(2);
         return registration;
     }
 
@@ -45,7 +55,7 @@ public class BeansConfig {
         registration.setFilter(new AssertionThreadLocalFilter());
         registration.addUrlPatterns("*");
         registration.setName("httpServletRequest");
-        registration.setOrder(2);
+        registration.setOrder(3);
 
         return registration;
     }
@@ -59,7 +69,7 @@ public class BeansConfig {
         registration.setFilter(new AutoSetUserAdapterFilter());
         registration.addUrlPatterns("*");
         registration.setName("adapterFilter");
-        registration.setOrder(3);
+        registration.setOrder(4);
 
 
         return registration;

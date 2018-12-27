@@ -47,7 +47,7 @@ public class AutoSetUserAdapterFilter implements Filter {
         String appId = globalConstants.getAppId();
         String ourPrivateKey = globalConstants.getPrivateKey();
         String otherPublicKey = globalConstants.getPublicKey();
-        String greathiitUrl = globalConstants.getUrl();
+        String greathiitUrl = globalConstants.getUrl().toString();
         Map<String, String> requestMap;
         try {
             requestMap = SecureUtil.encryptTradeInfo(appId, loginName, ourPrivateKey, otherPublicKey);

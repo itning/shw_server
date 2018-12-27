@@ -28,7 +28,7 @@ public class GlobalConstants {
     /**
      * CAS接口网址
      */
-    private String url;
+    private URI url;
     /**
      * 登陆成功后跳转的网址
      */
@@ -62,11 +62,11 @@ public class GlobalConstants {
         this.publicKey = publicKey;
     }
 
-    public String getUrl() {
+    public URI getUrl() {
         return url;
     }
 
-    public void setUrl(String url) {
+    public void setUrl(URI url) {
         this.url = url;
     }
 
