@@ -1,6 +1,7 @@
 package top.yunshu.shw.server.dao;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import top.yunshu.shw.server.entity.StudentGroup;
 import top.yunshu.shw.server.entity.StudentGroupPrimaryKey;
 
@@ -27,4 +28,14 @@ public interface StudentGroupDao extends JpaRepository<StudentGroup, StudentGrou
      * @return 学生集合
      */
     List<StudentGroup> findAllByGroupID(String groupId);
+
+    /**
+     * 根据学生学号查询所加入的群ID
+     *
+     * @param studentNumber 学生学号
+     * @return 群ID集合
+     */
+    @SuppressWarnings("SpringDataRepositoryMethodReturnTypeInspection")
+    @Query(value = "select groupID from StudentGroup s where s.studentNumber=?1")
+    List<String> findGroupIdByStudentNumber(String studentNumber);
 }

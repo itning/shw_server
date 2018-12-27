@@ -1,15 +1,32 @@
-package top.yunshu.shw.server.cas;
+package top.yunshu.shw.server.config;
 
 import org.jasig.cas.client.util.AssertionThreadLocalFilter;
 import org.jasig.cas.client.util.HttpServletRequestWrapperFilter;
+import org.modelmapper.ModelMapper;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
+import org.springframework.stereotype.Component;
+import top.yunshu.shw.server.cas.AutoSetUserAdapterFilter;
 
 /**
+ * Beans Config
+ *
  * @author itning
  */
 @SuppressWarnings("all")
-public class CasBeans {
+@Component
+public class BeansConfig {
+    /**
+     * <p>Add ModelMapper Bean</p>
+     * <p>You can also see {@link ModelMapperConfig}</p>
+     *
+     * @return {@link ModelMapper}
+     */
+    @Bean
+    public ModelMapper modelMapper() {
+        return new ModelMapper();
+    }
+
     @Bean
     public FilterRegistrationBean httpServletRequestWrapperFilterRegistration() {
 
@@ -46,12 +63,6 @@ public class CasBeans {
 
 
         return registration;
-    }
-
-
-    @Bean
-    public AutoSetUserAdapterFilter autoSetUserAdapterFilter() {
-        return new AutoSetUserAdapterFilter();
     }
 
     @Bean(name = "autoSetHRUserAdapterFilter")

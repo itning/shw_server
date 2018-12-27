@@ -1,5 +1,7 @@
 package top.yunshu.shw.server.entity;
 
+import org.springframework.http.HttpStatus;
+
 import java.io.Serializable;
 
 /**
@@ -19,6 +21,10 @@ public class RestModel<T> implements Serializable {
         this.code = code;
         this.msg = msg;
         this.data = data;
+    }
+
+    public RestModel(T data) {
+        this(HttpStatus.OK.value(), "查询成功", data);
     }
 
     public int getCode() {

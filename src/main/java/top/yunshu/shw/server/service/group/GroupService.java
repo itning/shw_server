@@ -48,7 +48,9 @@ public interface GroupService {
     /**
      * 创建新群组
      *
-     * @param groupName 新建群组名
+     * @param groupName   新建群组名
+     * @param teacherId   教师ID
+     * @param teacherName 教师姓名
      * @return 返回创建后群组
      */
     Group createGroup(String groupName, String teacherName, String teacherId);
@@ -69,5 +71,23 @@ public interface GroupService {
      * @throws top.yunshu.shw.server.exception.NullFiledException Id不存在
      */
     Group updateGroup(String id, String name);
+
+    /**
+     * 根据群ID查询群名称
+     *
+     * @param groupId 群ID
+     * @return 群名称
+     * @throws top.yunshu.shw.server.exception.NullFiledException Id不存在
+     */
+    String findGroupNameByGroupId(String groupId);
+
+    /**
+     * 根据群ID查询群
+     *
+     * @param groupId 群ID
+     * @return 教师名
+     * @throws top.yunshu.shw.server.exception.NullFiledException Id不存在
+     */
+    String findTeacherNameById(String groupId);
 
 }

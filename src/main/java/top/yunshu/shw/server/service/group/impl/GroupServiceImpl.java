@@ -81,4 +81,20 @@ public class GroupServiceImpl implements GroupService {
         group.setGroupName(name);
         return groupDao.save(group);
     }
+
+    @Override
+    public String findGroupNameByGroupId(String groupId) {
+        if (!groupDao.existsById(groupId)) {
+            throw new NullFiledException("群ID: " + groupId + "不存在", HttpStatus.NOT_FOUND);
+        }
+        return groupDao.findNameById(groupId);
+    }
+
+    @Override
+    public String findTeacherNameById(String groupId) {
+        if (!groupDao.existsById(groupId)) {
+            throw new NullFiledException("群ID: " + groupId + "不存在", HttpStatus.NOT_FOUND);
+        }
+        return groupDao.findTeacherNameById(groupId);
+    }
 }
