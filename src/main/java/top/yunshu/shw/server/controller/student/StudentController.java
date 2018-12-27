@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import top.yunshu.shw.server.entity.LoginUser;
 import top.yunshu.shw.server.entity.RestModel;
 import top.yunshu.shw.server.model.WorkModel;
@@ -133,4 +134,12 @@ public class StudentController {
         return ResponseEntity.noContent().build();
     }
 
+    @PostMapping("/work/{workId}")
+    public ResponseEntity<Void> uploadWork(@PathVariable String workId, @RequestParam("file") MultipartFile file) {
+        System.out.println(workId);
+        System.out.println(file.getOriginalFilename());
+        System.out.println(file.getSize());
+        //TODO 上传文件大小配置
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
 }
