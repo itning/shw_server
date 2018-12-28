@@ -53,18 +53,21 @@ public class CasFilter implements Filter {
             allowCors(resp, req);
             return;
         }
-        if (GET_METHOD.equalsIgnoreCase(req.getMethod()) && LOGOUT_URL.equals(req.getServletPath())) {
-            CasProperties casProperties = SpringContextHelper.getBean(CasProperties.class);
-            //清除Session
-            httpSession.invalidate();
-            //重定向到登出地址
-            resp.sendRedirect(casProperties.getLogoutUrl().toString());
-            return;
-        }
-        if (GET_METHOD.equalsIgnoreCase(req.getMethod()) && LOGIN_URL.equals(req.getServletPath())) {
-            CasProperties casProperties = SpringContextHelper.getBean(CasProperties.class);
-            //重定向到登陆地址
-            resp.sendRedirect(casProperties.getLoginUrl() + "?service=" + casProperties.getLocalServerUrl());
+        if (GET_METHOD.equalsIgnoreCase(req.getMethod())) {
+            //login
+            if (LOGIN_URL.equals(req.getServletPath())) {
+                CasProperties casProperties = SpringContextHelper.getBean(CasProperties.class);
+                //重定向到登陆地址
+                resp.sendRedirect(casProperties.getLoginUrl() + "?service=" + casProperties.getLocalServerUrl());
+            }
+            //logout
+            if (LOGOUT_URL.equals(req.getServletPath())) {
+                CasProperties casProperties = SpringContextHelper.getBean(CasProperties.class);
+                //清除Session
+                httpSession.invalidate();
+                //重定向到登出地址
+                resp.sendRedirect(casProperties.getLogoutUrl().toString());
+            }
             return;
         }
         //CAS Start
