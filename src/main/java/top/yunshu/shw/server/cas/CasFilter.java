@@ -59,6 +59,7 @@ public class CasFilter implements Filter {
                 CasProperties casProperties = SpringContextHelper.getBean(CasProperties.class);
                 //重定向到登陆地址
                 resp.sendRedirect(casProperties.getLoginUrl() + "?service=" + casProperties.getLocalServerUrl());
+                return;
             }
             //logout
             if (LOGOUT_URL.equals(req.getServletPath())) {
@@ -67,8 +68,8 @@ public class CasFilter implements Filter {
                 httpSession.invalidate();
                 //重定向到登出地址
                 resp.sendRedirect(casProperties.getLogoutUrl().toString());
+                return;
             }
-            return;
         }
         //CAS Start
         String ticket = req.getParameter("ticket");
