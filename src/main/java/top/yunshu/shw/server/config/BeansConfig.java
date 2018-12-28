@@ -1,12 +1,13 @@
 package top.yunshu.shw.server.config;
 
-import org.jasig.cas.client.util.AssertionThreadLocalFilter;
-import org.jasig.cas.client.util.HttpServletRequestWrapperFilter;
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.client.ClientHttpRequestFactory;
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.stereotype.Component;
-import top.yunshu.shw.server.cas.AutoSetUserAdapterFilter;
+import org.springframework.web.client.RestTemplate;
+import top.yunshu.shw.server.cas.CasFilter;
 
 /**
  * Beans Config
@@ -28,45 +29,25 @@ public class BeansConfig {
     }
 
     @Bean
-    public FilterRegistrationBean httpServletRequestWrapperFilterRegistration() {
-
+    public FilterRegistrationBean corsFilterRegistration() {
         FilterRegistrationBean registration = new FilterRegistrationBean();
-        registration.setFilter(new HttpServletRequestWrapperFilter());
+        registration.setFilter(new CasFilter());
         registration.addUrlPatterns("*");
-        registration.setName("httpServletRequest");
+        registration.setName("CasFilter");
         registration.setOrder(1);
         return registration;
     }
 
     @Bean
-    public FilterRegistrationBean assertionThreadLocalFilterRegistration() {
-
-        FilterRegistrationBean registration = new FilterRegistrationBean();
-        registration.setFilter(new AssertionThreadLocalFilter());
-        registration.addUrlPatterns("*");
-        registration.setName("httpServletRequest");
-        registration.setOrder(2);
-
-        return registration;
+    public RestTemplate restTemplate(ClientHttpRequestFactory factory){
+        return new RestTemplate(factory);
     }
-
 
     @Bean
-    public FilterRegistrationBean autoSetHRUserAdapterFilterRegistration() {
-
-        FilterRegistrationBean registration = new FilterRegistrationBean();
-
-        registration.setFilter(new AutoSetUserAdapterFilter());
-        registration.addUrlPatterns("*");
-        registration.setName("adapterFilter");
-        registration.setOrder(3);
-
-
-        return registration;
-    }
-
-    @Bean(name = "autoSetHRUserAdapterFilter")
-    public AutoSetUserAdapterFilter systemUrlFilter() {
-        return new AutoSetUserAdapterFilter();
+    public ClientHttpRequestFactory simpleClientHttpRequestFactory(){
+        SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();
+        factory.setReadTimeout(5000);//ms
+        factory.setConnectTimeout(15000);//ms
+        return factory;
     }
 }

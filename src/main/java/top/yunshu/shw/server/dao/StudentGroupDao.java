@@ -38,4 +38,13 @@ public interface StudentGroupDao extends JpaRepository<StudentGroup, StudentGrou
     @SuppressWarnings("SpringDataRepositoryMethodReturnTypeInspection")
     @Query(value = "select groupID from StudentGroup s where s.studentNumber=?1")
     List<String> findGroupIdByStudentNumber(String studentNumber);
+
+    /**
+     * 根据学号和群ID查找学生群组
+     *
+     * @param studentNumber 学号
+     * @param groupId       群ID
+     * @return StudentGroup
+     */
+    StudentGroup findByStudentNumberAndGroupID(String studentNumber, String groupId);
 }

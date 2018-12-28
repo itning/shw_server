@@ -32,6 +32,11 @@ public class LoginUser implements Serializable {
     private String mobile;
     private String loginIp;
     private String remarks;
+    private String roleId;
+    private String dormId;
+    private String clazzId;
+    private String companyId;
+    private String officeId;
 
     public String getId() {
         return id;
@@ -113,6 +118,46 @@ public class LoginUser implements Serializable {
         this.remarks = remarks;
     }
 
+    public String getRoleId() {
+        return roleId;
+    }
+
+    public void setRoleId(String roleId) {
+        this.roleId = roleId;
+    }
+
+    public String getDormId() {
+        return dormId;
+    }
+
+    public void setDormId(String dormId) {
+        this.dormId = dormId;
+    }
+
+    public String getClazzId() {
+        return clazzId;
+    }
+
+    public void setClazzId(String clazzId) {
+        this.clazzId = clazzId;
+    }
+
+    public String getCompanyId() {
+        return companyId;
+    }
+
+    public void setCompanyId(String companyId) {
+        this.companyId = companyId;
+    }
+
+    public String getOfficeId() {
+        return officeId;
+    }
+
+    public void setOfficeId(String officeId) {
+        this.officeId = officeId;
+    }
+
     @Override
     public String toString() {
         return "LoginUser{" +
@@ -126,6 +171,11 @@ public class LoginUser implements Serializable {
                 ", mobile='" + mobile + '\'' +
                 ", loginIp='" + loginIp + '\'' +
                 ", remarks='" + remarks + '\'' +
+                ", roleId='" + roleId + '\'' +
+                ", dormId='" + dormId + '\'' +
+                ", clazzId='" + clazzId + '\'' +
+                ", companyId='" + companyId + '\'' +
+                ", officeId='" + officeId + '\'' +
                 '}';
     }
 }

@@ -1,6 +1,7 @@
 package top.yunshu.shw.server.service.group;
 
 import top.yunshu.shw.server.entity.Group;
+import top.yunshu.shw.server.exception.NoSuchFiledValueException;
 
 import java.util.List;
 
@@ -14,10 +15,10 @@ public interface GroupService {
     /**
      * 获取学生所在的所有群组
      *
-     * @param id 学生学号
+     * @param studentNumber 学生学号
      * @return 学生加入群组集合
      */
-    List<Group> findStudentAllGroups(String id);
+    List<Group> findStudentAllGroups(String studentNumber);
 
     /**
      * 通过邀请码加入群组
@@ -25,7 +26,7 @@ public interface GroupService {
      * @param code      邀请码
      * @param studentId 学生ID
      * @return 返回加入成功的群组
-     * @throws top.yunshu.shw.server.exception.NullFiledException NO CODE
+     * @throws NoSuchFiledValueException 邀请码不存在
      */
     Group joinGroup(String code, String studentId);
 
@@ -34,6 +35,7 @@ public interface GroupService {
      *
      * @param groupId   要退出的群组ID
      * @param studentId 学生ID
+     * @throws NoSuchFiledValueException 群组ID不存在
      */
     void dropOutGroup(String groupId, String studentId);
 
@@ -68,7 +70,7 @@ public interface GroupService {
      * @param id   需要修改的群组ID
      * @param name 新群组名
      * @return 修改后的群组
-     * @throws top.yunshu.shw.server.exception.NullFiledException Id不存在
+     * @throws NoSuchFiledValueException Id不存在
      */
     Group updateGroup(String id, String name);
 
@@ -77,7 +79,7 @@ public interface GroupService {
      *
      * @param groupId 群ID
      * @return 群名称
-     * @throws top.yunshu.shw.server.exception.NullFiledException Id不存在
+     * @throws NoSuchFiledValueException Id不存在
      */
     String findGroupNameByGroupId(String groupId);
 
@@ -86,7 +88,7 @@ public interface GroupService {
      *
      * @param groupId 群ID
      * @return 教师名
-     * @throws top.yunshu.shw.server.exception.NullFiledException Id不存在
+     * @throws NoSuchFiledValueException Id不存在
      */
     String findTeacherNameById(String groupId);
 

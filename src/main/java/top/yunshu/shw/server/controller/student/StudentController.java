@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import top.yunshu.shw.server.entity.LoginUser;
 import top.yunshu.shw.server.entity.RestModel;
 import top.yunshu.shw.server.model.WorkModel;
@@ -103,6 +104,12 @@ public class StudentController {
         return ResponseEntity.ok(new RestModel<>(uploadService.getUploadInfoByWorkId(loginUser.getNo(), workId)));
     }
 
+    /**
+     * 学生加入群组
+     *
+     * @param code 邀请码
+     * @return ResponseEntity
+     */
     @PostMapping("/group")
     public ResponseEntity<Void> addGroup(String code) {
         logger.debug("add group , code: " + code);
@@ -112,4 +119,26 @@ public class StudentController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
+    /**
+     * 退出群组
+     *
+     * @param groupId 群组ID
+     * @return ResponseEntity
+     */
+    @DeleteMapping("/group/{groupId}")
+    public ResponseEntity<Void> dropOutGroup(@PathVariable String groupId) {
+        logger.debug("del group , id: " + groupId);
+        LoginUser loginUser = SessionUtils.getAttributeValueFromSession("loginUser", LoginUser.class);
+        logger.info("get login user: " + loginUser);
+        groupService.dropOutGroup(groupId, loginUser.getNo());
+        return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/work/{workId}")
+    public ResponseEntity<Void> uploadWork(@PathVariable String workId, @RequestParam("file") MultipartFile file) {
+        System.out.println(workId);
+        System.out.println(file.getOriginalFilename());
+        System.out.println(file.getSize());
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
 }
