@@ -134,11 +134,27 @@ public class StudentController {
         return ResponseEntity.noContent().build();
     }
 
+    /**
+     * 学生上传作业
+     *
+     * @param workId 作业ID
+     * @param file   文件
+     * @return ResponseEntity
+     */
     @PostMapping("/work/{workId}")
     public ResponseEntity<Void> uploadWork(@PathVariable String workId, @RequestParam("file") MultipartFile file) {
         System.out.println(workId);
         System.out.println(file.getOriginalFilename());
         System.out.println(file.getSize());
         return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    @DeleteMapping("/work/{workId}")
+    public ResponseEntity<Void> deleteUploadWork(@PathVariable String workId) {
+        logger.debug("delete Upload Work , workId: " + workId);
+        LoginUser loginUser = SessionUtils.getAttributeValueFromSession("loginUser", LoginUser.class);
+        logger.info("get login user: " + loginUser);
+        uploadService.delUploadInfoByWorkId(loginUser.getNo(), workId);
+        return ResponseEntity.noContent().build();
     }
 }

@@ -16,4 +16,13 @@ public interface UploadService {
      * @return 上传
      */
     Upload getUploadInfoByWorkId(String studentId, String workId);
+
+    /**
+     * 根据作业ID 删除作业
+     * 作业必须是开启状态
+     *
+     * @param studentId 学生学号
+     * @param workId    作业ID
+     */
+    void delUploadInfoByWorkId(String studentId, String workId);
 }
