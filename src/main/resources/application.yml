@@ -14,6 +14,10 @@ spring:
     add-mappings: false
   jackson:
     time-zone: Asia/Shanghai
+  servlet:
+    multipart:
+      max-file-size: 1024MB
+      max-request-size: 1024MB
 greathiit:
   app-id: 1
   private-key: MIICeAIBADANBgkqhkiG9w0BAQEFAASCAmIwggJeAgEAAoGBAKJCbQe+96CYcxvvAGJZGIfNSNnRD946ktrjeMbmVZ4dHm41hUwaVM465XjyFzi36DWgOYY8jWapiRO8LuuGsYnKZY4ofviGqRQXTtQnmE6jChBwMa8T2PTKRqQuToQF2SqrnTQyCgTtJXVFqwh0rW4NgG3fI7G63klY/I8Z9T1JAgMBAAECgYEAjZLjyuRm72rU1MSeUzFl4+fL7rEo5T+6Lt5W3UTP41uI16Q/H/3BjQd6fSLN/CEKrO+WAXgH8FFwVxXU4o/tit/r+IkUTMPq5clQb+j4CzWOJeU6J+frAgtkf+yfF7t5Hue7VuZ9WoiD8MFmIsGdZ7tkcKkJEfgexkXpdyhO5mECQQD3rAz+1h+lIBnJ0eUbNE6ADENLSL8VerzB8omv5GJ+reTdYRGq5S5ukhGe0LxAHu0VHHTXl4WCPWARtKgnl0VlAkEAp7clyvNl1PBAwny47Mifj+QmplsRPS8s6Pg7Hd6TDTIVun2Ta0T1swHo/Jve4TRSyFx4HTL/Jqw33QtehIecFQJBAMzNP93G0FoqRkjmQQ6S3UrzWP47BI/Nc6LpXUPOlkfsofESIJrxcsjKDroGH3TiXef0JQZV7He7KuLZQaejZiUCQGXChjfBvsOYknJu4nUotUfFEn5VOvx4pzMjihrxdR/Ih86DavLnAH0AZ7D9khnqeWAAWxC8ZHu+epav00VuUpECQQCUmEXF+Ar78x0i/SMXn+SW3qrxN6RptL3DkUay/9ATxQ9NMmyRg1MYqdr+9JMiTi5DOLDQ2K9ChtQ07TQXHPyL

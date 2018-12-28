@@ -139,7 +139,6 @@ public class StudentController {
         System.out.println(workId);
         System.out.println(file.getOriginalFilename());
         System.out.println(file.getSize());
-        //TODO 上传文件大小配置
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 }
