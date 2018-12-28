@@ -35,8 +35,8 @@ public class Work implements Serializable {
     /**
      * 作业启用状态
      */
-    @Column(nullable = false)
-    private boolean isEnabled = true;
+    @Column(name = "is_enabled", nullable = false)
+    private boolean enabled = true;
     /**
      * 文件名规范
      */
@@ -58,11 +58,11 @@ public class Work implements Serializable {
     public Work() {
     }
 
-    public Work(String id, String groupId, String workName, boolean isEnabled, String fileNameFormat) {
+    public Work(String id, String groupId, String workName, boolean enabled, String fileNameFormat) {
         this.id = id;
         this.groupId = groupId;
         this.workName = workName;
-        this.isEnabled = isEnabled;
+        this.enabled = enabled;
         this.fileNameFormat = fileNameFormat;
     }
 
@@ -91,11 +91,11 @@ public class Work implements Serializable {
     }
 
     public boolean isEnabled() {
-        return isEnabled;
+        return enabled;
     }
 
     public void setEnabled(boolean enabled) {
-        isEnabled = enabled;
+        this.enabled = enabled;
     }
 
     public String getFileNameFormat() {
@@ -128,7 +128,7 @@ public class Work implements Serializable {
                 "id='" + id + '\'' +
                 ", groupId='" + groupId + '\'' +
                 ", workName='" + workName + '\'' +
-                ", isEnabled=" + isEnabled +
+                ", enabled=" + enabled +
                 ", fileNameFormat='" + fileNameFormat + '\'' +
                 ", gmtCreate=" + gmtCreate +
                 ", gmtModified=" + gmtModified +

@@ -38,7 +38,7 @@ public class WorkServiceImpl implements WorkService {
 
     @Override
     public List<Work> getStudentUnDoneWork(String studentId) {
-        return studentGroupDao.findGroupIdByStudentNumber(studentId).parallelStream().map(workDao::findAllByGroupId).flatMap(Collection::stream).filter(work -> !uploadDao.existsByStudentIdAndWorkId(studentId, work.getId())).collect(Collectors.toList());
+        return studentGroupDao.findGroupIdByStudentNumber(studentId).parallelStream().map(workDao::findAllByGroupIdAndEnabledIsTrue).flatMap(Collection::stream).filter(work -> !uploadDao.existsByStudentIdAndWorkId(studentId, work.getId())).collect(Collectors.toList());
     }
 
     @Override

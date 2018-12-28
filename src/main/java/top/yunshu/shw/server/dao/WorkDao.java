@@ -16,4 +16,21 @@ public interface WorkDao extends JpaRepository<Work, String> {
      * @return 作业集合
      */
     List<Work> findAllByGroupId(String groupId);
+
+    /**
+     * 根据群组ID 查找所有作业
+     *
+     * @param groupId 群组ID
+     * @param enabled 是否开启
+     * @return 做业集合
+     */
+    List<Work> findAllByGroupIdAndEnabled(String groupId, boolean enabled);
+
+    /**
+     * 根据群组ID 查找已开启所有作业
+     *
+     * @param groupId 群组ID
+     * @return 做业集合
+     */
+    List<Work> findAllByGroupIdAndEnabledIsTrue(String groupId);
 }
