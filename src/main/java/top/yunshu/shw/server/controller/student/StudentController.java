@@ -9,10 +9,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import top.yunshu.shw.server.entity.Group;
 import top.yunshu.shw.server.entity.LoginUser;
 import top.yunshu.shw.server.entity.RestModel;
 import top.yunshu.shw.server.model.WorkModel;
 import top.yunshu.shw.server.service.group.GroupService;
+import top.yunshu.shw.server.service.student.group.StudentGroupService;
 import top.yunshu.shw.server.service.upload.UploadService;
 import top.yunshu.shw.server.service.work.WorkService;
 import top.yunshu.shw.server.util.SessionUtils;
@@ -39,12 +41,15 @@ public class StudentController {
 
     private final UploadService uploadService;
 
+    private final StudentGroupService studentGroupService;
+
     @Autowired
-    public StudentController(GroupService groupService, WorkService workService, ModelMapper modelMapper, UploadService uploadService) {
+    public StudentController(GroupService groupService, WorkService workService, ModelMapper modelMapper, UploadService uploadService, StudentGroupService studentGroupService) {
         this.groupService = groupService;
         this.workService = workService;
         this.modelMapper = modelMapper;
         this.uploadService = uploadService;
+        this.studentGroupService = studentGroupService;
     }
 
     /**
@@ -111,12 +116,11 @@ public class StudentController {
      * @return ResponseEntity
      */
     @PostMapping("/group")
-    public ResponseEntity<Void> addGroup(String code) {
+    public ResponseEntity<Group> addGroup(String code) {
         logger.debug("add group , code: " + code);
         LoginUser loginUser = SessionUtils.getAttributeValueFromSession("loginUser", LoginUser.class);
         logger.info("get login user: " + loginUser);
-        groupService.joinGroup(code, loginUser.getNo());
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        return ResponseEntity.status(HttpStatus.CREATED).body(groupService.joinGroup(code, loginUser.getNo()));
     }
 
     /**
@@ -149,6 +153,12 @@ public class StudentController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
+    /**
+     * 学生删除已上传作业
+     *
+     * @param workId 作业ID
+     * @return ResponseEntity
+     */
     @DeleteMapping("/work/{workId}")
     public ResponseEntity<Void> deleteUploadWork(@PathVariable String workId) {
         logger.debug("delete Upload Work , workId: " + workId);
@@ -156,5 +166,18 @@ public class StudentController {
         logger.info("get login user: " + loginUser);
         uploadService.delUploadInfoByWorkId(loginUser.getNo(), workId);
         return ResponseEntity.noContent().build();
+    }
+
+    /**
+     * 查询学生是否有学生群组
+     *
+     * @return ResponseEntity
+     */
+    @GetMapping("/group/exist")
+    public ResponseEntity<RestModel> isStudentJoinAnyStudentGroup() {
+        logger.debug("is Student Join Any StudentGroup");
+        LoginUser loginUser = SessionUtils.getAttributeValueFromSession("loginUser", LoginUser.class);
+        logger.info("get login user: " + loginUser);
+        return ResponseEntity.ok(new RestModel<>(studentGroupService.isHaveGroup(loginUser.getNo())));
     }
 }
