@@ -8,8 +8,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import top.yunshu.shw.server.ShwServerApplication;
 import top.yunshu.shw.server.service.group.GroupService;
 
-import static org.junit.Assert.*;
-
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = ShwServerApplication.class)
 public class GroupServiceImplTest {
@@ -26,7 +24,12 @@ public class GroupServiceImplTest {
 
     @Test
     public void createGroup() {
-        groupService.createGroup("2", "2", "2");
+       //for (int i = 0; i < 10000; i++) {
+       //    groupService.createGroup(
+       //            UUID.randomUUID().toString().replace("-", "")
+       //            , UUID.randomUUID().toString().replace("-", "")
+       //            , UUID.randomUUID().toString().replace("-", ""));
+       //}
     }
 
     @Test

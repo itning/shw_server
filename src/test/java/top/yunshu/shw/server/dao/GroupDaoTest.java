@@ -13,8 +13,14 @@ public class GroupDaoTest {
     @Autowired
     private GroupDao groupDao;
 
+    @Autowired
+    private StudentGroupDao studentGroupDao;
+
     @Test
     public void findByCode() {
+       //groupDao.findAll().parallelStream().forEach(group -> {
+       //    studentGroupDao.save(new StudentGroup("201601010317", group.getId()));
+       //});
     }
 
     @Test

@@ -47,4 +47,12 @@ public interface StudentGroupDao extends JpaRepository<StudentGroup, StudentGrou
      * @return StudentGroup
      */
     StudentGroup findByStudentNumberAndGroupID(String studentNumber, String groupId);
+
+    /**
+     * 根据学号查询该学生是否有学生群组
+     *
+     * @param studentNumber 学号
+     * @return 有返回真
+     */
+    boolean existsAllByStudentNumber(String studentNumber);
 }
