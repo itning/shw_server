@@ -17,7 +17,7 @@ import top.yunshu.shw.server.service.group.GroupService;
 import top.yunshu.shw.server.service.student.group.StudentGroupService;
 import top.yunshu.shw.server.service.upload.UploadService;
 import top.yunshu.shw.server.service.work.WorkService;
-import top.yunshu.shw.server.util.SessionUtils;
+import top.yunshu.shw.server.util.JwtUtils;
 
 import java.util.List;
 
@@ -58,9 +58,9 @@ public class StudentController {
      * @return ResponseEntity
      */
     @GetMapping("/groups")
-    public ResponseEntity<RestModel> getAllGroups() {
+    public ResponseEntity<RestModel> getAllGroups(@RequestHeader("Authorization") String authorization) {
         logger.debug("get all student groups");
-        LoginUser loginUser = SessionUtils.getAttributeValueFromSession("loginUser", LoginUser.class);
+        LoginUser loginUser = JwtUtils.getLoginUser(authorization);
         logger.info("get login user: " + loginUser);
         return ResponseEntity.ok(new RestModel<>(groupService.findStudentAllGroups(loginUser.getNo())));
     }
@@ -71,9 +71,9 @@ public class StudentController {
      * @return ResponseEntity
      */
     @GetMapping("/works/un_done")
-    public ResponseEntity<RestModel> getAllUnDoneWorks() {
+    public ResponseEntity<RestModel> getAllUnDoneWorks(@RequestHeader("Authorization") String authorization) {
         logger.debug("get all un done works");
-        LoginUser loginUser = SessionUtils.getAttributeValueFromSession("loginUser", LoginUser.class);
+        LoginUser loginUser = JwtUtils.getLoginUser(authorization);
         logger.info("get login user: " + loginUser);
         List<WorkModel> workModels = modelMapper.map(workService.getStudentUnDoneWork(loginUser.getNo()), new TypeToken<List<WorkModel>>() {
         }.getType());
@@ -86,9 +86,9 @@ public class StudentController {
      * @return ResponseEntity
      */
     @GetMapping("/works/done")
-    public ResponseEntity<RestModel> getAllDoneWorks() {
+    public ResponseEntity<RestModel> getAllDoneWorks(@RequestHeader("Authorization") String authorization) {
         logger.debug("get all done works");
-        LoginUser loginUser = SessionUtils.getAttributeValueFromSession("loginUser", LoginUser.class);
+        LoginUser loginUser = JwtUtils.getLoginUser(authorization);
         logger.info("get login user: " + loginUser);
         List<WorkModel> workModels = modelMapper.map(workService.getStudentDoneWork(loginUser.getNo()), new TypeToken<List<WorkModel>>() {
         }.getType());
@@ -102,9 +102,9 @@ public class StudentController {
      * @return ResponseEntity
      */
     @GetMapping("/upload/{workId}")
-    public ResponseEntity<RestModel> getUpLoadInfoByWorkId(@PathVariable String workId) {
+    public ResponseEntity<RestModel> getUpLoadInfoByWorkId(@RequestHeader("Authorization") String authorization, @PathVariable String workId) {
         logger.debug("get upload info by work id");
-        LoginUser loginUser = SessionUtils.getAttributeValueFromSession("loginUser", LoginUser.class);
+        LoginUser loginUser = JwtUtils.getLoginUser(authorization);
         logger.info("get login user: " + loginUser);
         return ResponseEntity.ok(new RestModel<>(uploadService.getUploadInfoByWorkId(loginUser.getNo(), workId)));
     }
@@ -116,9 +116,9 @@ public class StudentController {
      * @return ResponseEntity
      */
     @PostMapping("/group")
-    public ResponseEntity<Group> addGroup(String code) {
+    public ResponseEntity<Group> addGroup(@RequestHeader("Authorization") String authorization, String code) {
         logger.debug("add group , code: " + code);
-        LoginUser loginUser = SessionUtils.getAttributeValueFromSession("loginUser", LoginUser.class);
+        LoginUser loginUser = JwtUtils.getLoginUser(authorization);
         logger.info("get login user: " + loginUser);
         return ResponseEntity.status(HttpStatus.CREATED).body(groupService.joinGroup(code, loginUser.getNo()));
     }
@@ -130,9 +130,9 @@ public class StudentController {
      * @return ResponseEntity
      */
     @DeleteMapping("/group/{groupId}")
-    public ResponseEntity<Void> dropOutGroup(@PathVariable String groupId) {
+    public ResponseEntity<Void> dropOutGroup(@RequestHeader("Authorization") String authorization, @PathVariable String groupId) {
         logger.debug("del group , id: " + groupId);
-        LoginUser loginUser = SessionUtils.getAttributeValueFromSession("loginUser", LoginUser.class);
+        LoginUser loginUser = JwtUtils.getLoginUser(authorization);
         logger.info("get login user: " + loginUser);
         groupService.dropOutGroup(groupId, loginUser.getNo());
         return ResponseEntity.noContent().build();
@@ -160,9 +160,9 @@ public class StudentController {
      * @return ResponseEntity
      */
     @DeleteMapping("/work/{workId}")
-    public ResponseEntity<Void> deleteUploadWork(@PathVariable String workId) {
+    public ResponseEntity<Void> deleteUploadWork(@RequestHeader("Authorization") String authorization, @PathVariable String workId) {
         logger.debug("delete Upload Work , workId: " + workId);
-        LoginUser loginUser = SessionUtils.getAttributeValueFromSession("loginUser", LoginUser.class);
+        LoginUser loginUser = JwtUtils.getLoginUser(authorization);
         logger.info("get login user: " + loginUser);
         uploadService.delUploadInfoByWorkId(loginUser.getNo(), workId);
         return ResponseEntity.noContent().build();
@@ -174,9 +174,9 @@ public class StudentController {
      * @return ResponseEntity
      */
     @GetMapping("/group/exist")
-    public ResponseEntity<RestModel> isStudentJoinAnyStudentGroup() {
+    public ResponseEntity<RestModel> isStudentJoinAnyStudentGroup(@RequestHeader("Authorization") String authorization) {
         logger.debug("is Student Join Any StudentGroup");
-        LoginUser loginUser = SessionUtils.getAttributeValueFromSession("loginUser", LoginUser.class);
+        LoginUser loginUser = JwtUtils.getLoginUser(authorization);
         logger.info("get login user: " + loginUser);
         return ResponseEntity.ok(new RestModel<>(studentGroupService.isHaveGroup(loginUser.getNo())));
     }
