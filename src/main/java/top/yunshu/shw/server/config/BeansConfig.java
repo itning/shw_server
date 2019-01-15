@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
  *
  * @author itning
  */
-@SuppressWarnings("all")
 @Component
 public class BeansConfig {
     /**
