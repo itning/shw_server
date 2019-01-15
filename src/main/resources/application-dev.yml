@@ -11,3 +11,5 @@ spring:
 logging:
   level: debug
   level.top: debug
+cas:
+  debug: true

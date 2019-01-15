@@ -8,3 +8,5 @@ spring:
 logging:
   level: error
   level.top: warn
+cas:
+  debug: false
