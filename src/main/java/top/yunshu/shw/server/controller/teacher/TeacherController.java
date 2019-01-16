@@ -65,7 +65,10 @@ public class TeacherController {
      * @return ResponseEntity
      */
     @PatchMapping("/group/{id}/{name}")
-    public ResponseEntity<Void> updateGroupName(@PathVariable String id, @PathVariable String name) {
+    public ResponseEntity<Void> updateGroupName(@RequestHeader("Authorization") String authorization, @PathVariable String id, @PathVariable String name) {
+        logger.debug("update group , name: " + name);
+        LoginUser loginUser = JwtUtils.getLoginUser(authorization);
+        logger.info("get login user: " + loginUser);
         groupService.updateGroup(id, name);
         return ResponseEntity.noContent().build();
     }
@@ -76,7 +79,10 @@ public class TeacherController {
      * @param id 删除的群组名
      */
     @DeleteMapping("/group/{id}")
-    public ResponseEntity<Void> deleteGroup(@PathVariable String id) {
+    public ResponseEntity<Void> deleteGroup(@RequestHeader("Authorization") String authorization, @PathVariable String id) {
+        logger.debug("delete group , id: " + id);
+        LoginUser loginUser = JwtUtils.getLoginUser(authorization);
+        logger.info("get login user: " + loginUser);
         groupService.deleteGroup(id);
         return ResponseEntity.noContent().build();
     }
