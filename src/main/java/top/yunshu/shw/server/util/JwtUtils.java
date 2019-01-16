@@ -1,14 +1,13 @@
 package top.yunshu.shw.server.util;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.*;
 import org.springframework.http.HttpStatus;
 import top.yunshu.shw.server.entity.LoginUser;
 import top.yunshu.shw.server.exception.CasException;
 
 import java.util.Date;
-
-import static top.yunshu.shw.server.cas.CasFilter.MAPPER;
 
 /**
  * Jwt 工具类
@@ -19,6 +18,7 @@ public class JwtUtils {
     private static final String PRIVATE_KEY = "hxcshw";
     private static final String LOGIN_USER = "loginUser";
     private static final String DEFAULT_STR = "null";
+    private static final ObjectMapper MAPPER = new ObjectMapper();
 
     private JwtUtils() {
 
@@ -51,7 +51,6 @@ public class JwtUtils {
             //获取自定义字段key
             String loginUserJson = claims.get(LOGIN_USER, String.class);
             LoginUser loginUser = MAPPER.readValue(loginUserJson, LoginUser.class);
-            System.out.println(loginUser);
             //判断自定义字段是否正确
             if (loginUser == null) {
                 throw new CasException("登陆失败", HttpStatus.UNAUTHORIZED);
