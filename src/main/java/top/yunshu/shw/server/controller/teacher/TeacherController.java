@@ -61,15 +61,17 @@ public class TeacherController {
      * @return ResponseEntity
      */
     @PatchMapping("/group/{id}/{name}")
-    public ResponseEntity<Group> updateGroupName(@PathVariable String id, @PathVariable String name) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(groupService.updateGroup(id, name));
+    public ResponseEntity<Void> updateGroupName(@PathVariable String id, @PathVariable String name) {
+        groupService.updateGroup(id, name);
+        return ResponseEntity.noContent().build();
     }
 
     /**
      * @param id 删除的群组名
      */
     @DeleteMapping("/group/{id}")
-    public void deleteGroup(@PathVariable String id) {
+    public ResponseEntity<Void> deleteGroup(@PathVariable String id) {
         groupService.deleteGroup(id);
+        return ResponseEntity.noContent().build();
     }
 }
