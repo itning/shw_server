@@ -86,4 +86,17 @@ public class TeacherController {
         groupService.deleteGroup(id, loginUser.getNo());
         return ResponseEntity.noContent().build();
     }
+
+    /**
+     * 查询教师是否有群组
+     *
+     * @return ResponseEntity
+     */
+    @GetMapping("/group/exist")
+    public ResponseEntity<RestModel> isTeacherHaveAnyGroup(@RequestHeader("Authorization") String authorization) {
+        logger.debug("is Teacher Have Any Group");
+        LoginUser loginUser = JwtUtils.getLoginUser(authorization);
+        logger.info("get login user: " + loginUser);
+        return ResponseEntity.ok(new RestModel<>(groupService.isHaveAnyGroup(loginUser.getNo())));
+    }
 }

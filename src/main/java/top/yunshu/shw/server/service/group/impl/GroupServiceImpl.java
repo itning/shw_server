@@ -116,4 +116,9 @@ public class GroupServiceImpl implements GroupService {
         }
         return groupDao.findTeacherNameById(groupId);
     }
+
+    @Override
+    public boolean isHaveAnyGroup(String teacherNumber) {
+        return !groupDao.findByTeacherNumber(teacherNumber).isEmpty();
+    }
 }

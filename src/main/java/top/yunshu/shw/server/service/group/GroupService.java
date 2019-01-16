@@ -94,4 +94,12 @@ public interface GroupService {
      */
     String findTeacherNameById(String groupId);
 
+    /**
+     * 检查教师是否有群组
+     *
+     * @param teacherNumber 教师ID
+     * @return 有返回<code>true</code>
+     */
+    boolean isHaveAnyGroup(String teacherNumber);
+
 }
