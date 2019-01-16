@@ -44,6 +44,8 @@ public class TeacherController {
     }
 
     /**
+     * 新建群组
+     *
      * @param groupName 教师添加的组名
      * @return ResponseEntity
      */
@@ -56,6 +58,8 @@ public class TeacherController {
     }
 
     /**
+     * 更新群组
+     *
      * @param name 修改的新群组名
      * @param id   群组id
      * @return ResponseEntity
@@ -67,6 +71,8 @@ public class TeacherController {
     }
 
     /**
+     * 删除群组
+     *
      * @param id 删除的群组名
      */
     @DeleteMapping("/group/{id}")
