@@ -69,7 +69,7 @@ public class TeacherController {
         logger.debug("update group , name: " + name);
         LoginUser loginUser = JwtUtils.getLoginUser(authorization);
         logger.info("get login user: " + loginUser);
-        groupService.updateGroup(id, name);
+        groupService.updateGroup(id, name, loginUser.getNo());
         return ResponseEntity.noContent().build();
     }
 
@@ -83,7 +83,7 @@ public class TeacherController {
         logger.debug("delete group , id: " + id);
         LoginUser loginUser = JwtUtils.getLoginUser(authorization);
         logger.info("get login user: " + loginUser);
-        groupService.deleteGroup(id);
+        groupService.deleteGroup(id, loginUser.getNo());
         return ResponseEntity.noContent().build();
     }
 }

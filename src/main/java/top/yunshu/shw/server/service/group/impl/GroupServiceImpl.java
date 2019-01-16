@@ -83,13 +83,20 @@ public class GroupServiceImpl implements GroupService {
 
 
     @Override
-    public void deleteGroup(String id) {
-        groupDao.deleteById(id);
+    public void deleteGroup(String id, String teacherNumber) {
+        Group group = groupDao.findById(id).orElseThrow(() -> new NoSuchFiledValueException("id: " + id + " not found", HttpStatus.NOT_FOUND));
+        if (!group.getTeacherNumber().equals(teacherNumber)) {
+            throw new NoSuchFiledValueException("id: " + id + " not found", HttpStatus.NOT_FOUND);
+        }
+        groupDao.delete(group);
     }
 
     @Override
-    public Group updateGroup(String id, String name) {
-        Group group = groupDao.findById(id).orElseThrow(() -> new NoSuchFiledValueException("id: " + id + " not found", HttpStatus.NOT_FOUND));
+    public Group updateGroup(String id, String name, String teacherNumber) {
+        Group group = groupDao.findById(id).orElseThrow(() -> new NoSuchFiledValueException("id: " + id + " not found ", HttpStatus.NOT_FOUND));
+        if (!group.getTeacherNumber().equals(teacherNumber)) {
+            throw new NoSuchFiledValueException("id: " + id + " not found", HttpStatus.NOT_FOUND);
+        }
         group.setGroupName(name);
         return groupDao.save(group);
     }

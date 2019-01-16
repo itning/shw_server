@@ -60,19 +60,21 @@ public interface GroupService {
     /**
      * 删除已有群组
      *
-     * @param id 群组ID
+     * @param teacherNumber 教师ID
+     * @param id            群组ID
      */
-    void deleteGroup(String id);
+    void deleteGroup(String id, String teacherNumber);
 
     /**
      * 修改已有群组名
      *
-     * @param id   需要修改的群组ID
-     * @param name 新群组名
+     * @param id            需要修改的群组ID
+     * @param name          新群组名
+     * @param teacherNumber 教师ID
      * @return 修改后的群组
      * @throws NoSuchFiledValueException Id不存在
      */
-    Group updateGroup(String id, String name);
+    Group updateGroup(String id, String name, String teacherNumber);
 
     /**
      * 根据群ID查询群名称
