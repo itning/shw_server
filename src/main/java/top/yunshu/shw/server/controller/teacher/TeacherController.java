@@ -35,7 +35,7 @@ public class TeacherController {
      *
      * @return ResponseEntity
      */
-    @GetMapping("/getTeacherCreateGroups")
+    @GetMapping("/groups")
     public ResponseEntity<RestModel> getTeacherCreateGroups(@RequestHeader("Authorization") String authorization) {
         logger.debug("get all teacher groups");
         LoginUser loginUser = JwtUtils.getLoginUser(authorization);
@@ -44,35 +44,32 @@ public class TeacherController {
     }
 
     /**
-     *
      * @param groupName 教师添加的组名
      * @return ResponseEntity
      */
-    @PostMapping("/add")
-    public ResponseEntity<Group> addGroup(@RequestHeader("Authorization") String authorization,String groupName) {
+    @PostMapping("/group")
+    public ResponseEntity<Group> addGroup(@RequestHeader("Authorization") String authorization, String groupName) {
         logger.debug("add group , groupName: " + groupName);
         LoginUser loginUser = JwtUtils.getLoginUser(authorization);
         logger.info("get login user: " + loginUser);
-        return ResponseEntity.status(HttpStatus.CREATED).body(groupService.createGroup(groupName,loginUser.getName(),loginUser.getNo()));
+        return ResponseEntity.status(HttpStatus.CREATED).body(groupService.createGroup(groupName, loginUser.getName(), loginUser.getNo()));
     }
 
     /**
-     *
      * @param name 修改的新群组名
-     * @param id 群组id
+     * @param id   群组id
      * @return ResponseEntity
      */
-    @PatchMapping("/update")
-    public ResponseEntity<Group> updateGroupName(String name,String id){
-        return ResponseEntity.status(HttpStatus.CREATED).body(groupService.updateGroup(id,name));
+    @PatchMapping("/group/{id}/{name}")
+    public ResponseEntity<Group> updateGroupName(@PathVariable String id, @PathVariable String name) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(groupService.updateGroup(id, name));
     }
 
     /**
-     *
      * @param id 删除的群组名
      */
-    @DeleteMapping("/delete")
-    public void deleteGroup(String id){
+    @DeleteMapping("/group/{id}")
+    public void deleteGroup(@PathVariable String id) {
         groupService.deleteGroup(id);
     }
 }
