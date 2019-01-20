@@ -81,10 +81,9 @@ public class WorkServiceImpl implements WorkService {
 
     @Override
     public void changeEnabledWord(String workId, boolean enabled) {
-        if (!workDao.existsById(workId)) {
-            throw new NoSuchFiledValueException("作业ID: " + workId + "不存在", HttpStatus.NOT_FOUND);
-        }
-        workDao.updateEnabled(workId, enabled);
+        Work work = workDao.findById(workId).orElseThrow(() -> new NoSuchFiledValueException("作业ID: " + workId + "不存在", HttpStatus.NOT_FOUND));
+        work.setEnabled(enabled);
+        workDao.save(work);
     }
 
     @Override

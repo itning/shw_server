@@ -1,7 +1,6 @@
 package top.yunshu.shw.server.dao;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 import top.yunshu.shw.server.entity.Work;
 
 import java.util.List;
@@ -34,7 +33,4 @@ public interface WorkDao extends JpaRepository<Work, String> {
      * @return 做业集合
      */
     List<Work> findAllByGroupIdAndEnabledIsTrue(String groupId);
-
-    @Query("update Work w set w.enabled=?2 where w.id=?1")
-    void updateEnabled(String workId, boolean enabled);
 }
