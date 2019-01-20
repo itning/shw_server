@@ -25,4 +25,48 @@ public interface WorkService {
      * @return 已交作业集合
      */
     List<Work> getStudentDoneWork(String studentId);
+
+    /**
+     * 获取教师的所有作业信息
+     *
+     * @param teacherNumber 教师编号
+     * @return 作业信息集合
+     */
+    List<Work> getTeacherAllWork(String teacherNumber);
+
+    /**
+     * 根据群ID获取教师的作业信息
+     *
+     * @param teacherNumber 教师编号
+     * @param groupId       群ID
+     * @return 作业信息集合
+     */
+    List<Work> getTeacherWork(String teacherNumber, String groupId);
+
+    /**
+     * 创建作业
+     *
+     * @param workName 作业名
+     * @param groupId  所属群ID
+     * @param format   文件名规范
+     * @param enabled  是否开启
+     * @return 创建好的作业
+     */
+    Work createWork(String workName, String groupId, String format, boolean enabled);
+
+    /**
+     * 更改作业开启状态
+     *
+     * @param workId  作业ID
+     * @param enabled 是否开启
+     */
+    void changeEnabledWord(String workId, boolean enabled);
+
+    /**
+     * 删除作业
+     *
+     * @param workId        作业ID
+     * @param teacherNumber 教师编号
+     */
+    void delWork(String workId, String teacherNumber);
 }
