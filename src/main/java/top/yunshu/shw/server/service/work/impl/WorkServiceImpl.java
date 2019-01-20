@@ -92,7 +92,7 @@ public class WorkServiceImpl implements WorkService {
         Work work = workDao.findById(workId).orElseThrow(() -> new NoSuchFiledValueException("作业ID: " + workId + "不存在", HttpStatus.NOT_FOUND));
         Group group = groupDao.findById(work.getGroupId()).orElseThrow(() -> new NoSuchFiledValueException("群ID: " + work.getGroupId() + "不存在", HttpStatus.INTERNAL_SERVER_ERROR));
         if (!group.getTeacherNumber().equals(teacherNumber)) {
-            throw new NoSuchFiledValueException("workId: " + workId + " not found", HttpStatus.FORBIDDEN);
+            throw new NoSuchFiledValueException("Forbidden", HttpStatus.FORBIDDEN);
         }
         workDao.delete(work);
     }
