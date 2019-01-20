@@ -106,7 +106,7 @@ public class TeacherController {
     }
 
     /**
-     * 获取教师所有工作
+     * 获取教师所有作业
      *
      * @return ResponseEntity
      */
