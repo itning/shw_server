@@ -10,3 +10,5 @@ logging:
   level.top: warn
 cas:
   debug: false
+  login-success-url: http://localhost:8090
+  local-server-url: http://localhost:8080

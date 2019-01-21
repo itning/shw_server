@@ -22,6 +22,4 @@ cas:
   server-url: http://login.greathiit.com
   login-url: http://login.greathiit.com/login
   logout-url: http://login.greathiit.com/logout
-  login-success-url: http://localhost:8090
-  local-server-url: http://localhost:8080
 datasource_url_end_str: ?createDatabaseIfNotExist=true&useUnicode=true&characterEncoding=utf-8&useSSL=false&autoReconnect=true&failOverReadOnly=false&connectTimeout=0&serverTimezone=Asia/Shanghai&useLegacyDatetimeCode=false
