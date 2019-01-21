@@ -1,5 +1,7 @@
 package top.yunshu.shw.server.controller.teacher;
 
+import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,9 +12,12 @@ import top.yunshu.shw.server.entity.Group;
 import top.yunshu.shw.server.entity.LoginUser;
 import top.yunshu.shw.server.entity.RestModel;
 import top.yunshu.shw.server.entity.Work;
+import top.yunshu.shw.server.model.WorkModel;
 import top.yunshu.shw.server.service.group.GroupService;
 import top.yunshu.shw.server.service.work.WorkService;
 import top.yunshu.shw.server.util.JwtUtils;
+
+import java.util.List;
 
 /**
  * 教师控制器
@@ -29,10 +34,13 @@ public class TeacherController {
 
     private final WorkService workService;
 
+    private final ModelMapper modelMapper;
+
     @Autowired
-    public TeacherController(GroupService groupService, WorkService workService) {
+    public TeacherController(GroupService groupService, WorkService workService, ModelMapper modelMapper) {
         this.groupService = groupService;
         this.workService = workService;
+        this.modelMapper = modelMapper;
     }
 
     /**
@@ -129,7 +137,9 @@ public class TeacherController {
         logger.debug("get teacher work");
         LoginUser loginUser = JwtUtils.getLoginUser(authorization);
         logger.info("get login user: " + loginUser);
-        return ResponseEntity.ok(new RestModel<>(workService.getTeacherWork(loginUser.getNo(), groupId)));
+        List<WorkModel> workModels = modelMapper.map(workService.getTeacherWork(loginUser.getNo(), groupId), new TypeToken<List<WorkModel>>() {
+        }.getType());
+        return ResponseEntity.ok(new RestModel<>(workModels));
     }
 
     /**
