@@ -13,7 +13,6 @@ import top.yunshu.shw.server.entity.LoginUser;
 import top.yunshu.shw.server.entity.RestModel;
 import top.yunshu.shw.server.util.JwtUtils;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -43,11 +42,8 @@ public class JwtCasCallBackImpl implements ICasCallback {
     public void onLoginSuccess(HttpServletResponse resp, HttpServletRequest req, Map<String, String> attributesMap) throws IOException {
         LoginUser loginUser = map2userLoginEntity(attributesMap);
         String jwt = JwtUtils.buildJwt(loginUser);
-        Cookie cookie = new Cookie("Authorization", jwt);
-        cookie.setMaxAge(60);
-        resp.addCookie(cookie);
         //重定向到登陆成功需要跳转的地址
-        resp.sendRedirect(casProperties.getLoginSuccessUrl().toString());
+        resp.sendRedirect(casProperties.getLoginSuccessUrl().toString() + "/token/" + jwt);
     }
 
     @Override
