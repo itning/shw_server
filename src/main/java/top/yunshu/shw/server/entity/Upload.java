@@ -22,11 +22,13 @@ public class Upload implements Serializable {
      * 学生ID
      */
     @Id
+    @Column(length = 50)
     private String studentId;
     /**
      * 作业ID
      */
     @Id
+    @Column(length = 50)
     private String workId;
     /**
      * 文件类型

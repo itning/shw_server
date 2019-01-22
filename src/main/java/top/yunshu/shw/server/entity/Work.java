@@ -21,11 +21,12 @@ public class Work implements Serializable {
      * 作业ID，标识唯一作业
      */
     @Id
+    @Column(length = 50)
     private String id;
     /**
      * 群组ID，该作业所属群
      */
-    @Column(name = "group_id", nullable = false)
+    @Column(name = "group_id", nullable = false, length = 50)
     private String groupId;
     /**
      * 作业名

@@ -22,11 +22,13 @@ public class StudentGroup implements Serializable {
      * StudentGroup ID
      */
     @Id
+    @Column(length = 50)
     private String studentNumber;
     /**
      * Group ID
      */
     @Id
+    @Column(length = 50)
     private String groupID;
     /**
      * 创建时间

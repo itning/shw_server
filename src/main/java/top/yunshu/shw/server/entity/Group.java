@@ -25,6 +25,7 @@ public class Group implements Serializable {
      * 群组ID
      */
     @Id
+    @Column(length = 50)
     private String id;
     /**
      * 群组名
@@ -39,12 +40,12 @@ public class Group implements Serializable {
     /**
      * 教师序号
      */
-    @Column(name = "teacher_number", nullable = false)
+    @Column(name = "teacher_number", nullable = false, length = 50)
     private String teacherNumber;
     /**
      * 邀请码
      */
-    @Column(name = "code", nullable = false, unique = true)
+    @Column(name = "code", nullable = false, unique = true, length = 50)
     private String code;
     /**
      * 创建时间

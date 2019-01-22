@@ -21,6 +21,7 @@ public class Notice implements Serializable {
      * 标识通知
      */
     @Id
+    @Column(length = 50)
     private String id;
     /**
      * 邀请人
@@ -35,7 +36,7 @@ public class Notice implements Serializable {
     /**
      * 被邀请人学号
      */
-    @Column(name = "student_number", nullable = false)
+    @Column(name = "student_number", nullable = false, length = 50)
     private String studentNumber;
     /**
      * 创建时间
