@@ -187,4 +187,12 @@ public class TeacherController {
         workService.delWork(workId, loginUser.getNo());
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/work_detail/{workId}")
+    public ResponseEntity<RestModel> getTeacherWorkDetails(@RequestHeader("Authorization") String authorization, @PathVariable String workId) {
+        logger.debug("get teacher work detail, work id " + workId);
+        LoginUser loginUser = JwtUtils.getLoginUser(authorization);
+        logger.info("get login user: " + loginUser);
+        return ResponseEntity.ok(new RestModel<>(workService.getWorkDetailByWorkId(loginUser.getNo(),workId)));
+    }
 }

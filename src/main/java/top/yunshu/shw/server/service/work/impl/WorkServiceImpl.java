@@ -5,13 +5,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import top.yunshu.shw.server.dao.GroupDao;
-import top.yunshu.shw.server.dao.StudentGroupDao;
-import top.yunshu.shw.server.dao.UploadDao;
-import top.yunshu.shw.server.dao.WorkDao;
-import top.yunshu.shw.server.entity.Group;
-import top.yunshu.shw.server.entity.Work;
+import top.yunshu.shw.server.dao.*;
+import top.yunshu.shw.server.entity.*;
 import top.yunshu.shw.server.exception.NoSuchFiledValueException;
+import top.yunshu.shw.server.model.WorkDetailsModel;
 import top.yunshu.shw.server.service.work.WorkService;
 
 import java.util.Collection;
@@ -36,12 +33,15 @@ public class WorkServiceImpl implements WorkService {
 
     private final GroupDao groupDao;
 
+    private final StudentDao studentDao;
+
     @Autowired
-    public WorkServiceImpl(WorkDao workDao, StudentGroupDao studentGroupDao, UploadDao uploadDao, GroupDao groupDao) {
+    public WorkServiceImpl(WorkDao workDao, StudentGroupDao studentGroupDao, UploadDao uploadDao, GroupDao groupDao, StudentDao studentDao) {
         this.workDao = workDao;
         this.studentGroupDao = studentGroupDao;
         this.uploadDao = uploadDao;
         this.groupDao = groupDao;
+        this.studentDao = studentDao;
     }
 
     @Override
@@ -94,5 +94,31 @@ public class WorkServiceImpl implements WorkService {
             throw new NoSuchFiledValueException("Forbidden", HttpStatus.FORBIDDEN);
         }
         workDao.delete(work);
+    }
+
+    @Override
+    public List<WorkDetailsModel> getWorkDetailByWorkId(String teacherNumber, String workId) {
+        Work work = workDao.findById(workId).orElseThrow(() -> new NoSuchFiledValueException("作业ID: " + workId + "不存在", HttpStatus.NOT_FOUND));
+        Group group = groupDao.findById(work.getGroupId()).orElseThrow(() -> new NoSuchFiledValueException("群ID: " + work.getGroupId() + "不存在", HttpStatus.NOT_FOUND));
+        if (!group.getTeacherNumber().equals(teacherNumber)) {
+            throw new NoSuchFiledValueException("作业ID: " + workId + "不存在", HttpStatus.FORBIDDEN);
+        }
+        //所有加入该群组的学生
+        List<StudentGroup> studentGroupList = studentGroupDao.findAllByGroupID(work.getGroupId());
+        return studentGroupList.parallelStream().map(studentGroup -> {
+            //根据学生学号和作业ID查找所有已上传的信息
+            Upload upload = uploadDao.findUploadByStudentIdAndWorkId(studentGroup.getStudentNumber(), workId);
+            //查找学生信息
+            Student student = studentDao.findById(studentGroup.getStudentNumber()).orElse(new Student());
+            student.setNo(studentGroup.getStudentNumber());
+            student.setLoginName("");
+            WorkDetailsModel workDetailsModel = new WorkDetailsModel();
+            workDetailsModel.setUpload(upload);
+            workDetailsModel.setStudent(student);
+            workDetailsModel.setWorkName(work.getWorkName());
+            workDetailsModel.setUp(upload != null);
+            workDetailsModel.setGroupName(group.getGroupName());
+            return workDetailsModel;
+        }).collect(Collectors.toList());
     }
 }

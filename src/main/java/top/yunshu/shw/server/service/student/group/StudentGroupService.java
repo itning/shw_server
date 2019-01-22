@@ -13,4 +13,6 @@ public interface StudentGroupService {
      * @return 有群组返回真
      */
     boolean isHaveGroup(String studentNumber);
+
+
 }

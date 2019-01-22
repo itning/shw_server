@@ -1,6 +1,7 @@
 package top.yunshu.shw.server.service.work;
 
 import top.yunshu.shw.server.entity.Work;
+import top.yunshu.shw.server.model.WorkDetailsModel;
 
 import java.util.List;
 
@@ -69,4 +70,13 @@ public interface WorkService {
      * @param teacherNumber 教师编号
      */
     void delWork(String workId, String teacherNumber);
+
+    /**
+     * 根据作业ID查询作业上交情况
+     *
+     * @param teacherNumber 教师编号
+     * @param workId        作业ID
+     * @return 作业上交情况集合
+     */
+    List<WorkDetailsModel> getWorkDetailByWorkId(String teacherNumber, String workId);
 }

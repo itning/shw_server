@@ -9,8 +9,10 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import top.itning.cas.CasProperties;
 import top.itning.cas.ICasCallback;
+import top.yunshu.shw.server.dao.StudentDao;
 import top.yunshu.shw.server.entity.LoginUser;
 import top.yunshu.shw.server.entity.RestModel;
+import top.yunshu.shw.server.entity.Student;
 import top.yunshu.shw.server.util.JwtUtils;
 
 import javax.servlet.http.HttpServletRequest;
@@ -30,17 +32,29 @@ public class JwtCasCallBackImpl implements ICasCallback {
     private static final Logger logger = LoggerFactory.getLogger(JwtCasCallBackImpl.class);
     private static final ObjectMapper MAPPER = new ObjectMapper();
     private static final String LOGIN_NAME = "loginName";
+    private static final String STUDENT_USER_TYPE = "99";
 
     private final CasProperties casProperties;
 
+    private final StudentDao studentDao;
+
     @Autowired
-    public JwtCasCallBackImpl(CasProperties casProperties) {
+    public JwtCasCallBackImpl(CasProperties casProperties, StudentDao studentDao) {
         this.casProperties = casProperties;
+        this.studentDao = studentDao;
     }
 
     @Override
     public void onLoginSuccess(HttpServletResponse resp, HttpServletRequest req, Map<String, String> attributesMap) throws IOException {
         LoginUser loginUser = map2userLoginEntity(attributesMap);
+        if (STUDENT_USER_TYPE.equals(loginUser.getUserType())) {
+            Student student = new Student();
+            student.setNo(loginUser.getNo());
+            student.setLoginName(loginUser.getLoginName());
+            student.setName(loginUser.getName());
+            student.setClazzId(loginUser.getClazzId());
+            studentDao.saveAndFlush(student);
+        }
         String jwt = JwtUtils.buildJwt(loginUser);
         //重定向到登陆成功需要跳转的地址
         resp.sendRedirect(casProperties.getLoginSuccessUrl().toString() + "/token/" + jwt);
