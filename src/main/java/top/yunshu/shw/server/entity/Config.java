@@ -14,6 +14,14 @@ import java.io.Serializable;
 public class Config implements Serializable {
     public enum ConfigKey {
         /**
+         * 控制面板用户名
+         */
+        USERNAME("username"),
+        /**
+         * 控制面板密码
+         */
+        PASSWORD("password"),
+        /**
          * 文件仓库地址
          */
         FILE_REPOSITORY_PATH("file_repository_path"),
