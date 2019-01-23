@@ -123,7 +123,9 @@ public class TeacherController {
         logger.debug("get teacher works");
         LoginUser loginUser = JwtUtils.getLoginUser(authorization);
         logger.info("get login user: " + loginUser);
-        return ResponseEntity.ok(new RestModel<>(workService.getTeacherAllWork(loginUser.getNo())));
+        List<WorkModel> workModels = modelMapper.map(workService.getTeacherAllWork(loginUser.getNo()), new TypeToken<List<WorkModel>>() {
+        }.getType());
+        return ResponseEntity.ok(new RestModel<>(workModels));
     }
 
     /**
@@ -193,6 +195,6 @@ public class TeacherController {
         logger.debug("get teacher work detail, work id " + workId);
         LoginUser loginUser = JwtUtils.getLoginUser(authorization);
         logger.info("get login user: " + loginUser);
-        return ResponseEntity.ok(new RestModel<>(workService.getWorkDetailByWorkId(loginUser.getNo(),workId)));
+        return ResponseEntity.ok(new RestModel<>(workService.getWorkDetailByWorkId(loginUser.getNo(), workId)));
     }
 }
