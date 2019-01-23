@@ -135,6 +135,26 @@ public class AdminController {
         return "redirect:/config/init";
     }
 
+    /**
+     * 设置用户名密码
+     *
+     * @param username 用户名
+     * @param password 密码
+     * @param session  {@link HttpSession}
+     * @return ...
+     */
+    @PostMapping("/config/user")
+    public String user(String username, String password, HttpSession session) {
+        if (session.getAttribute(USER) == null) {
+            return "redirect:/config/login";
+        }
+        if (StringUtils.isNoneBlank(username, password)) {
+            configService.saveConfig(Config.ConfigKey.USERNAME, username);
+            configService.saveConfig(Config.ConfigKey.PASSWORD, password);
+        }
+        return "redirect:/config";
+    }
+
     @GetMapping("/config")
     public String index(Model model, HttpSession session) {
         if (session.getAttribute(USER) == null) {

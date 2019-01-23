@@ -125,6 +125,25 @@
             <input class="mdui-btn mdui-btn-raised mdui-ripple mdui-color-theme-accent" type="submit" value="保存"/>
         </div>
     </form>
+    <form th:action="@{/config/user}" method="post" class="mdui-card">
+        <div class="mdui-card-content">
+            <div class="mdui-textfield mdui-textfield-floating-label">
+                <label class="mdui-textfield-label">登陆用户名</label>
+                <!--/*@thymesVar id="username" type="java.lang.String"*/-->
+                <input class="mdui-textfield-input" name="username" type="text"
+                       th:value="${username}" required/>
+                <div class="mdui-textfield-error">必填</div>
+            </div>
+            <div class="mdui-textfield mdui-textfield-floating-label">
+                <label class="mdui-textfield-label">登陆密码</label>
+                <!--/*@thymesVar id="password" type="java.lang.String"*/-->
+                <input class="mdui-textfield-input" name="password" type="text"
+                       th:value="${password}" required/>
+                <div class="mdui-textfield-error">必填</div>
+            </div>
+            <input class="mdui-btn mdui-btn-raised mdui-ripple mdui-color-theme-accent" type="submit" value="保存"/>
+        </div>
+    </form>
 </section>
 <script th:src="@{/config/mdui/js/mdui.min.js}"></script>
 <script th:inline="javascript">
