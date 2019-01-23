@@ -155,6 +155,13 @@ public class AdminController {
         return "redirect:/config";
     }
 
+    /**
+     * 主页
+     *
+     * @param model   {@link Model}
+     * @param session {@link HttpSession}
+     * @return ...
+     */
     @GetMapping("/config")
     public String index(Model model, HttpSession session) {
         if (session.getAttribute(USER) == null) {
@@ -178,6 +185,13 @@ public class AdminController {
         return "config";
     }
 
+    /**
+     * 设置文件目录
+     *
+     * @param name    目录
+     * @param session {@link HttpSession}
+     * @return "redirect:/config"
+     */
     @PostMapping("/config/filePath")
     public String saveFilePath(String name, HttpSession session) {
         if (session.getAttribute(USER) == null) {
@@ -189,6 +203,13 @@ public class AdminController {
         return "redirect:/config";
     }
 
+    /**
+     * 设置CAS SERVER
+     *
+     * @param name    URL
+     * @param session {@link HttpSession}
+     * @return "redirect:/config"
+     */
     @PostMapping("/config/casServerUrl")
     public String saveCasServerUrl(String name, HttpSession session) {
         if (session.getAttribute(USER) == null) {
@@ -200,6 +221,13 @@ public class AdminController {
         return "redirect:/config";
     }
 
+    /**
+     * 设置CAS LOGIN
+     *
+     * @param name    URL
+     * @param session {@link HttpSession}
+     * @return "redirect:/config"
+     */
     @PostMapping("/config/casLoginUrl")
     public String saveCasLoginUrl(String name, HttpSession session) {
         if (session.getAttribute(USER) == null) {
@@ -211,6 +239,13 @@ public class AdminController {
         return "redirect:/config";
     }
 
+    /**
+     * 设置CAS LOGOUT
+     *
+     * @param name    URL
+     * @param session {@link HttpSession}
+     * @return "redirect:/config"
+     */
     @PostMapping("/config/casLogoutUrl")
     public String saveCasLogoutUrl(String name, HttpSession session) {
         if (session.getAttribute(USER) == null) {
@@ -222,6 +257,13 @@ public class AdminController {
         return "redirect:/config";
     }
 
+    /**
+     * 设置CAS LOGIN SUCCESS
+     *
+     * @param name    URL
+     * @param session {@link HttpSession}
+     * @return "redirect:/config"
+     */
     @PostMapping("/config/loginSuccessUrl")
     public String saveLoginSuccessUrl(String name, HttpSession session) {
         if (session.getAttribute(USER) == null) {
@@ -233,6 +275,13 @@ public class AdminController {
         return "redirect:/config";
     }
 
+    /**
+     * 设置CAS LOCAL SERVER
+     *
+     * @param name    URL
+     * @param session {@link HttpSession}
+     * @return "redirect:/config"
+     */
     @PostMapping("/config/localServerUrl")
     public String saveLocalServerUrl(String name, HttpSession session) {
         if (session.getAttribute(USER) == null) {

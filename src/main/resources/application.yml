@@ -23,6 +23,7 @@ cas:
   logout-url: http://login.greathiit.com/logout
   exclude:
     - '/config'
+    - '/student/down'
 management:
   endpoints:
     web:

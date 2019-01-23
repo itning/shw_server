@@ -166,6 +166,13 @@
             <input class="mdui-btn mdui-btn-raised mdui-ripple mdui-color-theme-accent" type="submit" value="保存"/>
         </div>
     </form>
+    <div class="mdui-dialog" id="dialog">
+        <div class="mdui-dialog-title">错误</div>
+        <div class="mdui-dialog-content">目录路径不正确,请检查!</div>
+        <div class="mdui-dialog-actions">
+            <button class="mdui-btn mdui-ripple" mdui-dialog-cancel>确定</button>
+        </div>
+    </div>
 </section>
 <script th:src="@{/config/mdui/js/mdui.min.js}"></script>
 <script th:inline="javascript">
@@ -210,8 +217,7 @@
             f = getFormatFileSize(f);
             $$('#fileSpace').text('剩余空间：' + f);
         } else {
-            mdui.alert('目录路径不正确,请检查', function () {
-            }, {history: false});
+            new mdui.Dialog('#dialog', {history: false}).open();
         }
         $$.ajax({
             method: 'GET',

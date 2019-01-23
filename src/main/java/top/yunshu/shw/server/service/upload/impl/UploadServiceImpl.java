@@ -3,6 +3,7 @@ package top.yunshu.shw.server.service.upload.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import top.yunshu.shw.server.dao.UploadDao;
 import top.yunshu.shw.server.dao.WorkDao;
 import top.yunshu.shw.server.entity.Upload;
@@ -10,6 +11,7 @@ import top.yunshu.shw.server.entity.Work;
 import top.yunshu.shw.server.exception.NullFiledException;
 import top.yunshu.shw.server.exception.PermissionsException;
 import top.yunshu.shw.server.service.upload.UploadService;
+import top.yunshu.shw.server.util.FileUtils;
 
 /**
  * 上传历史服务实现
@@ -52,4 +54,17 @@ public class UploadServiceImpl implements UploadService {
         Upload upload = uploadDao.findUploadByStudentIdAndWorkId(studentId, workId);
         uploadDao.delete(upload);
     }
+
+    @Override
+    public void uploadFile(MultipartFile file, String studentNumber, String workId) {
+        Upload upload = new Upload();
+        upload.setStudentId(studentNumber);
+        upload.setWorkId(workId);
+        upload.setMime(file.getContentType());
+        upload.setSize(file.getSize());
+        upload.setExtensionName(FileUtils.getExtensionName(file));
+        uploadDao.save(upload);
+    }
+
+
 }

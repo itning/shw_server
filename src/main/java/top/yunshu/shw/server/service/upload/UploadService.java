@@ -1,5 +1,6 @@
 package top.yunshu.shw.server.service.upload;
 
+import org.springframework.web.multipart.MultipartFile;
 import top.yunshu.shw.server.entity.Upload;
 
 /**
@@ -25,4 +26,13 @@ public interface UploadService {
      * @param workId    作业ID
      */
     void delUploadInfoByWorkId(String studentId, String workId);
+
+    /**
+     * 上传文件
+     *
+     * @param file          {@link MultipartFile}
+     * @param studentNumber 学号
+     * @param workId        作业ID
+     */
+    void uploadFile(MultipartFile file, String studentNumber, String workId);
 }

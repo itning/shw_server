@@ -3,7 +3,6 @@ package top.yunshu.shw.server.entity;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -13,7 +12,9 @@ import java.util.Date;
 
 /**
  * 上传
+ *
  * @author shulu
+ * @author itning
  */
 @Entity
 @IdClass(UploadPrimaryKey.class)
@@ -36,10 +37,15 @@ public class Upload implements Serializable {
     @Column(nullable = false)
     private String mime;
     /**
-     * 文件大小
+     * 扩展名
      */
     @Column(nullable = false)
-    private Double size;
+    private String extensionName;
+    /**
+     * 文件大小(bytes)
+     */
+    @Column(nullable = false)
+    private long size;
     /**
      * 创建时间
      */
@@ -54,13 +60,6 @@ public class Upload implements Serializable {
     private Date gmtModified;
 
     public Upload() {
-    }
-
-    public Upload(String studentId, String workId, String mime, Double size) {
-        this.studentId = studentId;
-        this.workId = workId;
-        this.mime = mime;
-        this.size = size;
     }
 
     public String getStudentId() {
@@ -87,11 +86,19 @@ public class Upload implements Serializable {
         this.mime = mime;
     }
 
-    public Double getSize() {
+    public String getExtensionName() {
+        return extensionName;
+    }
+
+    public void setExtensionName(String extensionName) {
+        this.extensionName = extensionName;
+    }
+
+    public long getSize() {
         return size;
     }
 
-    public void setSize(Double size) {
+    public void setSize(long size) {
         this.size = size;
     }
 
@@ -117,6 +124,7 @@ public class Upload implements Serializable {
                 "studentId='" + studentId + '\'' +
                 ", workId='" + workId + '\'' +
                 ", mime='" + mime + '\'' +
+                ", extensionName='" + extensionName + '\'' +
                 ", size=" + size +
                 ", gmtCreate=" + gmtCreate +
                 ", gmtModified=" + gmtModified +
