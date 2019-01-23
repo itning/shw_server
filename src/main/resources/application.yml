@@ -10,7 +10,7 @@ spring:
   mvc:
     throw-exception-if-no-handler-found: true
   resources:
-    add-mappings: false
+    add-mappings: true
   jackson:
     time-zone: Asia/Shanghai
   servlet:
@@ -21,4 +21,6 @@ cas:
   server-url: http://login.greathiit.com
   login-url: http://login.greathiit.com/login
   logout-url: http://login.greathiit.com/logout
+  exclude:
+    - '/config'
 datasource_url_end_str: ?createDatabaseIfNotExist=true&useUnicode=true&characterEncoding=UTF-8&useSSL=false&autoReconnect=true&failOverReadOnly=false&connectTimeout=0&serverTimezone=Asia/Shanghai&useLegacyDatetimeCode=false

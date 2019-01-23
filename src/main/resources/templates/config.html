@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <link rel="shortcut icon" type="image/png" href="//www.greathiit.com/favicon.ico"/>
+    <link rel="stylesheet" th:href="@{/config/mdui/css/mdui.min.css}">
+    <title>哈信息作业管理系统控制面板</title>
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <style>
+        .mdui-card {
+            margin-bottom: 8px;
+        }
+    </style>
+</head>
+<body class="mdui-drawer-body-left mdui-appbar-with-toolbar mdui-theme-primary-indigo mdui-theme-accent-pink">
+<header class="mdui-appbar mdui-appbar-fixed">
+    <div class="mdui-toolbar mdui-color-theme">
+        <a href="javascript:" class="mdui-btn mdui-btn-icon" mdui-drawer="{target: '#left-drawer'}"><i
+                class="mdui-icon material-icons">menu</i></a>
+        <p>哈信息作业管理系统控制面板</p>
+        <div class="mdui-toolbar-spacer"></div>
+        <a href="javascript:window.location.reload();" class="mdui-btn mdui-btn-icon"><i
+                class="mdui-icon material-icons">refresh</i></a>
+    </div>
+</header>
+
+<nav class="mdui-drawer mdui-card" id="left-drawer">
+    <div class="mdui-card-media">
+        <img th:src="@{/config/image/card.jpg}"/>
+        <div class="mdui-card-media-covered">
+            <div class="mdui-card-primary">
+                <div class="mdui-card-primary-title">欢迎</div>
+                <div class="mdui-card-primary-subtitle">Welcome</div>
+            </div>
+        </div>
+    </div>
+    <ul class="mdui-list mdui-card-content" mdui-collapse="{accordion: true}">
+        <li class="mdui-list-item mdui-ripple">
+            <i class="mdui-list-item-icon mdui-icon material-icons">vpn_key</i>
+            <a th:href="@{/logout}" class="mdui-list-item-content">注销登陆</a>
+        </li>
+    </ul>
+</nav>
+<section class="mdui-container">
+    <form th:action="@{/config/filePath}" method="post" onsubmit="return onSave('file')" class="mdui-card">
+        <div class="mdui-card-content">
+            <div class="mdui-textfield mdui-textfield-floating-label">
+                <label class="mdui-textfield-label">文件上传地址</label>
+                <!--/*@thymesVar id="file_repository_path" type="java.lang.String"*/-->
+                <input class="mdui-textfield-input" id="file" name="name" type="text"
+                       th:value="${file_repository_path}"/>
+                <div class="mdui-textfield-helper" id="fileSpace"></div>
+                <div class="mdui-textfield-error">必填</div>
+            </div>
+            <input class="mdui-btn mdui-btn-raised mdui-ripple mdui-color-theme-accent" type="submit" value="保存"/>
+        </div>
+    </form>
+    <form th:action="@{/config/casServerUrl}" method="post" onsubmit="return onSave('cas_server_url')"
+          class="mdui-card">
+        <div class="mdui-card-content">
+            <div class="mdui-textfield mdui-textfield-floating-label">
+                <label class="mdui-textfield-label">CAS服务器地址</label>
+                <!--/*@thymesVar id="cas_server_url" type="java.lang.String"*/-->
+                <input class="mdui-textfield-input" id="cas_server_url" name="name" type="url"
+                       th:value="${cas_server_url}"/>
+                <div class="mdui-textfield-error">必填</div>
+            </div>
+            <input class="mdui-btn mdui-btn-raised mdui-ripple mdui-color-theme-accent" type="submit" value="保存"/>
+        </div>
+    </form>
+    <form th:action="@{/config/casLoginUrl}" method="post" onsubmit="return onSave('cas_login_url')" class="mdui-card">
+        <div class="mdui-card-content">
+            <div class="mdui-textfield mdui-textfield-floating-label">
+                <label class="mdui-textfield-label">CAS服务器登陆地址</label>
+                <!--/*@thymesVar id="cas_login_url" type="java.lang.String"*/-->
+                <input class="mdui-textfield-input" id="cas_login_url" name="name" type="url"
+                       th:value="${cas_login_url}"/>
+                <div class="mdui-textfield-error">必填</div>
+            </div>
+            <input class="mdui-btn mdui-btn-raised mdui-ripple mdui-color-theme-accent" type="submit" value="保存"/>
+        </div>
+    </form>
+    <form th:action="@{/config/casLogoutUrl}" method="post" onsubmit="return onSave('cas_logout_url')"
+          class="mdui-card">
+        <div class="mdui-card-content">
+            <div class="mdui-textfield mdui-textfield-floating-label">
+                <label class="mdui-textfield-label">CAS服务器登出地址</label>
+                <!--/*@thymesVar id="cas_logout_url" type="java.lang.String"*/-->
+                <input class="mdui-textfield-input" id="cas_logout_url" name="name" type="url"
+                       th:value="${cas_logout_url}"/>
+                <div class="mdui-textfield-error">必填</div>
+            </div>
+            <input class="mdui-btn mdui-btn-raised mdui-ripple mdui-color-theme-accent" type="submit" value="保存"/>
+        </div>
+    </form>
+    <form th:action="@{/config/loginSuccessUrl}" method="post" onsubmit="return onSave('login_success_url')"
+          class="mdui-card">
+        <div class="mdui-card-content">
+            <div class="mdui-textfield mdui-textfield-floating-label">
+                <label class="mdui-textfield-label">登陆成功后跳转的地址</label>
+                <!--/*@thymesVar id="login_success_url" type="java.lang.String"*/-->
+                <input class="mdui-textfield-input" id="login_success_url" name="name" type="url"
+                       th:value="${login_success_url}"/>
+                <div class="mdui-textfield-error">必填</div>
+            </div>
+            <input class="mdui-btn mdui-btn-raised mdui-ripple mdui-color-theme-accent" type="submit" value="保存"/>
+        </div>
+    </form>
+    <form th:action="@{/config/localServerUrl}" method="post" onsubmit="return onSave('local_server_url')"
+          class="mdui-card">
+        <div class="mdui-card-content">
+            <div class="mdui-textfield mdui-textfield-floating-label">
+                <label class="mdui-textfield-label">本地服务端地址(该项目地址)</label>
+                <!--/*@thymesVar id="local_server_url" type="java.lang.String"*/-->
+                <input class="mdui-textfield-input" id="local_server_url" name="name" type="url"
+                       th:value="${local_server_url}"/>
+                <div class="mdui-textfield-error">必填</div>
+            </div>
+            <input class="mdui-btn mdui-btn-raised mdui-ripple mdui-color-theme-accent" type="submit" value="保存"/>
+        </div>
+    </form>
+</section>
+<script th:src="@{/config/mdui/js/mdui.min.js}"></script>
+<script th:inline="javascript">
+    'use strict';
+    let $$ = mdui.JQ;
+    let freeDirSize = [[${freeSpace}]];
+
+    function checkAllInputHasValue() {
+        $$('.mdui-textfield-input').each(function (i, e) {
+            checkInputHasValue(e);
+        })
+    }
+
+    function checkInputHasValue(e) {
+        $$(e.parentNode).removeClass('mdui-textfield-invalid');
+        if (e.value === '') {
+            $$(e.parentNode).addClass('mdui-textfield-invalid');
+            return false;
+        }
+        return true;
+    }
+
+    function getFormatFileSize(size) {
+        let number = Number(size);
+        if (number < 1048576) {
+            return (number / 1024).toFixed(2) + ' KB';
+        } else if (number < 1073741824) {
+            return (number / 1024 / 1024).toFixed(2) + ' MB';
+        } else if (number < 1099511627776) {
+            return (number / 1024 / 1024 / 1024).toFixed(2) + ' GB';
+        } else if (number < 1125899906842624) {
+            return (number / 1024 / 1024 / 1024 / 1024).toFixed(2) + ' TB';
+        } else {
+            return (number / 1024 / 1024 / 1024 / 1024 / 1024).toFixed(2) + ' PB';
+        }
+    }
+
+    $$(function () {
+        checkAllInputHasValue();
+        let f = Number(freeDirSize);
+        if (f !== -1) {
+            f = getFormatFileSize(f);
+            $$('#fileSpace').text('剩余空间：' + f);
+        } else {
+            mdui.alert('目录路径不正确,请检查', function () {
+            }, {history: false});
+        }
+    });
+
+    function onSave(e) {
+        let file = document.getElementById(e);
+        return checkInputHasValue(file);
+    }
+</script>
+</body>
+</html>
