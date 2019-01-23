@@ -1,6 +1,7 @@
 package top.yunshu.shw.server.config;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
@@ -20,5 +21,15 @@ public class BeansConfig {
     @Bean
     public ModelMapper modelMapper() {
         return new ModelMapper();
+    }
+
+    @Bean
+    public FilterRegistrationBean adminFilterRegistration() {
+        FilterRegistrationBean<AdminFilter> registration = new FilterRegistrationBean<>();
+        registration.setFilter(new AdminFilter());
+        registration.addUrlPatterns("/config/actuator/*");
+        registration.setName("adminFilter");
+        registration.setOrder(1);
+        return registration;
     }
 }

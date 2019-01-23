@@ -48,6 +48,28 @@
     </ul>
 </nav>
 <section class="mdui-container">
+    <div class="mdui-card">
+        <div class="mdui-card-content">
+            <p>系统日志级别：</p>
+            <span>设置级别：</span>
+            <select class="mdui-select mdui-m-r-1" id="root_select"></select>
+            <span class="mdui-m-r-1">有效级别：<span id="root"></span></span><br>
+            <button onclick="saveRoot()"
+                    class="mdui-btn mdui-btn-raised mdui-ripple mdui-color-theme-accent mdui-m-t-2">保存
+            </button>
+        </div>
+    </div>
+    <div class="mdui-card">
+        <div class="mdui-card-content">
+            <p>项目日志级别：</p>
+            <span>设置级别：</span>
+            <select class="mdui-select mdui-m-r-1" id="top_select"></select>
+            <span class="mdui-m-r-1">有效级别：<span id="top"></span></span><br>
+            <button onclick="saveTop()" class="mdui-btn mdui-btn-raised mdui-ripple mdui-color-theme-accent mdui-m-t-2">
+                保存
+            </button>
+        </div>
+    </div>
     <form th:action="@{/config/filePath}" method="post" onsubmit="return onSave('file')" class="mdui-card">
         <div class="mdui-card-content">
             <div class="mdui-textfield mdui-textfield-floating-label">
@@ -191,11 +213,63 @@
             mdui.alert('目录路径不正确,请检查', function () {
             }, {history: false});
         }
+        $$.ajax({
+            method: 'GET',
+            url: './config/actuator/loggers',
+            success: function (data) {
+                let json = JSON.parse(data);
+                let levels = json.levels;
+                let top = json.loggers.top;
+                let root = json.loggers.ROOT;
+                $$('#top').text(top.effectiveLevel);
+                $$('#root').text(root.effectiveLevel);
+                for (let i = 0; i < levels.length; i++) {
+                    if (levels[i] === top.configuredLevel) {
+                        $$('#top_select').append('<option value="' + levels[i] + '" selected>' + levels[i] + '</option>');
+                    } else {
+                        $$('#top_select').append('<option value="' + levels[i] + '">' + levels[i] + '</option>');
+                    }
+                    if (levels[i] === root.configuredLevel) {
+                        $$('#root_select').append('<option value="' + levels[i] + '" selected>' + levels[i] + '</option>');
+                    } else {
+                        $$('#root_select').append('<option value="' + levels[i] + '">' + levels[i] + '</option>');
+                    }
+                }
+            }
+        });
     });
 
     function onSave(e) {
         let file = document.getElementById(e);
         return checkInputHasValue(file);
+    }
+
+    function saveRoot() {
+        let select = $$('#root_select').val();
+        $$.ajax({
+            method: 'POST',
+            url: './config/actuator/loggers/ROOT',
+            contentType: 'application/json',
+            processData: false,
+            data: '{"configuredLevel": "' + select + '"}',
+            success: function (data) {
+                window.location.reload();
+            }
+        });
+    }
+
+    function saveTop() {
+        let select = $$('#top_select').val();
+        $$.ajax({
+            method: 'POST',
+            url: './config/actuator/loggers/top',
+            contentType: 'application/json',
+            processData: false,
+            data: '{"configuredLevel": "' + select + '"}',
+            success: function (data) {
+                window.location.reload();
+            }
+        });
     }
 </script>
 </body>

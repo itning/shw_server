@@ -23,4 +23,10 @@ cas:
   logout-url: http://login.greathiit.com/logout
   exclude:
     - '/config'
+management:
+  endpoints:
+    web:
+      exposure:
+        include: loggers
+      base-path: /config/actuator
 datasource_url_end_str: ?createDatabaseIfNotExist=true&useUnicode=true&characterEncoding=UTF-8&useSSL=false&autoReconnect=true&failOverReadOnly=false&connectTimeout=0&serverTimezone=Asia/Shanghai&useLegacyDatetimeCode=false
