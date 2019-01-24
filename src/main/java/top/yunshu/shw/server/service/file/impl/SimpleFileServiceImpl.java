@@ -151,7 +151,7 @@ public class SimpleFileServiceImpl implements FileService {
                     try (InputStream input = new FileInputStream(file)) {
                         zipOut.putNextEntry(new ZipEntry(file.getName()));
                         IOUtils.copy(input, zipOut);
-                        TeacherController.packMap.put(workId, i.incrementAndGet() + "/" + fileList.size());
+                        TeacherController.packMap.put(workId, i.incrementAndGet() + "/" + fileList.size() + " " + file.getName());
                     } catch (IOException e) {
                         logger.error("file zip error: ", e);
                         TeacherController.packMap.put(workId, "ERROR:" + e.getMessage());
