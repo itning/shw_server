@@ -4,6 +4,7 @@ import org.springframework.web.multipart.MultipartFile;
 import top.yunshu.shw.server.exception.FileException;
 
 import java.io.File;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -38,4 +39,19 @@ public interface FileService {
      * @return 获取到的文件
      */
     Optional<File> getFile(String studentNumber, String workId);
+
+    /**
+     * 获取所有文件集合
+     *
+     * @param workId 作业ID
+     * @return 文件集合
+     */
+    List<File> getAllFiles(String workId);
+
+    /**
+     * 打包文件
+     *
+     * @param workId 作业ID
+     */
+    void unpackFiles(String workId);
 }

@@ -12,12 +12,20 @@ import top.yunshu.shw.server.entity.Group;
 import top.yunshu.shw.server.entity.LoginUser;
 import top.yunshu.shw.server.entity.RestModel;
 import top.yunshu.shw.server.entity.Work;
+import top.yunshu.shw.server.exception.FileException;
 import top.yunshu.shw.server.model.WorkModel;
+import top.yunshu.shw.server.service.file.FileService;
 import top.yunshu.shw.server.service.group.GroupService;
+import top.yunshu.shw.server.service.upload.UploadService;
 import top.yunshu.shw.server.service.work.WorkService;
+import top.yunshu.shw.server.util.FileUtils;
 import top.yunshu.shw.server.util.JwtUtils;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 教师控制器
@@ -30,17 +38,25 @@ import java.util.List;
 @RequestMapping("/teacher")
 public class TeacherController {
     private static final Logger logger = LoggerFactory.getLogger(TeacherController.class);
+    public static volatile Map<String, String> packMap = new HashMap<>(16);
+
     private final GroupService groupService;
 
     private final WorkService workService;
 
     private final ModelMapper modelMapper;
 
+    private final FileService fileService;
+
+    private final UploadService uploadService;
+
     @Autowired
-    public TeacherController(GroupService groupService, WorkService workService, ModelMapper modelMapper) {
+    public TeacherController(GroupService groupService, WorkService workService, ModelMapper modelMapper, FileService fileService, UploadService uploadService) {
         this.groupService = groupService;
         this.workService = workService;
         this.modelMapper = modelMapper;
+        this.fileService = fileService;
+        this.uploadService = uploadService;
     }
 
     /**
@@ -202,5 +218,51 @@ public class TeacherController {
         LoginUser loginUser = JwtUtils.getLoginUser(authorization);
         logger.info("get login user: " + loginUser);
         return ResponseEntity.ok(new RestModel<>(workService.getWorkDetailByWorkId(loginUser.getNo(), workId)));
+    }
+
+    /**
+     * 打包
+     *
+     * @param workId 作业ID
+     * @return ResponseEntity
+     */
+    @GetMapping("/pack/{workId}")
+    public ResponseEntity<RestModel> pack(@RequestHeader("Authorization") String authorization, @PathVariable String workId) {
+        logger.debug("get teacher work detail, work id " + workId);
+        LoginUser loginUser = JwtUtils.getLoginUser(authorization);
+        logger.info("get login user: " + loginUser);
+
+        String s = packMap.get(workId);
+        if (s == null) {
+            fileService.unpackFiles(workId);
+            return ResponseEntity.ok(new RestModel<>("START"));
+        } else {
+            if ("OK".equals(s)) {
+                packMap.remove(workId);
+                return ResponseEntity.ok(new RestModel<>("OK"));
+            } else {
+                return ResponseEntity.ok(new RestModel<>(packMap.get(workId)));
+            }
+        }
+    }
+
+    /**
+     * 下载所有
+     *
+     * @param range    请求头
+     * @param workId   作业ID
+     * @param response {@link HttpServletResponse}
+     */
+    @GetMapping("/down/{workId}")
+    public void downloadAllFile(@RequestHeader(required = false) String range, @PathVariable String workId, HttpServletResponse response) {
+        logger.debug("down file, work id: " + workId);
+        long sum = uploadService.getUploadSum(workId);
+        String tempFilePath = System.getProperty("java.io.tmpdir") + File.separator + workId + sum + ".zip";
+        File file = new File(tempFilePath);
+        if (file.canRead()) {
+            FileUtils.breakpointResume(file, "application/octet-stream", range, response);
+        } else {
+            throw new FileException("文件不可读", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }

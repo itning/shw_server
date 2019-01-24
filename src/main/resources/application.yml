@@ -24,6 +24,7 @@ cas:
   exclude:
     - '/config'
     - '/student/down'
+    - '/teacher/down'
 management:
   endpoints:
     web:

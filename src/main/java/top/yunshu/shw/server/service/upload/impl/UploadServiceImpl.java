@@ -66,5 +66,8 @@ public class UploadServiceImpl implements UploadService {
         uploadDao.save(upload);
     }
 
-
+    @Override
+    public long getUploadSum(String workId) {
+        return uploadDao.findSizeByWorkId(workId).stream().mapToLong(Long::longValue).sum();
+    }
 }

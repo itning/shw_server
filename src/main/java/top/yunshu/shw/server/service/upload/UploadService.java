@@ -35,4 +35,12 @@ public interface UploadService {
      * @param workId        作业ID
      */
     void uploadFile(MultipartFile file, String studentNumber, String workId);
+
+    /**
+     * 根据作业ID查找所有
+     *
+     * @param workId 作业ID
+     * @return 上传集合
+     */
+    long getUploadSum(String workId);
 }
