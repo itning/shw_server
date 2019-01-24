@@ -260,11 +260,6 @@ public class StudentController {
                 while ((transmitted + len) <= contentLength && (len = randomAccessFile.read(buff)) != -1) {
                     outputStream.write(buff, 0, len);
                     transmitted += len;
-                    try {
-                        Thread.sleep(100);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
                 }
                 if (transmitted < contentLength) {
                     len = randomAccessFile.read(buff, 0, (int) (contentLength - transmitted));
