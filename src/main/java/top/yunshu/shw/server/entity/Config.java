@@ -26,6 +26,10 @@ public class Config implements Serializable {
          */
         FILE_REPOSITORY_PATH("file_repository_path"),
         /**
+         * 临时打包目录
+         */
+        TEMP_DIR("temp_dir"),
+        /**
          * CAS服务器地址
          */
         CAS_SERVER_URL("cas_server_url"),

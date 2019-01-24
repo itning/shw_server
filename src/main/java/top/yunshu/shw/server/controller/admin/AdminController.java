@@ -179,6 +179,9 @@ public class AdminController {
                 model.addAttribute("freeSpace", -1L);
             }
         });
+        String tempDir = configService.getConfig(Config.ConfigKey.TEMP_DIR).orElse(System.getProperty("java.io.tmpdir"));
+        model.addAttribute("tempDirPath", tempDir);
+        model.addAttribute("tempDirFreeSpace", new File(tempDir).getFreeSpace());
         Map<String, String> map = new HashMap<>(16);
         configService.getAllConfigs().forEach(config -> map.put(config.getName(), config.getValue()));
         model.addAllAttributes(map);
@@ -199,6 +202,24 @@ public class AdminController {
         }
         if (StringUtils.isNotBlank(name)) {
             configService.saveConfig(Config.ConfigKey.FILE_REPOSITORY_PATH, name);
+        }
+        return "redirect:/config";
+    }
+
+    /**
+     * 设置临时目录
+     *
+     * @param name    目录
+     * @param session {@link HttpSession}
+     * @return "redirect:/config"
+     */
+    @PostMapping("/config/tempDir")
+    public String saveTempDir(String name, HttpSession session) {
+        if (session.getAttribute(USER) == null) {
+            return "redirect:/config/login";
+        }
+        if (StringUtils.isNotBlank(name)) {
+            configService.saveConfig(Config.ConfigKey.TEMP_DIR, name);
         }
         return "redirect:/config";
     }

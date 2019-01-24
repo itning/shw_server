@@ -8,12 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import top.yunshu.shw.server.entity.Group;
-import top.yunshu.shw.server.entity.LoginUser;
-import top.yunshu.shw.server.entity.RestModel;
-import top.yunshu.shw.server.entity.Work;
+import top.yunshu.shw.server.entity.*;
 import top.yunshu.shw.server.exception.FileException;
 import top.yunshu.shw.server.model.WorkModel;
+import top.yunshu.shw.server.service.config.ConfigService;
 import top.yunshu.shw.server.service.file.FileService;
 import top.yunshu.shw.server.service.group.GroupService;
 import top.yunshu.shw.server.service.upload.UploadService;
@@ -50,13 +48,16 @@ public class TeacherController {
 
     private final UploadService uploadService;
 
+    private final ConfigService configService;
+
     @Autowired
-    public TeacherController(GroupService groupService, WorkService workService, ModelMapper modelMapper, FileService fileService, UploadService uploadService) {
+    public TeacherController(GroupService groupService, WorkService workService, ModelMapper modelMapper, FileService fileService, UploadService uploadService, ConfigService configService) {
         this.groupService = groupService;
         this.workService = workService;
         this.modelMapper = modelMapper;
         this.fileService = fileService;
         this.uploadService = uploadService;
+        this.configService = configService;
     }
 
     /**
@@ -260,7 +261,7 @@ public class TeacherController {
     public void downloadAllFile(@RequestHeader(required = false) String range, @PathVariable String workId, HttpServletResponse response) {
         logger.debug("down file, work id: " + workId);
         long sum = uploadService.getUploadSum(workId);
-        String tempFilePath = System.getProperty("java.io.tmpdir") + File.separator + workId + sum + ".zip";
+        String tempFilePath = configService.getConfig(Config.ConfigKey.TEMP_DIR).orElse(System.getProperty("java.io.tmpdir")) + File.separator + workId + sum + ".zip";
         File file = new File(tempFilePath);
         if (file.canRead()) {
             FileUtils.breakpointResume(file, "application/octet-stream", range, response);

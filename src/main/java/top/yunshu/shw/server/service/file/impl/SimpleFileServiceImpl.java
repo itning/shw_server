@@ -124,9 +124,10 @@ public class SimpleFileServiceImpl implements FileService {
     public synchronized void unpackFiles(String workId) {
         try {
             long sum = uploadDao.findSizeByWorkId(workId).stream().mapToLong(Long::longValue).sum();
-            String tempFilePath = System.getProperty("java.io.tmpdir") + File.separator + workId + sum + ".zip";
+            String temp = configService.getConfig(Config.ConfigKey.TEMP_DIR).orElse(System.getProperty("java.io.tmpdir"));
+            String tempFilePath = temp + File.separator + workId + sum + ".zip";
             if (!new File(tempFilePath).exists()) {
-                File tempDir = new File(System.getProperty("java.io.tmpdir"));
+                File tempDir = new File(temp);
                 List<File> fileList = this.getAllFiles(workId);
                 long filesSize = fileList.stream().mapToLong(File::length).sum();
                 if (tempDir.getFreeSpace() < filesSize) {

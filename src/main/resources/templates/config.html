@@ -73,12 +73,28 @@
     <form th:action="@{/config/filePath}" method="post" onsubmit="return onSave('file')" class="mdui-card">
         <div class="mdui-card-content">
             <div class="mdui-textfield mdui-textfield-floating-label">
-                <label class="mdui-textfield-label">文件上传地址</label>
+                <label class="mdui-textfield-label">文件上传目录</label>
                 <!--/*@thymesVar id="file_repository_path" type="java.lang.String"*/-->
                 <input class="mdui-textfield-input" id="file" name="name" type="text"
                        th:value="${file_repository_path}"/>
                 <div class="mdui-textfield-helper" id="fileSpace"></div>
                 <div class="mdui-textfield-error">必填</div>
+            </div>
+            <input class="mdui-btn mdui-btn-raised mdui-ripple mdui-color-theme-accent" type="submit" value="保存"/>
+        </div>
+    </form>
+    <form th:action="@{/config/tempDir}" method="post" class="mdui-card">
+        <div class="mdui-card-content">
+            <div class="mdui-textfield mdui-textfield-floating-label">
+                <label class="mdui-textfield-label">打包临时目录(留空则使用系统临时目录)</label>
+                <!--/*@thymesVar id="temp_dir" type="java.lang.String"*/-->
+                <input class="mdui-textfield-input" id="temp_file" name="name" type="text"
+                       th:value="${temp_dir}"/>
+                <div class="mdui-textfield-helper">
+                    <!--/*@thymesVar id="tempDirPath" type="java.lang.String"*/-->
+                    <span th:text="${'当前临时目录：'+tempDirPath}"></span>
+                    <span id="tempDirFreeSpace"></span>
+                </div>
             </div>
             <input class="mdui-btn mdui-btn-raised mdui-ripple mdui-color-theme-accent" type="submit" value="保存"/>
         </div>
@@ -179,6 +195,7 @@
     'use strict';
     let $$ = mdui.JQ;
     let freeDirSize = [[${freeSpace}]];
+    let freeTempDirSize = [[${tempDirFreeSpace}]];
 
     function checkAllInputHasValue() {
         $$('.mdui-textfield-input').each(function (i, e) {
@@ -219,6 +236,8 @@
         } else {
             new mdui.Dialog('#dialog', {history: false}).open();
         }
+        $$(document.getElementById('temp_file').parentNode).removeClass('mdui-textfield-invalid');
+        $$('#tempDirFreeSpace').text('剩余空间：' + getFormatFileSize(freeTempDirSize));
         $$.ajax({
             method: 'GET',
             url: './config/actuator/loggers',
