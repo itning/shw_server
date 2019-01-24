@@ -190,6 +190,12 @@ public class TeacherController {
         return ResponseEntity.noContent().build();
     }
 
+    /**
+     * 获取作业详情
+     *
+     * @param workId 作业ID
+     * @return ResponseEntity
+     */
     @GetMapping("/work_detail/{workId}")
     public ResponseEntity<RestModel> getTeacherWorkDetails(@RequestHeader("Authorization") String authorization, @PathVariable String workId) {
         logger.debug("get teacher work detail, work id " + workId);
