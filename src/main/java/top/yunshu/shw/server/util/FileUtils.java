@@ -47,6 +47,14 @@ public class FileUtils {
         return extensionName;
     }
 
+    /**
+     * 断点续传
+     *
+     * @param file        所需要下载的文件
+     * @param contentType MIME类型
+     * @param range       请求头
+     * @param response    {@link HttpServletResponse}
+     */
     public static void breakpointResume(File file, String contentType, String range, HttpServletResponse response) {
         long startByte = 0;
         long endByte = file.length() - 1;

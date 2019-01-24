@@ -197,6 +197,15 @@ public class StudentController {
         return ResponseEntity.ok(new RestModel<>(studentGroupService.isHaveGroup(loginUser.getNo())));
     }
 
+    /**
+     * 学生作业下载
+     *
+     * @param range         请求头
+     * @param studentNumber 学号
+     * @param workId        作业ID
+     * @param response      {@link HttpServletResponse}
+     * @throws IOException 文件没有找到
+     */
     @GetMapping("/down/{studentNumber}/{workId}")
     public void downloadFile(@RequestHeader(required = false) String range, @PathVariable String studentNumber, @PathVariable String workId, HttpServletResponse response) throws IOException {
         logger.debug("down file, work id: " + workId);
