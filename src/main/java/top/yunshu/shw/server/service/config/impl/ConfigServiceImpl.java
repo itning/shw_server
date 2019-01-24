@@ -29,31 +29,46 @@ public class ConfigServiceImpl implements ConfigService {
     }
 
     private void init() {
-        if (!configDao.existsById(Config.ConfigKey.CAS_SERVER_URL.getKey())) {
+        Optional<Config> casServerUrl = configDao.findById(Config.ConfigKey.CAS_SERVER_URL.getKey());
+        if (casServerUrl.isPresent()) {
+            casProperties.setServerUrl(URI.create(casServerUrl.get().getValue()));
+        } else {
             Config config = new Config();
             config.setName(Config.ConfigKey.CAS_SERVER_URL.getKey());
             config.setValue(casProperties.getServerUrl().toString());
             configDao.saveAndFlush(config);
         }
-        if (!configDao.existsById(Config.ConfigKey.CAS_LOGIN_URL.getKey())) {
+        Optional<Config> casLoginUrl = configDao.findById(Config.ConfigKey.CAS_LOGIN_URL.getKey());
+        if (casLoginUrl.isPresent()) {
+            casProperties.setLoginUrl(URI.create(casLoginUrl.get().getValue()));
+        } else {
             Config config = new Config();
             config.setName(Config.ConfigKey.CAS_LOGIN_URL.getKey());
             config.setValue(casProperties.getLoginUrl().toString());
             configDao.saveAndFlush(config);
         }
-        if (!configDao.existsById(Config.ConfigKey.CAS_LOGOUT_URL.getKey())) {
+        Optional<Config> casLogoutUrl = configDao.findById(Config.ConfigKey.CAS_LOGOUT_URL.getKey());
+        if (casLogoutUrl.isPresent()) {
+            casProperties.setLogoutUrl(URI.create(casLogoutUrl.get().getValue()));
+        } else {
             Config config = new Config();
             config.setName(Config.ConfigKey.CAS_LOGOUT_URL.getKey());
             config.setValue(casProperties.getLogoutUrl().toString());
             configDao.saveAndFlush(config);
         }
-        if (!configDao.existsById(Config.ConfigKey.LOGIN_SUCCESS_URL.getKey())) {
+        Optional<Config> loginSuccessUrl = configDao.findById(Config.ConfigKey.LOGIN_SUCCESS_URL.getKey());
+        if (loginSuccessUrl.isPresent()) {
+            casProperties.setLoginSuccessUrl(URI.create(loginSuccessUrl.get().getValue()));
+        } else {
             Config config = new Config();
             config.setName(Config.ConfigKey.LOGIN_SUCCESS_URL.getKey());
             config.setValue(casProperties.getLoginSuccessUrl().toString());
             configDao.saveAndFlush(config);
         }
-        if (!configDao.existsById(Config.ConfigKey.LOCAL_SERVER_URL.getKey())) {
+        Optional<Config> localServerUrl = configDao.findById(Config.ConfigKey.LOCAL_SERVER_URL.getKey());
+        if (localServerUrl.isPresent()) {
+            casProperties.setLocalServerUrl(URI.create(localServerUrl.get().getValue()));
+        } else {
             Config config = new Config();
             config.setName(Config.ConfigKey.LOCAL_SERVER_URL.getKey());
             config.setValue(casProperties.getLocalServerUrl().toString());
