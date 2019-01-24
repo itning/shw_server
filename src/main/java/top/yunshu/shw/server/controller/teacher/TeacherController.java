@@ -240,8 +240,11 @@ public class TeacherController {
             if ("OK".equals(s)) {
                 packMap.remove(workId);
                 return ResponseEntity.ok(new RestModel<>("OK"));
+            } else if (s.contains("ERROR")) {
+                packMap.remove(workId);
+                return ResponseEntity.ok(new RestModel<>(s));
             } else {
-                return ResponseEntity.ok(new RestModel<>(packMap.get(workId)));
+                return ResponseEntity.ok(new RestModel<>(s));
             }
         }
     }

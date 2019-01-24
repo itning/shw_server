@@ -139,6 +139,7 @@ public class SimpleFileServiceImpl implements FileService {
                     if (tempDir.getFreeSpace() < filesSize) {
                         logger.error("临时目录剩余: " + (tempDir.getFreeSpace() / 1024 / 1024) + "MB空间");
                         logger.error("临时目录太小,需要 " + (filesSize / 1024 / 1024) + "MB空间");
+                        TeacherController.packMap.put(workId, "ERROR:" + "临时目录太小,需要 " + (filesSize / 1024 / 1024) + "MB空间");
                         throw new FileException("临时目录太小,需要 " + (filesSize / 1024 / 1024) + "MB空间", HttpStatus.INTERNAL_SERVER_ERROR);
                     }
                 }
@@ -164,6 +165,7 @@ public class SimpleFileServiceImpl implements FileService {
                 TeacherController.packMap.put(workId, "OK");
             }
         } catch (IOException e) {
+            TeacherController.packMap.put(workId, "ERROR:" + e.getMessage());
             throw new FileException(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
