@@ -3,6 +3,7 @@ package top.yunshu.shw.server.exception;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -53,6 +54,24 @@ public class ExceptionResolver {
         restModel.setCode(e.getCode().value());
         restModel.setMsg(e.getMessage());
         response.setStatus(e.getCode().value());
+        return restModel;
+    }
+
+    /**
+     * MissingServletRequestParameterException 错误
+     *
+     * @param response HttpServletResponse
+     * @param e        MissingServletRequestParameterException
+     * @return 异常消息
+     */
+    @ExceptionHandler(value = MissingServletRequestParameterException.class)
+    @ResponseBody
+    public RestModel missingServletRequestParameterException(HttpServletResponse response, MissingServletRequestParameterException e) {
+        logger.info("missingServletRequestParameterException->" + e.getMessage());
+        RestModel restModel = new RestModel();
+        restModel.setCode(HttpServletResponse.SC_BAD_REQUEST);
+        restModel.setMsg(e.getMessage());
+        response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         return restModel;
     }
 

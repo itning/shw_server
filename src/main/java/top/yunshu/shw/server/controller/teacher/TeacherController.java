@@ -80,7 +80,7 @@ public class TeacherController {
      * @return ResponseEntity
      */
     @PostMapping("/group")
-    public ResponseEntity<Group> addGroup(@RequestHeader("Authorization") String authorization, String groupName) {
+    public ResponseEntity<Group> addGroup(@RequestHeader("Authorization") String authorization, @RequestParam String groupName) {
         logger.debug("add group , groupName: " + groupName);
         LoginUser loginUser = JwtUtils.getLoginUser(authorization);
         logger.info("get login user: " + loginUser);
@@ -169,7 +169,7 @@ public class TeacherController {
      * @return ResponseEntity
      */
     @PostMapping("/work")
-    public ResponseEntity<Work> addWork(@RequestHeader("Authorization") String authorization, String workName, String groupId) {
+    public ResponseEntity<Work> addWork(@RequestHeader("Authorization") String authorization,@RequestParam String workName,@RequestParam String groupId) {
         logger.debug("add work , workName: " + workName);
         LoginUser loginUser = JwtUtils.getLoginUser(authorization);
         logger.info("get login user: " + loginUser);

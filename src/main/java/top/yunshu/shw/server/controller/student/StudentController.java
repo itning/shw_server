@@ -126,7 +126,7 @@ public class StudentController {
      * @return ResponseEntity
      */
     @PostMapping("/group")
-    public ResponseEntity<Group> addGroup(@RequestHeader("Authorization") String authorization, String code) {
+    public ResponseEntity<Group> addGroup(@RequestHeader("Authorization") String authorization,@RequestParam String code) {
         logger.debug("add group , code: " + code);
         LoginUser loginUser = JwtUtils.getLoginUser(authorization);
         logger.info("get login user: " + loginUser);
