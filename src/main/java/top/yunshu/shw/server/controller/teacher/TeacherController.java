@@ -23,6 +23,7 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Callable;
 
 /**
  * 教师控制器
@@ -65,8 +66,8 @@ public class TeacherController {
      * @return ResponseEntity
      */
     @GetMapping("/groups")
-    public ResponseEntity<RestModel> getTeacherCreateGroups(LoginUser loginUser) {
-        return ResponseEntity.ok(new RestModel<>(groupService.findTeacherAllGroups(loginUser.getNo())));
+    public Callable<ResponseEntity<RestModel>> getTeacherCreateGroups(LoginUser loginUser) {
+        return () -> ResponseEntity.ok(new RestModel<>(groupService.findTeacherAllGroups(loginUser.getNo())));
     }
 
     /**
@@ -113,9 +114,9 @@ public class TeacherController {
      * @return ResponseEntity
      */
     @GetMapping("/group/exist")
-    public ResponseEntity<RestModel> isTeacherHaveAnyGroup(LoginUser loginUser) {
+    public Callable<ResponseEntity<RestModel>> isTeacherHaveAnyGroup(LoginUser loginUser) {
         logger.debug("is Teacher Have Any Group");
-        return ResponseEntity.ok(new RestModel<>(groupService.isHaveAnyGroup(loginUser.getNo())));
+        return () -> ResponseEntity.ok(new RestModel<>(groupService.isHaveAnyGroup(loginUser.getNo())));
     }
 
     /**
@@ -124,11 +125,10 @@ public class TeacherController {
      * @return ResponseEntity
      */
     @GetMapping("/works")
-    public ResponseEntity<RestModel> getTeacherWorks(LoginUser loginUser) {
+    public Callable<ResponseEntity<RestModel>> getTeacherWorks(LoginUser loginUser) {
         logger.debug("get teacher works");
-        List<WorkModel> workModels = modelMapper.map(workService.getTeacherAllWork(loginUser.getNo()), new TypeToken<List<WorkModel>>() {
-        }.getType());
-        return ResponseEntity.ok(new RestModel<>(workModels));
+        return () -> ResponseEntity.ok(new RestModel<>(modelMapper.map(workService.getTeacherAllWork(loginUser.getNo()), new TypeToken<List<WorkModel>>() {
+        }.getType())));
     }
 
     /**
@@ -138,11 +138,10 @@ public class TeacherController {
      * @return ResponseEntity
      */
     @GetMapping("/work/{groupId}")
-    public ResponseEntity<RestModel> getTeacherWork(LoginUser loginUser, @PathVariable String groupId) {
+    public Callable<ResponseEntity<RestModel>> getTeacherWork(LoginUser loginUser, @PathVariable String groupId) {
         logger.debug("get teacher work");
-        List<WorkModel> workModels = modelMapper.map(workService.getTeacherWork(loginUser.getNo(), groupId), new TypeToken<List<WorkModel>>() {
-        }.getType());
-        return ResponseEntity.ok(new RestModel<>(workModels));
+        return () -> ResponseEntity.ok(new RestModel<>(modelMapper.map(workService.getTeacherWork(loginUser.getNo(), groupId), new TypeToken<List<WorkModel>>() {
+        }.getType())));
     }
 
     /**
@@ -192,9 +191,9 @@ public class TeacherController {
      * @return ResponseEntity
      */
     @GetMapping("/work_detail/{workId}")
-    public ResponseEntity<RestModel> getTeacherWorkDetails(LoginUser loginUser, @PathVariable String workId) {
+    public Callable<ResponseEntity<RestModel>> getTeacherWorkDetails(LoginUser loginUser, @PathVariable String workId) {
         logger.debug("get teacher work detail, work id " + workId);
-        return ResponseEntity.ok(new RestModel<>(workService.getWorkDetailByWorkId(loginUser.getNo(), workId)));
+        return () -> ResponseEntity.ok(new RestModel<>(workService.getWorkDetailByWorkId(loginUser.getNo(), workId)));
     }
 
     /**

@@ -26,6 +26,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.Callable;
 
 
 /**
@@ -67,9 +68,9 @@ public class StudentController {
      * @return ResponseEntity
      */
     @GetMapping("/groups")
-    public ResponseEntity<RestModel> getAllGroups(LoginUser loginUser) {
+    public Callable<ResponseEntity<RestModel>> getAllGroups(LoginUser loginUser) {
         logger.debug("get all student groups");
-        return ResponseEntity.ok(new RestModel<>(groupService.findStudentAllGroups(loginUser.getNo())));
+        return () -> ResponseEntity.ok(new RestModel<>(groupService.findStudentAllGroups(loginUser.getNo())));
     }
 
     /**
@@ -78,11 +79,10 @@ public class StudentController {
      * @return ResponseEntity
      */
     @GetMapping("/works/un_done")
-    public ResponseEntity<RestModel> getAllUnDoneWorks(LoginUser loginUser) {
+    public Callable<ResponseEntity<RestModel>> getAllUnDoneWorks(LoginUser loginUser) {
         logger.debug("get all un done works");
-        List<WorkModel> workModels = modelMapper.map(workService.getStudentUnDoneWork(loginUser.getNo()), new TypeToken<List<WorkModel>>() {
-        }.getType());
-        return ResponseEntity.ok(new RestModel<>(workModels));
+        return () -> ResponseEntity.ok(new RestModel<>(modelMapper.map(workService.getStudentUnDoneWork(loginUser.getNo()), new TypeToken<List<WorkModel>>() {
+        }.getType())));
     }
 
     /**
@@ -91,11 +91,10 @@ public class StudentController {
      * @return ResponseEntity
      */
     @GetMapping("/works/done")
-    public ResponseEntity<RestModel> getAllDoneWorks(LoginUser loginUser) {
+    public Callable<ResponseEntity<RestModel>> getAllDoneWorks(LoginUser loginUser) {
         logger.debug("get all done works");
-        List<WorkModel> workModels = modelMapper.map(workService.getStudentDoneWork(loginUser.getNo()), new TypeToken<List<WorkModel>>() {
-        }.getType());
-        return ResponseEntity.ok(new RestModel<>(workModels));
+        return () -> ResponseEntity.ok(new RestModel<>(modelMapper.map(workService.getStudentDoneWork(loginUser.getNo()), new TypeToken<List<WorkModel>>() {
+        }.getType())));
     }
 
     /**
@@ -105,9 +104,9 @@ public class StudentController {
      * @return ResponseEntity
      */
     @GetMapping("/upload/{workId}")
-    public ResponseEntity<RestModel> getUpLoadInfoByWorkId(LoginUser loginUser, @PathVariable String workId) {
+    public Callable<ResponseEntity<RestModel>> getUpLoadInfoByWorkId(LoginUser loginUser, @PathVariable String workId) {
         logger.debug("get upload info by work id");
-        return ResponseEntity.ok(new RestModel<>(uploadService.getUploadInfoByWorkId(loginUser.getNo(), workId)));
+        return () -> ResponseEntity.ok(new RestModel<>(uploadService.getUploadInfoByWorkId(loginUser.getNo(), workId)));
     }
 
     /**
@@ -170,9 +169,9 @@ public class StudentController {
      * @return ResponseEntity
      */
     @GetMapping("/group/exist")
-    public ResponseEntity<RestModel> isStudentJoinAnyStudentGroup(LoginUser loginUser) {
+    public Callable<ResponseEntity<RestModel>> isStudentJoinAnyStudentGroup(LoginUser loginUser) {
         logger.debug("is Student Join Any StudentGroup");
-        return ResponseEntity.ok(new RestModel<>(studentGroupService.isHaveGroup(loginUser.getNo())));
+        return () -> ResponseEntity.ok(new RestModel<>(studentGroupService.isHaveGroup(loginUser.getNo())));
     }
 
     /**
