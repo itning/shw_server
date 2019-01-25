@@ -28,6 +28,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
+import static top.yunshu.shw.server.util.RoleUtils.checkRoleIsStudent;
+
 
 /**
  * 学生控制器
@@ -72,6 +74,7 @@ public class StudentController {
         logger.debug("get all student groups");
         LoginUser loginUser = JwtUtils.getLoginUser(authorization);
         logger.info("get login user: " + loginUser);
+        checkRoleIsStudent(loginUser);
         return ResponseEntity.ok(new RestModel<>(groupService.findStudentAllGroups(loginUser.getNo())));
     }
 
@@ -85,6 +88,7 @@ public class StudentController {
         logger.debug("get all un done works");
         LoginUser loginUser = JwtUtils.getLoginUser(authorization);
         logger.info("get login user: " + loginUser);
+        checkRoleIsStudent(loginUser);
         List<WorkModel> workModels = modelMapper.map(workService.getStudentUnDoneWork(loginUser.getNo()), new TypeToken<List<WorkModel>>() {
         }.getType());
         return ResponseEntity.ok(new RestModel<>(workModels));
@@ -100,6 +104,7 @@ public class StudentController {
         logger.debug("get all done works");
         LoginUser loginUser = JwtUtils.getLoginUser(authorization);
         logger.info("get login user: " + loginUser);
+        checkRoleIsStudent(loginUser);
         List<WorkModel> workModels = modelMapper.map(workService.getStudentDoneWork(loginUser.getNo()), new TypeToken<List<WorkModel>>() {
         }.getType());
         return ResponseEntity.ok(new RestModel<>(workModels));
@@ -116,6 +121,7 @@ public class StudentController {
         logger.debug("get upload info by work id");
         LoginUser loginUser = JwtUtils.getLoginUser(authorization);
         logger.info("get login user: " + loginUser);
+        checkRoleIsStudent(loginUser);
         return ResponseEntity.ok(new RestModel<>(uploadService.getUploadInfoByWorkId(loginUser.getNo(), workId)));
     }
 
@@ -126,10 +132,11 @@ public class StudentController {
      * @return ResponseEntity
      */
     @PostMapping("/group")
-    public ResponseEntity<Group> addGroup(@RequestHeader("Authorization") String authorization,@RequestParam String code) {
+    public ResponseEntity<Group> addGroup(@RequestHeader("Authorization") String authorization, @RequestParam String code) {
         logger.debug("add group , code: " + code);
         LoginUser loginUser = JwtUtils.getLoginUser(authorization);
         logger.info("get login user: " + loginUser);
+        checkRoleIsStudent(loginUser);
         return ResponseEntity.status(HttpStatus.CREATED).body(groupService.joinGroup(code, loginUser.getNo()));
     }
 
@@ -144,6 +151,7 @@ public class StudentController {
         logger.debug("del group , id: " + groupId);
         LoginUser loginUser = JwtUtils.getLoginUser(authorization);
         logger.info("get login user: " + loginUser);
+        checkRoleIsStudent(loginUser);
         groupService.dropOutGroup(groupId, loginUser.getNo());
         return ResponseEntity.noContent().build();
     }
@@ -160,9 +168,7 @@ public class StudentController {
         logger.debug("upload file , work id: " + workId);
         LoginUser loginUser = JwtUtils.getLoginUser(authorization);
         logger.info("get login user: " + loginUser);
-        System.out.println(workId);
-        System.out.println(file.getOriginalFilename());
-        System.out.println(file.getSize());
+        checkRoleIsStudent(loginUser);
         fileService.uploadFile(file, loginUser.getNo(), workId);
         uploadService.uploadFile(file, loginUser.getNo(), workId);
         return ResponseEntity.status(HttpStatus.CREATED).build();
@@ -179,6 +185,7 @@ public class StudentController {
         logger.debug("delete Upload Work , workId: " + workId);
         LoginUser loginUser = JwtUtils.getLoginUser(authorization);
         logger.info("get login user: " + loginUser);
+        checkRoleIsStudent(loginUser);
         fileService.delFile(loginUser.getNo(), workId);
         uploadService.delUploadInfoByWorkId(loginUser.getNo(), workId);
         return ResponseEntity.noContent().build();
@@ -194,6 +201,7 @@ public class StudentController {
         logger.debug("is Student Join Any StudentGroup");
         LoginUser loginUser = JwtUtils.getLoginUser(authorization);
         logger.info("get login user: " + loginUser);
+        checkRoleIsStudent(loginUser);
         return ResponseEntity.ok(new RestModel<>(studentGroupService.isHaveGroup(loginUser.getNo())));
     }
 

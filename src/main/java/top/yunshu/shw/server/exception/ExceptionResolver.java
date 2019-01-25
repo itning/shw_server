@@ -66,8 +66,8 @@ public class ExceptionResolver {
      */
     @ExceptionHandler(value = MissingServletRequestParameterException.class)
     @ResponseBody
-    public RestModel missingServletRequestParameterException(HttpServletResponse response, MissingServletRequestParameterException e) {
-        logger.info("missingServletRequestParameterException->" + e.getMessage());
+    public RestModel missingServletRequestParameterExceptionHandler(HttpServletResponse response, MissingServletRequestParameterException e) {
+        logger.info("missingServletRequestParameterExceptionHandler->" + e.getMessage());
         RestModel restModel = new RestModel();
         restModel.setCode(HttpServletResponse.SC_BAD_REQUEST);
         restModel.setMsg(e.getMessage());

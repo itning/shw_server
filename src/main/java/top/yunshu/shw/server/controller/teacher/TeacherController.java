@@ -25,6 +25,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static top.yunshu.shw.server.util.RoleUtils.checkRoleIsTeacher;
+
 /**
  * 教师控制器
  *
@@ -70,6 +72,7 @@ public class TeacherController {
         logger.debug("get all teacher groups");
         LoginUser loginUser = JwtUtils.getLoginUser(authorization);
         logger.info("get login user: " + loginUser);
+        checkRoleIsTeacher(loginUser);
         return ResponseEntity.ok(new RestModel<>(groupService.findTeacherAllGroups(loginUser.getNo())));
     }
 
@@ -84,6 +87,7 @@ public class TeacherController {
         logger.debug("add group , groupName: " + groupName);
         LoginUser loginUser = JwtUtils.getLoginUser(authorization);
         logger.info("get login user: " + loginUser);
+        checkRoleIsTeacher(loginUser);
         return ResponseEntity.status(HttpStatus.CREATED).body(groupService.createGroup(groupName, loginUser.getName(), loginUser.getNo()));
     }
 
@@ -99,6 +103,7 @@ public class TeacherController {
         logger.debug("update group , name: " + name);
         LoginUser loginUser = JwtUtils.getLoginUser(authorization);
         logger.info("get login user: " + loginUser);
+        checkRoleIsTeacher(loginUser);
         groupService.updateGroup(id, name, loginUser.getNo());
         return ResponseEntity.noContent().build();
     }
@@ -113,6 +118,7 @@ public class TeacherController {
         logger.debug("delete group , id: " + id);
         LoginUser loginUser = JwtUtils.getLoginUser(authorization);
         logger.info("get login user: " + loginUser);
+        checkRoleIsTeacher(loginUser);
         groupService.deleteGroup(id, loginUser.getNo());
         return ResponseEntity.noContent().build();
     }
@@ -127,6 +133,7 @@ public class TeacherController {
         logger.debug("is Teacher Have Any Group");
         LoginUser loginUser = JwtUtils.getLoginUser(authorization);
         logger.info("get login user: " + loginUser);
+        checkRoleIsTeacher(loginUser);
         return ResponseEntity.ok(new RestModel<>(groupService.isHaveAnyGroup(loginUser.getNo())));
     }
 
@@ -140,6 +147,7 @@ public class TeacherController {
         logger.debug("get teacher works");
         LoginUser loginUser = JwtUtils.getLoginUser(authorization);
         logger.info("get login user: " + loginUser);
+        checkRoleIsTeacher(loginUser);
         List<WorkModel> workModels = modelMapper.map(workService.getTeacherAllWork(loginUser.getNo()), new TypeToken<List<WorkModel>>() {
         }.getType());
         return ResponseEntity.ok(new RestModel<>(workModels));
@@ -156,6 +164,7 @@ public class TeacherController {
         logger.debug("get teacher work");
         LoginUser loginUser = JwtUtils.getLoginUser(authorization);
         logger.info("get login user: " + loginUser);
+        checkRoleIsTeacher(loginUser);
         List<WorkModel> workModels = modelMapper.map(workService.getTeacherWork(loginUser.getNo(), groupId), new TypeToken<List<WorkModel>>() {
         }.getType());
         return ResponseEntity.ok(new RestModel<>(workModels));
@@ -173,6 +182,7 @@ public class TeacherController {
         logger.debug("add work , workName: " + workName);
         LoginUser loginUser = JwtUtils.getLoginUser(authorization);
         logger.info("get login user: " + loginUser);
+        checkRoleIsTeacher(loginUser);
         return ResponseEntity.status(HttpStatus.CREATED).body(workService.createWork(workName, groupId, "", true));
     }
 
@@ -188,6 +198,7 @@ public class TeacherController {
         logger.debug("up work , work id: " + workId + " enabled: " + enabled);
         LoginUser loginUser = JwtUtils.getLoginUser(authorization);
         logger.info("get login user: " + loginUser);
+        checkRoleIsTeacher(loginUser);
         workService.changeEnabledWord(workId, Boolean.parseBoolean(enabled));
         return ResponseEntity.noContent().build();
     }
@@ -203,6 +214,7 @@ public class TeacherController {
         logger.debug("del work , work id: " + workId);
         LoginUser loginUser = JwtUtils.getLoginUser(authorization);
         logger.info("get login user: " + loginUser);
+        checkRoleIsTeacher(loginUser);
         workService.delWork(workId, loginUser.getNo());
         return ResponseEntity.noContent().build();
     }
@@ -218,6 +230,7 @@ public class TeacherController {
         logger.debug("get teacher work detail, work id " + workId);
         LoginUser loginUser = JwtUtils.getLoginUser(authorization);
         logger.info("get login user: " + loginUser);
+        checkRoleIsTeacher(loginUser);
         return ResponseEntity.ok(new RestModel<>(workService.getWorkDetailByWorkId(loginUser.getNo(), workId)));
     }
 
@@ -232,7 +245,7 @@ public class TeacherController {
         logger.debug("get teacher work detail, work id " + workId);
         LoginUser loginUser = JwtUtils.getLoginUser(authorization);
         logger.info("get login user: " + loginUser);
-
+        checkRoleIsTeacher(loginUser);
         String s = packMap.get(workId);
         if (s == null) {
             fileService.unpackFiles(workId);
