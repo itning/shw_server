@@ -49,7 +49,7 @@ public class ExceptionResolver {
     @ExceptionHandler(value = BaseException.class)
     @ResponseBody
     public RestModel baseErrorHandler(HttpServletResponse response, BaseException e) {
-        logger.info("baseErrorHandler->" + e.getClass().getSimpleName() + ":" + e.getMessage(), e);
+        logger.info("baseErrorHandler->" + e.getClass().getSimpleName() + ":" + e.getMessage());
         RestModel restModel = new RestModel();
         restModel.setCode(e.getCode().value());
         restModel.setMsg(e.getMessage());
