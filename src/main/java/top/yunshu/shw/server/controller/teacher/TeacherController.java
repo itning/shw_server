@@ -17,7 +17,6 @@ import top.yunshu.shw.server.service.group.GroupService;
 import top.yunshu.shw.server.service.upload.UploadService;
 import top.yunshu.shw.server.service.work.WorkService;
 import top.yunshu.shw.server.util.FileUtils;
-import top.yunshu.shw.server.util.JwtUtils;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
@@ -68,10 +67,7 @@ public class TeacherController {
      * @return ResponseEntity
      */
     @GetMapping("/groups")
-    public ResponseEntity<RestModel> getTeacherCreateGroups(@RequestHeader("Authorization") String authorization) {
-        logger.debug("get all teacher groups");
-        LoginUser loginUser = JwtUtils.getLoginUser(authorization);
-        logger.info("get login user: " + loginUser);
+    public ResponseEntity<RestModel> getTeacherCreateGroups(LoginUser loginUser) {
         checkRoleIsTeacher(loginUser);
         return ResponseEntity.ok(new RestModel<>(groupService.findTeacherAllGroups(loginUser.getNo())));
     }
@@ -83,10 +79,8 @@ public class TeacherController {
      * @return ResponseEntity
      */
     @PostMapping("/group")
-    public ResponseEntity<Group> addGroup(@RequestHeader("Authorization") String authorization, @RequestParam String groupName) {
+    public ResponseEntity<Group> addGroup(LoginUser loginUser, @RequestParam String groupName) {
         logger.debug("add group , groupName: " + groupName);
-        LoginUser loginUser = JwtUtils.getLoginUser(authorization);
-        logger.info("get login user: " + loginUser);
         checkRoleIsTeacher(loginUser);
         return ResponseEntity.status(HttpStatus.CREATED).body(groupService.createGroup(groupName, loginUser.getName(), loginUser.getNo()));
     }
@@ -99,10 +93,8 @@ public class TeacherController {
      * @return ResponseEntity
      */
     @PatchMapping("/group/{id}/{name}")
-    public ResponseEntity<Void> updateGroupName(@RequestHeader("Authorization") String authorization, @PathVariable String id, @PathVariable String name) {
+    public ResponseEntity<Void> updateGroupName(LoginUser loginUser, @PathVariable String id, @PathVariable String name) {
         logger.debug("update group , name: " + name);
-        LoginUser loginUser = JwtUtils.getLoginUser(authorization);
-        logger.info("get login user: " + loginUser);
         checkRoleIsTeacher(loginUser);
         groupService.updateGroup(id, name, loginUser.getNo());
         return ResponseEntity.noContent().build();
@@ -114,10 +106,8 @@ public class TeacherController {
      * @param id 删除的群组名
      */
     @DeleteMapping("/group/{id}")
-    public ResponseEntity<Void> deleteGroup(@RequestHeader("Authorization") String authorization, @PathVariable String id) {
+    public ResponseEntity<Void> deleteGroup(LoginUser loginUser, @PathVariable String id) {
         logger.debug("delete group , id: " + id);
-        LoginUser loginUser = JwtUtils.getLoginUser(authorization);
-        logger.info("get login user: " + loginUser);
         checkRoleIsTeacher(loginUser);
         groupService.deleteGroup(id, loginUser.getNo());
         return ResponseEntity.noContent().build();
@@ -129,10 +119,8 @@ public class TeacherController {
      * @return ResponseEntity
      */
     @GetMapping("/group/exist")
-    public ResponseEntity<RestModel> isTeacherHaveAnyGroup(@RequestHeader("Authorization") String authorization) {
+    public ResponseEntity<RestModel> isTeacherHaveAnyGroup(LoginUser loginUser) {
         logger.debug("is Teacher Have Any Group");
-        LoginUser loginUser = JwtUtils.getLoginUser(authorization);
-        logger.info("get login user: " + loginUser);
         checkRoleIsTeacher(loginUser);
         return ResponseEntity.ok(new RestModel<>(groupService.isHaveAnyGroup(loginUser.getNo())));
     }
@@ -143,10 +131,8 @@ public class TeacherController {
      * @return ResponseEntity
      */
     @GetMapping("/works")
-    public ResponseEntity<RestModel> getTeacherWorks(@RequestHeader("Authorization") String authorization) {
+    public ResponseEntity<RestModel> getTeacherWorks(LoginUser loginUser) {
         logger.debug("get teacher works");
-        LoginUser loginUser = JwtUtils.getLoginUser(authorization);
-        logger.info("get login user: " + loginUser);
         checkRoleIsTeacher(loginUser);
         List<WorkModel> workModels = modelMapper.map(workService.getTeacherAllWork(loginUser.getNo()), new TypeToken<List<WorkModel>>() {
         }.getType());
@@ -160,10 +146,8 @@ public class TeacherController {
      * @return ResponseEntity
      */
     @GetMapping("/work/{groupId}")
-    public ResponseEntity<RestModel> getTeacherWork(@RequestHeader("Authorization") String authorization, @PathVariable String groupId) {
+    public ResponseEntity<RestModel> getTeacherWork(LoginUser loginUser, @PathVariable String groupId) {
         logger.debug("get teacher work");
-        LoginUser loginUser = JwtUtils.getLoginUser(authorization);
-        logger.info("get login user: " + loginUser);
         checkRoleIsTeacher(loginUser);
         List<WorkModel> workModels = modelMapper.map(workService.getTeacherWork(loginUser.getNo(), groupId), new TypeToken<List<WorkModel>>() {
         }.getType());
@@ -178,10 +162,8 @@ public class TeacherController {
      * @return ResponseEntity
      */
     @PostMapping("/work")
-    public ResponseEntity<Work> addWork(@RequestHeader("Authorization") String authorization,@RequestParam String workName,@RequestParam String groupId) {
+    public ResponseEntity<Work> addWork(LoginUser loginUser, @RequestParam String workName, @RequestParam String groupId) {
         logger.debug("add work , workName: " + workName);
-        LoginUser loginUser = JwtUtils.getLoginUser(authorization);
-        logger.info("get login user: " + loginUser);
         checkRoleIsTeacher(loginUser);
         return ResponseEntity.status(HttpStatus.CREATED).body(workService.createWork(workName, groupId, "", true));
     }
@@ -194,10 +176,8 @@ public class TeacherController {
      * @return ResponseEntity
      */
     @PatchMapping("/work/{workId}/{enabled}")
-    public ResponseEntity<Void> updateWorkEnabled(@RequestHeader("Authorization") String authorization, @PathVariable String workId, @PathVariable String enabled) {
+    public ResponseEntity<Void> updateWorkEnabled(LoginUser loginUser, @PathVariable String workId, @PathVariable String enabled) {
         logger.debug("up work , work id: " + workId + " enabled: " + enabled);
-        LoginUser loginUser = JwtUtils.getLoginUser(authorization);
-        logger.info("get login user: " + loginUser);
         checkRoleIsTeacher(loginUser);
         workService.changeEnabledWord(workId, Boolean.parseBoolean(enabled));
         return ResponseEntity.noContent().build();
@@ -210,10 +190,8 @@ public class TeacherController {
      * @return ResponseEntity
      */
     @DeleteMapping("/work/{workId}")
-    public ResponseEntity<Void> deleteWork(@RequestHeader("Authorization") String authorization, @PathVariable String workId) {
+    public ResponseEntity<Void> deleteWork(LoginUser loginUser, @PathVariable String workId) {
         logger.debug("del work , work id: " + workId);
-        LoginUser loginUser = JwtUtils.getLoginUser(authorization);
-        logger.info("get login user: " + loginUser);
         checkRoleIsTeacher(loginUser);
         workService.delWork(workId, loginUser.getNo());
         return ResponseEntity.noContent().build();
@@ -226,10 +204,8 @@ public class TeacherController {
      * @return ResponseEntity
      */
     @GetMapping("/work_detail/{workId}")
-    public ResponseEntity<RestModel> getTeacherWorkDetails(@RequestHeader("Authorization") String authorization, @PathVariable String workId) {
+    public ResponseEntity<RestModel> getTeacherWorkDetails(LoginUser loginUser, @PathVariable String workId) {
         logger.debug("get teacher work detail, work id " + workId);
-        LoginUser loginUser = JwtUtils.getLoginUser(authorization);
-        logger.info("get login user: " + loginUser);
         checkRoleIsTeacher(loginUser);
         return ResponseEntity.ok(new RestModel<>(workService.getWorkDetailByWorkId(loginUser.getNo(), workId)));
     }
@@ -241,10 +217,8 @@ public class TeacherController {
      * @return ResponseEntity
      */
     @GetMapping("/pack/{workId}")
-    public ResponseEntity<RestModel> pack(@RequestHeader("Authorization") String authorization, @PathVariable String workId) {
+    public ResponseEntity<RestModel> pack(LoginUser loginUser, @PathVariable String workId) {
         logger.debug("get teacher work detail, work id " + workId);
-        LoginUser loginUser = JwtUtils.getLoginUser(authorization);
-        logger.info("get login user: " + loginUser);
         checkRoleIsTeacher(loginUser);
         String s = packMap.get(workId);
         if (s == null) {
