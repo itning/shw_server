@@ -27,8 +27,6 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
-import static top.yunshu.shw.server.util.RoleUtils.checkRoleIsStudent;
-
 
 /**
  * 学生控制器
