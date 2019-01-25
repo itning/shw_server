@@ -24,8 +24,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static top.yunshu.shw.server.util.RoleUtils.checkRoleIsTeacher;
-
 /**
  * 教师控制器
  *
@@ -68,7 +66,6 @@ public class TeacherController {
      */
     @GetMapping("/groups")
     public ResponseEntity<RestModel> getTeacherCreateGroups(LoginUser loginUser) {
-        checkRoleIsTeacher(loginUser);
         return ResponseEntity.ok(new RestModel<>(groupService.findTeacherAllGroups(loginUser.getNo())));
     }
 
@@ -81,7 +78,6 @@ public class TeacherController {
     @PostMapping("/group")
     public ResponseEntity<Group> addGroup(LoginUser loginUser, @RequestParam String groupName) {
         logger.debug("add group , groupName: " + groupName);
-        checkRoleIsTeacher(loginUser);
         return ResponseEntity.status(HttpStatus.CREATED).body(groupService.createGroup(groupName, loginUser.getName(), loginUser.getNo()));
     }
 
@@ -95,7 +91,6 @@ public class TeacherController {
     @PatchMapping("/group/{id}/{name}")
     public ResponseEntity<Void> updateGroupName(LoginUser loginUser, @PathVariable String id, @PathVariable String name) {
         logger.debug("update group , name: " + name);
-        checkRoleIsTeacher(loginUser);
         groupService.updateGroup(id, name, loginUser.getNo());
         return ResponseEntity.noContent().build();
     }
@@ -108,7 +103,6 @@ public class TeacherController {
     @DeleteMapping("/group/{id}")
     public ResponseEntity<Void> deleteGroup(LoginUser loginUser, @PathVariable String id) {
         logger.debug("delete group , id: " + id);
-        checkRoleIsTeacher(loginUser);
         groupService.deleteGroup(id, loginUser.getNo());
         return ResponseEntity.noContent().build();
     }
@@ -121,7 +115,6 @@ public class TeacherController {
     @GetMapping("/group/exist")
     public ResponseEntity<RestModel> isTeacherHaveAnyGroup(LoginUser loginUser) {
         logger.debug("is Teacher Have Any Group");
-        checkRoleIsTeacher(loginUser);
         return ResponseEntity.ok(new RestModel<>(groupService.isHaveAnyGroup(loginUser.getNo())));
     }
 
@@ -133,7 +126,6 @@ public class TeacherController {
     @GetMapping("/works")
     public ResponseEntity<RestModel> getTeacherWorks(LoginUser loginUser) {
         logger.debug("get teacher works");
-        checkRoleIsTeacher(loginUser);
         List<WorkModel> workModels = modelMapper.map(workService.getTeacherAllWork(loginUser.getNo()), new TypeToken<List<WorkModel>>() {
         }.getType());
         return ResponseEntity.ok(new RestModel<>(workModels));
@@ -148,7 +140,6 @@ public class TeacherController {
     @GetMapping("/work/{groupId}")
     public ResponseEntity<RestModel> getTeacherWork(LoginUser loginUser, @PathVariable String groupId) {
         logger.debug("get teacher work");
-        checkRoleIsTeacher(loginUser);
         List<WorkModel> workModels = modelMapper.map(workService.getTeacherWork(loginUser.getNo(), groupId), new TypeToken<List<WorkModel>>() {
         }.getType());
         return ResponseEntity.ok(new RestModel<>(workModels));
@@ -164,7 +155,6 @@ public class TeacherController {
     @PostMapping("/work")
     public ResponseEntity<Work> addWork(LoginUser loginUser, @RequestParam String workName, @RequestParam String groupId) {
         logger.debug("add work , workName: " + workName);
-        checkRoleIsTeacher(loginUser);
         return ResponseEntity.status(HttpStatus.CREATED).body(workService.createWork(workName, groupId, "", true));
     }
 
@@ -178,7 +168,6 @@ public class TeacherController {
     @PatchMapping("/work/{workId}/{enabled}")
     public ResponseEntity<Void> updateWorkEnabled(LoginUser loginUser, @PathVariable String workId, @PathVariable String enabled) {
         logger.debug("up work , work id: " + workId + " enabled: " + enabled);
-        checkRoleIsTeacher(loginUser);
         workService.changeEnabledWord(workId, Boolean.parseBoolean(enabled));
         return ResponseEntity.noContent().build();
     }
@@ -192,7 +181,6 @@ public class TeacherController {
     @DeleteMapping("/work/{workId}")
     public ResponseEntity<Void> deleteWork(LoginUser loginUser, @PathVariable String workId) {
         logger.debug("del work , work id: " + workId);
-        checkRoleIsTeacher(loginUser);
         workService.delWork(workId, loginUser.getNo());
         return ResponseEntity.noContent().build();
     }
@@ -206,7 +194,6 @@ public class TeacherController {
     @GetMapping("/work_detail/{workId}")
     public ResponseEntity<RestModel> getTeacherWorkDetails(LoginUser loginUser, @PathVariable String workId) {
         logger.debug("get teacher work detail, work id " + workId);
-        checkRoleIsTeacher(loginUser);
         return ResponseEntity.ok(new RestModel<>(workService.getWorkDetailByWorkId(loginUser.getNo(), workId)));
     }
 
@@ -219,7 +206,6 @@ public class TeacherController {
     @GetMapping("/pack/{workId}")
     public ResponseEntity<RestModel> pack(LoginUser loginUser, @PathVariable String workId) {
         logger.debug("get teacher work detail, work id " + workId);
-        checkRoleIsTeacher(loginUser);
         String s = packMap.get(workId);
         if (s == null) {
             fileService.unpackFiles(workId);

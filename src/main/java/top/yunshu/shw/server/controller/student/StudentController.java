@@ -71,7 +71,6 @@ public class StudentController {
     @GetMapping("/groups")
     public ResponseEntity<RestModel> getAllGroups(LoginUser loginUser) {
         logger.debug("get all student groups");
-        checkRoleIsStudent(loginUser);
         return ResponseEntity.ok(new RestModel<>(groupService.findStudentAllGroups(loginUser.getNo())));
     }
 
@@ -83,7 +82,6 @@ public class StudentController {
     @GetMapping("/works/un_done")
     public ResponseEntity<RestModel> getAllUnDoneWorks(LoginUser loginUser) {
         logger.debug("get all un done works");
-        checkRoleIsStudent(loginUser);
         List<WorkModel> workModels = modelMapper.map(workService.getStudentUnDoneWork(loginUser.getNo()), new TypeToken<List<WorkModel>>() {
         }.getType());
         return ResponseEntity.ok(new RestModel<>(workModels));
@@ -97,7 +95,6 @@ public class StudentController {
     @GetMapping("/works/done")
     public ResponseEntity<RestModel> getAllDoneWorks(LoginUser loginUser) {
         logger.debug("get all done works");
-        checkRoleIsStudent(loginUser);
         List<WorkModel> workModels = modelMapper.map(workService.getStudentDoneWork(loginUser.getNo()), new TypeToken<List<WorkModel>>() {
         }.getType());
         return ResponseEntity.ok(new RestModel<>(workModels));
@@ -112,7 +109,6 @@ public class StudentController {
     @GetMapping("/upload/{workId}")
     public ResponseEntity<RestModel> getUpLoadInfoByWorkId(LoginUser loginUser, @PathVariable String workId) {
         logger.debug("get upload info by work id");
-        checkRoleIsStudent(loginUser);
         return ResponseEntity.ok(new RestModel<>(uploadService.getUploadInfoByWorkId(loginUser.getNo(), workId)));
     }
 
@@ -125,7 +121,6 @@ public class StudentController {
     @PostMapping("/group")
     public ResponseEntity<Group> addGroup(LoginUser loginUser, @RequestParam String code) {
         logger.debug("add group , code: " + code);
-        checkRoleIsStudent(loginUser);
         return ResponseEntity.status(HttpStatus.CREATED).body(groupService.joinGroup(code, loginUser.getNo()));
     }
 
@@ -138,7 +133,6 @@ public class StudentController {
     @DeleteMapping("/group/{groupId}")
     public ResponseEntity<Void> dropOutGroup(LoginUser loginUser, @PathVariable String groupId) {
         logger.debug("del group , id: " + groupId);
-        checkRoleIsStudent(loginUser);
         groupService.dropOutGroup(groupId, loginUser.getNo());
         return ResponseEntity.noContent().build();
     }
@@ -153,7 +147,6 @@ public class StudentController {
     @PostMapping("/work/{workId}")
     public ResponseEntity<Void> uploadWork(LoginUser loginUser, @PathVariable String workId, @RequestParam("file") MultipartFile file) {
         logger.debug("upload file , work id: " + workId);
-        checkRoleIsStudent(loginUser);
         fileService.uploadFile(file, loginUser.getNo(), workId);
         uploadService.uploadFile(file, loginUser.getNo(), workId);
         return ResponseEntity.status(HttpStatus.CREATED).build();
@@ -168,7 +161,6 @@ public class StudentController {
     @DeleteMapping("/work/{workId}")
     public ResponseEntity<Void> deleteUploadWork(LoginUser loginUser, @PathVariable String workId) {
         logger.debug("delete Upload Work , workId: " + workId);
-        checkRoleIsStudent(loginUser);
         fileService.delFile(loginUser.getNo(), workId);
         uploadService.delUploadInfoByWorkId(loginUser.getNo(), workId);
         return ResponseEntity.noContent().build();
@@ -182,7 +174,6 @@ public class StudentController {
     @GetMapping("/group/exist")
     public ResponseEntity<RestModel> isStudentJoinAnyStudentGroup(LoginUser loginUser) {
         logger.debug("is Student Join Any StudentGroup");
-        checkRoleIsStudent(loginUser);
         return ResponseEntity.ok(new RestModel<>(studentGroupService.isHaveGroup(loginUser.getNo())));
     }
 
