@@ -10,6 +10,7 @@ import java.io.Serializable;
  *
  * @author itning
  */
+
 @Entity
 public class Config implements Serializable {
     public enum ConfigKey {

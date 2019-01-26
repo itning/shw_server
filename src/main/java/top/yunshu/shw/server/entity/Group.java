@@ -1,5 +1,7 @@
 package top.yunshu.shw.server.entity;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -15,6 +17,7 @@ import java.util.Date;
  * @author shulu
  * @author itning
  */
+@ApiModel(description = "群组")
 @Entity
 @Table(name = "group_", indexes = {
         @Index(name = "teacher_number_index", columnList = "teacher_number"),
@@ -24,38 +27,45 @@ public class Group implements Serializable {
     /**
      * 群组ID
      */
+    @ApiModelProperty(required = true, value = "群组ID")
     @Id
     @Column(length = 50)
     private String id;
     /**
      * 群组名
      */
+    @ApiModelProperty(required = true, value = "群组名")
     @Column(nullable = false)
     private String groupName;
     /**
      * 教师名
      */
+    @ApiModelProperty(required = true, value = "教师名")
     @Column(nullable = false)
     private String teacherName;
     /**
      * 教师序号
      */
+    @ApiModelProperty(required = true, value = "教师序号")
     @Column(name = "teacher_number", nullable = false, length = 50)
     private String teacherNumber;
     /**
      * 邀请码
      */
+    @ApiModelProperty(required = true, value = "邀请码")
     @Column(name = "code", nullable = false, unique = true, length = 50)
     private String code;
     /**
      * 创建时间
      */
+    @ApiModelProperty(required = true, value = "创建时间")
     @Column(nullable = false)
     @CreationTimestamp
     private Date gmtCreate;
     /**
      * 更新时间
      */
+    @ApiModelProperty(required = true, value = "更新时间")
     @Column(nullable = false)
     @UpdateTimestamp
     private Date gmtModified;

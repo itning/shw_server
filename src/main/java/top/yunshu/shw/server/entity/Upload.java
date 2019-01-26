@@ -1,5 +1,7 @@
 package top.yunshu.shw.server.entity;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -16,45 +18,53 @@ import java.util.Date;
  * @author shulu
  * @author itning
  */
+@ApiModel(description = "上传")
 @Entity
 @IdClass(UploadPrimaryKey.class)
 public class Upload implements Serializable {
     /**
      * 学生ID
      */
+    @ApiModelProperty(required = true, value = "学生ID")
     @Id
     @Column(length = 50)
     private String studentId;
     /**
      * 作业ID
      */
+    @ApiModelProperty(required = true, value = "作业ID")
     @Id
     @Column(length = 50)
     private String workId;
     /**
      * 文件类型
      */
+    @ApiModelProperty(required = true, value = "文件类型")
     @Column(nullable = false)
     private String mime;
     /**
      * 扩展名
      */
+    @ApiModelProperty(required = true, value = "扩展名")
     @Column(nullable = false)
     private String extensionName;
     /**
      * 文件大小(bytes)
      */
+    @ApiModelProperty(required = true, value = "文件大小(bytes)")
     @Column(nullable = false)
     private long size;
     /**
      * 创建时间
      */
+    @ApiModelProperty(required = true, value = "创建时间")
     @Column(nullable = false)
     @CreationTimestamp
     private Date gmtCreate;
     /**
      * 更新时间
      */
+    @ApiModelProperty(required = true, value = "更新时间")
     @Column(nullable = false)
     @UpdateTimestamp
     private Date gmtModified;

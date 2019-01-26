@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -72,7 +73,8 @@ public class StudentController {
      *
      * @return ResponseEntity
      */
-    @ApiOperation("获取学生所有群组")
+    @ApiOperation(value = "获取学生所有群组", produces = MediaType.APPLICATION_JSON_UTF8_VALUE,
+            response = Group.class, responseContainer = "List")
     @GetMapping("/groups")
     public Callable<ResponseEntity<RestModel>> getAllGroups(@ApiIgnore LoginUser loginUser) {
         logger.debug("get all student groups");
@@ -84,7 +86,8 @@ public class StudentController {
      *
      * @return ResponseEntity
      */
-    @ApiOperation("获取学生所有未上传作业")
+    @ApiOperation(value = "获取学生所有未上传作业", produces = MediaType.APPLICATION_JSON_UTF8_VALUE,
+            response = WorkModel.class, responseContainer = "List")
     @GetMapping("/works/un_done")
     public Callable<ResponseEntity<RestModel>> getAllUnDoneWorks(@ApiIgnore LoginUser loginUser) {
         logger.debug("get all un done works");
@@ -97,7 +100,8 @@ public class StudentController {
      *
      * @return ResponseEntity
      */
-    @ApiOperation("获取学生所有已上传作业")
+    @ApiOperation(value = "获取学生所有已上传作业", produces = MediaType.APPLICATION_JSON_UTF8_VALUE,
+            response = WorkModel.class, responseContainer = "List")
     @GetMapping("/works/done")
     public Callable<ResponseEntity<RestModel>> getAllDoneWorks(@ApiIgnore LoginUser loginUser) {
         logger.debug("get all done works");
@@ -111,7 +115,7 @@ public class StudentController {
      * @param workId 作业ID
      * @return ResponseEntity
      */
-    @ApiOperation("根据作业ID获取上传信息")
+    @ApiOperation(value = "根据作业ID获取上传信息", produces = MediaType.APPLICATION_JSON_UTF8_VALUE, response = Upload.class)
     @GetMapping("/upload/{workId}")
     public Callable<ResponseEntity<RestModel>> getUpLoadInfoByWorkId(@ApiIgnore LoginUser loginUser,
                                                                      @ApiParam(value = "作业ID", required = true) @PathVariable String workId) {
@@ -125,7 +129,7 @@ public class StudentController {
      * @param code 邀请码
      * @return ResponseEntity
      */
-    @ApiOperation("学生加入群组")
+    @ApiOperation(value = "学生加入群组", produces = MediaType.APPLICATION_JSON_UTF8_VALUE, response = Group.class)
     @PostMapping("/group")
     public ResponseEntity<Group> addGroup(@ApiIgnore LoginUser loginUser,
                                           @ApiParam(value = "邀请码", required = true) @RequestParam String code) {

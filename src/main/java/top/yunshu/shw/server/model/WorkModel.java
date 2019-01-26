@@ -1,5 +1,8 @@
 package top.yunshu.shw.server.model;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -8,42 +11,52 @@ import java.util.Date;
  *
  * @author itning
  */
+@ApiModel(description = "作业模型")
 public class WorkModel implements Serializable {
     /**
      * 作业ID，标识唯一作业
      */
+    @ApiModelProperty(required = true, value = "作业ID，标识唯一作业")
     private String id;
     /**
      * 群组ID，该作业所属群
      */
+    @ApiModelProperty(required = true, value = "群组ID，该作业所属群")
     private String groupId;
     /**
      * 作业名
      */
+    @ApiModelProperty(required = true, value = "作业名")
     private String workName;
     /**
      * 作业启用状态
      */
+    @ApiModelProperty(required = true, value = "作业启用状态")
     private boolean isEnabled = true;
     /**
      * 文件名规范
      */
+    @ApiModelProperty(required = true, value = "文件名规范")
     private String fileNameFormat;
     /**
      * 创建时间
      */
+    @ApiModelProperty(required = true, value = "创建时间")
     private Date gmtCreate;
     /**
      * 更新时间
      */
+    @ApiModelProperty(required = true, value = "更新时间")
     private Date gmtModified;
     /**
      * 群组名
      */
+    @ApiModelProperty(required = true, value = "群组名")
     private String groupName;
     /**
      * 教师名
      */
+    @ApiModelProperty(required = true, value = "教师名")
     private String teacherName;
 
     public String getId() {

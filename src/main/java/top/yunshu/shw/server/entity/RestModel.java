@@ -1,5 +1,7 @@
 package top.yunshu.shw.server.entity;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import org.springframework.http.HttpStatus;
 
 import java.io.Serializable;
@@ -9,9 +11,13 @@ import java.io.Serializable;
  *
  * @author itning
  */
+@ApiModel(description = "Rest 返回消息")
 public class RestModel<T> implements Serializable {
+    @ApiModelProperty(required = true, value = "状态码")
     private int code;
+    @ApiModelProperty(required = true, value = "消息")
     private String msg;
+    @ApiModelProperty(required = true, value = "数据")
     private T data;
 
     public RestModel() {

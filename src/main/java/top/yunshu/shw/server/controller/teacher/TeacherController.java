@@ -9,11 +9,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 import top.yunshu.shw.server.entity.*;
 import top.yunshu.shw.server.exception.FileException;
+import top.yunshu.shw.server.model.WorkDetailsModel;
 import top.yunshu.shw.server.model.WorkModel;
 import top.yunshu.shw.server.service.config.ConfigService;
 import top.yunshu.shw.server.service.file.FileService;
@@ -70,7 +72,8 @@ public class TeacherController {
      *
      * @return ResponseEntity
      */
-    @ApiOperation("教师获取创建的所有群组")
+    @ApiOperation(value = "教师获取创建的所有群组", produces = MediaType.APPLICATION_JSON_UTF8_VALUE,
+            response = Group.class, responseContainer = "List")
     @GetMapping("/groups")
     public Callable<ResponseEntity<RestModel>> getTeacherCreateGroups(@ApiIgnore LoginUser loginUser) {
         return () -> ResponseEntity.ok(new RestModel<>(groupService.findTeacherAllGroups(loginUser.getNo())));
@@ -82,7 +85,7 @@ public class TeacherController {
      * @param groupName 教师添加的组名
      * @return ResponseEntity
      */
-    @ApiOperation("新建群组")
+    @ApiOperation(value = "新建群组", produces = MediaType.APPLICATION_JSON_UTF8_VALUE, response = Group.class)
     @PostMapping("/group")
     public ResponseEntity<Group> addGroup(@ApiIgnore LoginUser loginUser,
                                           @ApiParam(value = "教师添加的组名", required = true) @RequestParam String groupName) {
@@ -138,7 +141,8 @@ public class TeacherController {
      *
      * @return ResponseEntity
      */
-    @ApiOperation("获取教师所有作业")
+    @ApiOperation(value = "获取教师所有作业", produces = MediaType.APPLICATION_JSON_UTF8_VALUE,
+            response = WorkModel.class, responseContainer = "List")
     @GetMapping("/works")
     public Callable<ResponseEntity<RestModel>> getTeacherWorks(@ApiIgnore LoginUser loginUser) {
         logger.debug("get teacher works");
@@ -152,7 +156,8 @@ public class TeacherController {
      * @param groupId 群ID
      * @return ResponseEntity
      */
-    @ApiOperation("根据群ID获取作业")
+    @ApiOperation(value = "根据群ID获取作业", produces = MediaType.APPLICATION_JSON_UTF8_VALUE,
+            response = WorkModel.class, responseContainer = "List")
     @GetMapping("/work/{groupId}")
     public Callable<ResponseEntity<RestModel>> getTeacherWork(@ApiIgnore LoginUser loginUser,
                                                               @ApiParam(value = "群ID", required = true) @PathVariable String groupId) {
@@ -168,7 +173,8 @@ public class TeacherController {
      * @param groupId  群ID
      * @return ResponseEntity
      */
-    @ApiOperation("添加作业")
+    @ApiOperation(value = "添加作业", produces = MediaType.APPLICATION_JSON_UTF8_VALUE,
+            response = Work.class)
     @PostMapping("/work")
     public ResponseEntity<Work> addWork(@ApiIgnore LoginUser loginUser,
                                         @ApiParam(value = "作业名", required = true) @RequestParam String workName,
@@ -215,7 +221,8 @@ public class TeacherController {
      * @param workId 作业ID
      * @return ResponseEntity
      */
-    @ApiOperation("获取作业详情")
+    @ApiOperation(value = "获取作业详情", produces = MediaType.APPLICATION_JSON_UTF8_VALUE,
+            response = WorkDetailsModel.class, responseContainer = "List")
     @GetMapping("/work_detail/{workId}")
     public Callable<ResponseEntity<RestModel>> getTeacherWorkDetails(@ApiIgnore LoginUser loginUser,
                                                                      @ApiParam(value = "作业ID", required = true) @PathVariable String workId) {

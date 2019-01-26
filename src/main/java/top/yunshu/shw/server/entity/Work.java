@@ -1,5 +1,7 @@
 package top.yunshu.shw.server.entity;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -12,6 +14,7 @@ import java.util.Date;
  *
  * @author shulu
  */
+@ApiModel(description = "作业")
 @Entity
 @Table(name = "work", indexes = {
         @Index(name = "group_id_index", columnList = "group_id")
@@ -20,38 +23,45 @@ public class Work implements Serializable {
     /**
      * 作业ID，标识唯一作业
      */
+    @ApiModelProperty(required = true, value = "作业ID，标识唯一作业")
     @Id
     @Column(length = 50)
     private String id;
     /**
      * 群组ID，该作业所属群
      */
+    @ApiModelProperty(required = true, value = "群组ID，该作业所属群")
     @Column(name = "group_id", nullable = false, length = 50)
     private String groupId;
     /**
      * 作业名
      */
+    @ApiModelProperty(required = true, value = "作业名")
     @Column(nullable = false)
     private String workName;
     /**
      * 作业启用状态
      */
+    @ApiModelProperty(required = true, value = "作业启用状态")
     @Column(name = "is_enabled", nullable = false)
     private boolean enabled = true;
     /**
      * 文件名规范
      */
+    @ApiModelProperty(required = true, value = "文件名规范")
     @Column(nullable = false)
     private String fileNameFormat;
     /**
      * 创建时间
      */
+    @ApiModelProperty(required = true, value = "创建时间")
     @Column(nullable = false)
     @CreationTimestamp
     private Date gmtCreate;
     /**
      * 更新时间
      */
+    @ApiModelProperty(required = true, value = "更新时间")
     @Column(nullable = false)
     @UpdateTimestamp
     private Date gmtModified;

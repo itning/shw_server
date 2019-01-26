@@ -1,5 +1,7 @@
 package top.yunshu.shw.server.entity;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -15,30 +17,35 @@ import java.util.Date;
  *
  * @author shulu
  */
+@ApiModel(description = "学生群组")
 @Entity
 @IdClass(StudentGroupPrimaryKey.class)
 public class StudentGroup implements Serializable {
     /**
      * StudentGroup ID
      */
+    @ApiModelProperty(required = true, value = "StudentGroup ID")
     @Id
     @Column(length = 50)
     private String studentNumber;
     /**
      * Group ID
      */
+    @ApiModelProperty(required = true, value = "Group ID")
     @Id
     @Column(length = 50)
     private String groupID;
     /**
      * 创建时间
      */
+    @ApiModelProperty(required = true, value = "创建时间")
     @Column(nullable = false)
     @CreationTimestamp
     private Date gmtCreate;
     /**
      * 更新时间
      */
+    @ApiModelProperty(required = true, value = "更新时间")
     @Column(nullable = false)
     @UpdateTimestamp
     private Date gmtModified;

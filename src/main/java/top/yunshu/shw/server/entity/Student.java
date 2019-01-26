@@ -1,5 +1,8 @@
 package top.yunshu.shw.server.entity;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -10,27 +13,32 @@ import java.io.Serializable;
  *
  * @author itning
  */
+@ApiModel(description = "用于存储学生元数据的实体")
 @Entity
 public class Student implements Serializable {
     /**
      * 学号
      */
+    @ApiModelProperty(required = true, value = "学号")
     @Id
     @Column(length = 50)
     private String no;
     /**
      * 登录名
      */
+    @ApiModelProperty("登录名")
     @Column(length = 50)
     private String loginName;
     /**
      * 姓名
      */
+    @ApiModelProperty("姓名")
     @Column(length = 50)
     private String name;
     /**
      * 班级
      */
+    @ApiModelProperty("班级")
     @Column(length = 50)
     private String clazzId;
 
