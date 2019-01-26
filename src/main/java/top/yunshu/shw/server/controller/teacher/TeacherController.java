@@ -1,5 +1,8 @@
 package top.yunshu.shw.server.controller.teacher;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.slf4j.Logger;
@@ -8,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 import top.yunshu.shw.server.entity.*;
 import top.yunshu.shw.server.exception.FileException;
 import top.yunshu.shw.server.model.WorkModel;
@@ -32,6 +36,7 @@ import java.util.concurrent.Callable;
  * @author shulu
  * @date 2018/12/21
  */
+@Api(tags = {"教师接口"})
 @RestController
 @RequestMapping("/teacher")
 public class TeacherController {
@@ -65,8 +70,9 @@ public class TeacherController {
      *
      * @return ResponseEntity
      */
+    @ApiOperation("教师获取创建的所有群组")
     @GetMapping("/groups")
-    public Callable<ResponseEntity<RestModel>> getTeacherCreateGroups(LoginUser loginUser) {
+    public Callable<ResponseEntity<RestModel>> getTeacherCreateGroups(@ApiIgnore LoginUser loginUser) {
         return () -> ResponseEntity.ok(new RestModel<>(groupService.findTeacherAllGroups(loginUser.getNo())));
     }
 
@@ -76,8 +82,10 @@ public class TeacherController {
      * @param groupName 教师添加的组名
      * @return ResponseEntity
      */
+    @ApiOperation("新建群组")
     @PostMapping("/group")
-    public ResponseEntity<Group> addGroup(LoginUser loginUser, @RequestParam String groupName) {
+    public ResponseEntity<Group> addGroup(@ApiIgnore LoginUser loginUser,
+                                          @ApiParam(value = "教师添加的组名", required = true) @RequestParam String groupName) {
         logger.debug("add group , groupName: " + groupName);
         return ResponseEntity.status(HttpStatus.CREATED).body(groupService.createGroup(groupName, loginUser.getName(), loginUser.getNo()));
     }
@@ -89,8 +97,11 @@ public class TeacherController {
      * @param id   群组id
      * @return ResponseEntity
      */
+    @ApiOperation("更新群组")
     @PatchMapping("/group/{id}/{name}")
-    public ResponseEntity<Void> updateGroupName(LoginUser loginUser, @PathVariable String id, @PathVariable String name) {
+    public ResponseEntity<Void> updateGroupName(@ApiIgnore LoginUser loginUser,
+                                                @ApiParam(value = "群组id", required = true) @PathVariable String id,
+                                                @ApiParam(value = "修改的新群组名", required = true) @PathVariable String name) {
         logger.debug("update group , name: " + name);
         groupService.updateGroup(id, name, loginUser.getNo());
         return ResponseEntity.noContent().build();
@@ -99,10 +110,12 @@ public class TeacherController {
     /**
      * 删除群组
      *
-     * @param id 删除的群组名
+     * @param id 要删除的群组ID
      */
+    @ApiOperation("删除群组")
     @DeleteMapping("/group/{id}")
-    public ResponseEntity<Void> deleteGroup(LoginUser loginUser, @PathVariable String id) {
+    public ResponseEntity<Void> deleteGroup(@ApiIgnore LoginUser loginUser,
+                                            @ApiParam(value = "要删除的群组ID", required = true) @PathVariable String id) {
         logger.debug("delete group , id: " + id);
         groupService.deleteGroup(id, loginUser.getNo());
         return ResponseEntity.noContent().build();
@@ -113,8 +126,9 @@ public class TeacherController {
      *
      * @return ResponseEntity
      */
+    @ApiOperation("查询教师是否有群组")
     @GetMapping("/group/exist")
-    public Callable<ResponseEntity<RestModel>> isTeacherHaveAnyGroup(LoginUser loginUser) {
+    public Callable<ResponseEntity<RestModel>> isTeacherHaveAnyGroup(@ApiIgnore LoginUser loginUser) {
         logger.debug("is Teacher Have Any Group");
         return () -> ResponseEntity.ok(new RestModel<>(groupService.isHaveAnyGroup(loginUser.getNo())));
     }
@@ -124,8 +138,9 @@ public class TeacherController {
      *
      * @return ResponseEntity
      */
+    @ApiOperation("获取教师所有作业")
     @GetMapping("/works")
-    public Callable<ResponseEntity<RestModel>> getTeacherWorks(LoginUser loginUser) {
+    public Callable<ResponseEntity<RestModel>> getTeacherWorks(@ApiIgnore LoginUser loginUser) {
         logger.debug("get teacher works");
         return () -> ResponseEntity.ok(new RestModel<>(modelMapper.map(workService.getTeacherAllWork(loginUser.getNo()), new TypeToken<List<WorkModel>>() {
         }.getType())));
@@ -137,8 +152,10 @@ public class TeacherController {
      * @param groupId 群ID
      * @return ResponseEntity
      */
+    @ApiOperation("根据群ID获取作业")
     @GetMapping("/work/{groupId}")
-    public Callable<ResponseEntity<RestModel>> getTeacherWork(LoginUser loginUser, @PathVariable String groupId) {
+    public Callable<ResponseEntity<RestModel>> getTeacherWork(@ApiIgnore LoginUser loginUser,
+                                                              @ApiParam(value = "群ID", required = true) @PathVariable String groupId) {
         logger.debug("get teacher work");
         return () -> ResponseEntity.ok(new RestModel<>(modelMapper.map(workService.getTeacherWork(loginUser.getNo(), groupId), new TypeToken<List<WorkModel>>() {
         }.getType())));
@@ -151,8 +168,11 @@ public class TeacherController {
      * @param groupId  群ID
      * @return ResponseEntity
      */
+    @ApiOperation("添加作业")
     @PostMapping("/work")
-    public ResponseEntity<Work> addWork(LoginUser loginUser, @RequestParam String workName, @RequestParam String groupId) {
+    public ResponseEntity<Work> addWork(@ApiIgnore LoginUser loginUser,
+                                        @ApiParam(value = "作业名", required = true) @RequestParam String workName,
+                                        @ApiParam(value = "群ID", required = true) @RequestParam String groupId) {
         logger.debug("add work , workName: " + workName);
         return ResponseEntity.status(HttpStatus.CREATED).body(workService.createWork(workName, groupId, "", true));
     }
@@ -164,8 +184,11 @@ public class TeacherController {
      * @param enabled 开启状态
      * @return ResponseEntity
      */
+    @ApiOperation("更新作业启用状态")
     @PatchMapping("/work/{workId}/{enabled}")
-    public ResponseEntity<Void> updateWorkEnabled(LoginUser loginUser, @PathVariable String workId, @PathVariable String enabled) {
+    public ResponseEntity<Void> updateWorkEnabled(@ApiIgnore LoginUser loginUser,
+                                                  @ApiParam(value = "作业ID", required = true) @PathVariable String workId,
+                                                  @ApiParam(value = "开启状态", required = true) @PathVariable String enabled) {
         logger.debug("up work , work id: " + workId + " enabled: " + enabled);
         workService.changeEnabledWord(workId, Boolean.parseBoolean(enabled));
         return ResponseEntity.noContent().build();
@@ -177,8 +200,10 @@ public class TeacherController {
      * @param workId 作业ID
      * @return ResponseEntity
      */
+    @ApiOperation("删除作业")
     @DeleteMapping("/work/{workId}")
-    public ResponseEntity<Void> deleteWork(LoginUser loginUser, @PathVariable String workId) {
+    public ResponseEntity<Void> deleteWork(@ApiIgnore LoginUser loginUser,
+                                           @ApiParam(value = "作业ID", required = true) @PathVariable String workId) {
         logger.debug("del work , work id: " + workId);
         workService.delWork(workId, loginUser.getNo());
         return ResponseEntity.noContent().build();
@@ -190,8 +215,10 @@ public class TeacherController {
      * @param workId 作业ID
      * @return ResponseEntity
      */
+    @ApiOperation("获取作业详情")
     @GetMapping("/work_detail/{workId}")
-    public Callable<ResponseEntity<RestModel>> getTeacherWorkDetails(LoginUser loginUser, @PathVariable String workId) {
+    public Callable<ResponseEntity<RestModel>> getTeacherWorkDetails(@ApiIgnore LoginUser loginUser,
+                                                                     @ApiParam(value = "作业ID", required = true) @PathVariable String workId) {
         logger.debug("get teacher work detail, work id " + workId);
         return () -> ResponseEntity.ok(new RestModel<>(workService.getWorkDetailByWorkId(loginUser.getNo(), workId)));
     }
@@ -202,8 +229,10 @@ public class TeacherController {
      * @param workId 作业ID
      * @return ResponseEntity
      */
+    @ApiOperation(value = "打包", notes = "下载所有作业之前必须先调用该API")
     @GetMapping("/pack/{workId}")
-    public ResponseEntity<RestModel> pack(LoginUser loginUser, @PathVariable String workId) {
+    public ResponseEntity<RestModel> pack(@ApiIgnore LoginUser loginUser,
+                                          @ApiParam(value = "作业ID", required = true) @PathVariable String workId) {
         logger.debug("get teacher work detail, work id " + workId);
         String s = packMap.get(workId);
         if (s == null) {
@@ -229,8 +258,11 @@ public class TeacherController {
      * @param workId   作业ID
      * @param response {@link HttpServletResponse}
      */
+    @ApiOperation("下载所有")
     @GetMapping("/down/{workId}")
-    public void downloadAllFile(@RequestHeader(required = false) String range, @PathVariable String workId, HttpServletResponse response) {
+    public void downloadAllFile(@ApiParam(value = "Range请求头(用于判断是否需要支持多线程下载和断点续传)", required = true) @RequestHeader(required = false) String range,
+                                @ApiParam(value = "作业ID", required = true) @PathVariable String workId,
+                                @ApiIgnore HttpServletResponse response) {
         logger.debug("down file, work id: " + workId);
         long sum = uploadService.getUploadSum(workId);
         String tempFilePath = configService.getConfig(Config.ConfigKey.TEMP_DIR).orElse(System.getProperty("java.io.tmpdir")) + File.separator + workId + sum + ".zip";

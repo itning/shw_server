@@ -1,5 +1,8 @@
 package top.yunshu.shw.server.controller.admin;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,6 +11,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import springfox.documentation.annotations.ApiIgnore;
 import top.yunshu.shw.server.entity.Config;
 import top.yunshu.shw.server.service.config.ConfigService;
 
@@ -23,6 +28,7 @@ import java.util.Optional;
  * @author itning
  * @date 2018/12/21
  */
+@Api(tags = {"管理员接口"})
 @Controller
 public class AdminController {
     private static final Logger logger = LoggerFactory.getLogger(AdminController.class);
@@ -40,6 +46,7 @@ public class AdminController {
      *
      * @return login.html
      */
+    @ApiOperation("登陆页面")
     @GetMapping("/config/login")
     public String login() {
         //如果用户名不存在
@@ -56,8 +63,9 @@ public class AdminController {
      * @param session {@link HttpSession}
      * @return "redirect:/config/login";
      */
+    @ApiOperation("注销登陆")
     @GetMapping("/config/logout")
-    public String logout(HttpSession session) {
+    public String logout(@ApiIgnore HttpSession session) {
         session.removeAttribute(USER);
         session.invalidate();
         return "redirect:/config/login";
@@ -72,8 +80,12 @@ public class AdminController {
      * @param session  {@link HttpSession}
      * @return ...
      */
+    @ApiOperation("提交登陆方法")
     @PostMapping("/config/login")
-    public String doLogin(String username, String password, Model model, HttpSession session) {
+    public String doLogin(@ApiParam(value = "用户名", required = true) @RequestParam String username,
+                          @ApiParam(value = "密码", required = true) @RequestParam String password,
+                          @ApiIgnore Model model,
+                          @ApiIgnore HttpSession session) {
         Optional<String> usernameOptional = configService.getConfig(Config.ConfigKey.USERNAME);
         Optional<String> passwordOptional = configService.getConfig(Config.ConfigKey.PASSWORD);
         //如果用户名或者密码不存在
@@ -105,6 +117,7 @@ public class AdminController {
      *
      * @return init.html
      */
+    @ApiOperation("第一次进入控制面板")
     @GetMapping("/config/init")
     public String init() {
         Optional<String> usernameOptional = configService.getConfig(Config.ConfigKey.USERNAME);
@@ -123,8 +136,11 @@ public class AdminController {
      * @param session  {@link HttpSession}
      * @return ...
      */
+    @ApiOperation("提交初始化方法")
     @PostMapping("/config/init")
-    public String doInit(String username, String password, HttpSession session) {
+    public String doInit(@ApiParam(value = "新用户名", required = true) @RequestParam String username,
+                         @ApiParam(value = "新密码", required = true) @RequestParam String password,
+                         @ApiIgnore HttpSession session) {
         if (StringUtils.isNoneBlank(username, password)) {
             configService.saveConfig(Config.ConfigKey.USERNAME, username);
             configService.saveConfig(Config.ConfigKey.PASSWORD, password);
@@ -143,8 +159,11 @@ public class AdminController {
      * @param session  {@link HttpSession}
      * @return ...
      */
+    @ApiOperation("设置用户名密码")
     @PostMapping("/config/user")
-    public String user(String username, String password, HttpSession session) {
+    public String user(@ApiParam(value = "新用户名", required = true) @RequestParam String username,
+                       @ApiParam(value = "新密码", required = true) @RequestParam String password,
+                       @ApiIgnore HttpSession session) {
         if (session.getAttribute(USER) == null) {
             return "redirect:/config/login";
         }
@@ -162,8 +181,9 @@ public class AdminController {
      * @param session {@link HttpSession}
      * @return ...
      */
+    @ApiOperation("控制面板主页")
     @GetMapping("/config")
-    public String index(Model model, HttpSession session) {
+    public String index(@ApiIgnore Model model, @ApiIgnore HttpSession session) {
         if (session.getAttribute(USER) == null) {
             return "redirect:/config/login";
         }
@@ -195,8 +215,10 @@ public class AdminController {
      * @param session {@link HttpSession}
      * @return "redirect:/config"
      */
+    @ApiOperation("设置文件目录")
     @PostMapping("/config/filePath")
-    public String saveFilePath(String name, HttpSession session) {
+    public String saveFilePath(@ApiParam(value = "文件目录地址", required = true) @RequestParam String name,
+                               @ApiIgnore HttpSession session) {
         if (session.getAttribute(USER) == null) {
             return "redirect:/config/login";
         }
@@ -213,8 +235,10 @@ public class AdminController {
      * @param session {@link HttpSession}
      * @return "redirect:/config"
      */
+    @ApiOperation("设置临时目录")
     @PostMapping("/config/tempDir")
-    public String saveTempDir(String name, HttpSession session) {
+    public String saveTempDir(@ApiParam(value = "打包临时目录地址", required = true) String name,
+                              @ApiIgnore HttpSession session) {
         if (session.getAttribute(USER) == null) {
             return "redirect:/config/login";
         }
@@ -231,8 +255,10 @@ public class AdminController {
      * @param session {@link HttpSession}
      * @return "redirect:/config"
      */
+    @ApiOperation("设置CAS服务器地址")
     @PostMapping("/config/casServerUrl")
-    public String saveCasServerUrl(String name, HttpSession session) {
+    public String saveCasServerUrl(@ApiParam(value = "CAS服务器地址", required = true) @RequestParam String name,
+                                   @ApiIgnore HttpSession session) {
         if (session.getAttribute(USER) == null) {
             return "redirect:/config/login";
         }
@@ -249,8 +275,10 @@ public class AdminController {
      * @param session {@link HttpSession}
      * @return "redirect:/config"
      */
+    @ApiOperation("设置CAS登陆地址")
     @PostMapping("/config/casLoginUrl")
-    public String saveCasLoginUrl(String name, HttpSession session) {
+    public String saveCasLoginUrl(@ApiParam(value = "CAS登陆地址", required = true) @RequestParam String name,
+                                  @ApiIgnore HttpSession session) {
         if (session.getAttribute(USER) == null) {
             return "redirect:/config/login";
         }
@@ -267,8 +295,10 @@ public class AdminController {
      * @param session {@link HttpSession}
      * @return "redirect:/config"
      */
+    @ApiOperation("设置CAS登出地址")
     @PostMapping("/config/casLogoutUrl")
-    public String saveCasLogoutUrl(String name, HttpSession session) {
+    public String saveCasLogoutUrl(@ApiParam(value = "CAS登出地址", required = true) @RequestParam String name,
+                                   @ApiIgnore HttpSession session) {
         if (session.getAttribute(USER) == null) {
             return "redirect:/config/login";
         }
@@ -285,8 +315,10 @@ public class AdminController {
      * @param session {@link HttpSession}
      * @return "redirect:/config"
      */
+    @ApiOperation("设置CAS登陆成功跳转地址")
     @PostMapping("/config/loginSuccessUrl")
-    public String saveLoginSuccessUrl(String name, HttpSession session) {
+    public String saveLoginSuccessUrl(@ApiParam(value = "CAS登陆成功跳转地址", required = true) @RequestParam String name,
+                                      @ApiIgnore HttpSession session) {
         if (session.getAttribute(USER) == null) {
             return "redirect:/config/login";
         }
@@ -303,8 +335,10 @@ public class AdminController {
      * @param session {@link HttpSession}
      * @return "redirect:/config"
      */
+    @ApiOperation("设置本地服务器地址")
     @PostMapping("/config/localServerUrl")
-    public String saveLocalServerUrl(String name, HttpSession session) {
+    public String saveLocalServerUrl(@ApiParam(value = "本地服务器地址", required = true) @RequestParam String name,
+                                     @ApiIgnore HttpSession session) {
         if (session.getAttribute(USER) == null) {
             return "redirect:/config/login";
         }

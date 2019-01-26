@@ -15,3 +15,11 @@ cas:
   debug: true
   login-success-url: http://localhost:8090
   local-server-url: http://localhost:8080
+  exclude:
+    - '/config'
+    - '/student/down'
+    - '/teacher/down'
+    - '/swagger'
+    - '/webjars'
+    - '/v2'
+    - '/csrf'
