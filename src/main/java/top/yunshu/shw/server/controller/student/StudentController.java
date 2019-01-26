@@ -191,7 +191,7 @@ public class StudentController {
      *
      * @return ResponseEntity
      */
-    @ApiOperation("查询学生是否有学生群组")
+    @ApiOperation(value = "查询学生是否有学生群组", produces = MediaType.APPLICATION_JSON_UTF8_VALUE, response = RestModel.class)
     @GetMapping("/group/exist")
     public Callable<ResponseEntity<RestModel>> isStudentJoinAnyStudentGroup(@ApiIgnore LoginUser loginUser) {
         logger.debug("is Student Join Any StudentGroup");

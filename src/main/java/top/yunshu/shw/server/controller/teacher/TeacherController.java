@@ -129,7 +129,7 @@ public class TeacherController {
      *
      * @return ResponseEntity
      */
-    @ApiOperation("查询教师是否有群组")
+    @ApiOperation(value = "查询教师是否有群组", produces = MediaType.APPLICATION_JSON_UTF8_VALUE, response = RestModel.class)
     @GetMapping("/group/exist")
     public Callable<ResponseEntity<RestModel>> isTeacherHaveAnyGroup(@ApiIgnore LoginUser loginUser) {
         logger.debug("is Teacher Have Any Group");
