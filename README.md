@@ -2,9 +2,13 @@
 
 前端：Vue.Js
 
-后端：Spring Boot WebFlux
+后端：Spring Boot
 
-数据库：MongoDB Hbase
+数据库：MySql
+
+# API文档
+
+![https://github.com/YunShuSoftwareStudio/shw_server/blob/master/api.md](https://github.com/YunShuSoftwareStudio/shw_server/blob/master/api.md)
 
 # 表字段实体属性
 
