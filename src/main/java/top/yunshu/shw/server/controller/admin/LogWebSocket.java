@@ -1,5 +1,7 @@
 package top.yunshu.shw.server.controller.admin;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -20,6 +22,7 @@ import java.util.stream.Collectors;
 @Component
 @ServerEndpoint(value = "/config/log")
 public final class LogWebSocket {
+    private static final Logger logger = LoggerFactory.getLogger(LogWebSocket.class);
     /**
      * 存放Session
      */
@@ -88,12 +91,12 @@ public final class LogWebSocket {
 
     @OnClose
     public void onClose() {
-        System.out.println("close");
+        logger.debug("on close");
     }
 
     @OnMessage
     public void onMessage(String message, Session session) throws IOException {
-        System.out.println("onMessage " + message);
+        logger.debug("onMessage " + message);
         //回复用户
         session.getBasicRemote().sendText("收到消息 ");
     }
@@ -101,7 +104,7 @@ public final class LogWebSocket {
     @OnError
     public void onError(Session session, Throwable error) {
         SESSION_MAP.remove(session.getId());
-        System.out.println("onError");
+        logger.error("onError ", error);
         error.printStackTrace();
     }
 }
