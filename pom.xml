@@ -10,7 +10,7 @@
     </parent>
     <groupId>top.yunshu</groupId>
     <artifactId>shw_server</artifactId>
-    <version>1.0.0-BETA</version>
+    <version>1.0.0-RC</version>
     <name>shw_server</name>
     <description>Student HomeWork Management System</description>
 
@@ -38,6 +38,10 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-websocket</artifactId>
         </dependency>
         <dependency>
             <groupId>mysql</groupId>

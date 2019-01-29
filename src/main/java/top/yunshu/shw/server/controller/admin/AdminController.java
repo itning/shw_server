@@ -175,6 +175,21 @@ public class AdminController {
     }
 
     /**
+     * 日志主页
+     *
+     * @param session {@link HttpSession}
+     * @return ...
+     */
+    @ApiOperation("日志主页")
+    @GetMapping("/config/log")
+    public String log(@ApiIgnore HttpSession session) {
+        if (session.getAttribute(USER) == null) {
+            return "redirect:/config/login";
+        }
+        return "log";
+    }
+
+    /**
      * 主页
      *
      * @param model   {@link Model}
