@@ -77,7 +77,7 @@
         <dependency>
             <groupId>com.github.itning</groupId>
             <artifactId>cas-spring-boot-starter</artifactId>
-            <version>1.0.5-RELEASE</version>
+            <version>1.0.6-RELEASE</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/io.springfox/springfox-swagger2 -->
         <dependency>

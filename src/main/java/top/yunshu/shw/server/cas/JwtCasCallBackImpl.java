@@ -19,6 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.URLEncoder;
 import java.util.Arrays;
 import java.util.Map;
 
@@ -46,6 +47,10 @@ public class JwtCasCallBackImpl implements ICasCallback {
 
     @Override
     public void onLoginSuccess(HttpServletResponse resp, HttpServletRequest req, Map<String, String> attributesMap) throws IOException {
+        if (attributesMap.isEmpty()) {
+            sendRefresh2Response(resp);
+            return;
+        }
         LoginUser loginUser = map2userLoginEntity(attributesMap);
         if (STUDENT_USER_TYPE.equals(loginUser.getUserType())) {
             Student student = new Student();
@@ -62,9 +67,7 @@ public class JwtCasCallBackImpl implements ICasCallback {
 
     @Override
     public void onLoginFailure(HttpServletResponse resp, HttpServletRequest req, Exception e) throws IOException {
-        allowCors(resp, req);
-        resp.setHeader("Retry-After", "10");
-        writeJson2Response(resp, HttpStatus.SERVICE_UNAVAILABLE, "身份认证失败,请重试");
+        sendRefresh2Response(resp);
     }
 
     @Override
@@ -138,5 +141,24 @@ public class JwtCasCallBackImpl implements ICasCallback {
         resp.setHeader("Access-Control-Allow-Origin", origin);
         resp.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS,DELETE,PUT,PATCH");
         resp.setHeader("Access-Control-Allow-Headers", req.getHeader("Access-Control-Request-Headers"));
+    }
+
+    /**
+     * 登陆失败时
+     *
+     * @param resp {@link HttpServletResponse}
+     * @throws IOException IOException
+     */
+    private void sendRefresh2Response(HttpServletResponse resp) throws IOException {
+        resp.setCharacterEncoding("utf-8");
+        String location = casProperties.getLoginUrl() + "?service=" + URLEncoder.encode(casProperties.getLocalServerUrl().toString(), "UTF-8");
+        PrintWriter writer = resp.getWriter();
+        writer.write("<!DOCTYPE html><html><head><meta charset=\"UTF-8\">\n" +
+                "<meta http-equiv=\"refresh\" content=\"3;url=" + location + "\">" +
+                "<title>身份信息获取失败</title></head><body>" +
+                "身份信息获取失败，3秒后重试..." +
+                "</body></html>");
+        writer.flush();
+        writer.close();
     }
 }
