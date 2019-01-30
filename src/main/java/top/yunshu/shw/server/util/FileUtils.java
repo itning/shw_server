@@ -91,7 +91,6 @@ public class FileUtils {
             response.setHeader("Content-Range", "bytes " + startByte + "-" + endByte + "/" + file.length());
         }
         response.setContentType(contentType);
-        response.setHeader("Content-Type", contentType);
         response.setHeader("Content-Disposition", "attachment;filename=" + new String(file.getName().getBytes(), StandardCharsets.ISO_8859_1));
         response.setHeader("Content-Length", String.valueOf(contentLength));
         long transmitted = 0;
