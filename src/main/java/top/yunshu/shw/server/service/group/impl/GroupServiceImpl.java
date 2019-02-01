@@ -1,16 +1,22 @@
 package top.yunshu.shw.server.service.group.impl;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import top.yunshu.shw.server.dao.GroupDao;
 import top.yunshu.shw.server.dao.StudentGroupDao;
 import top.yunshu.shw.server.entity.Group;
 import top.yunshu.shw.server.entity.StudentGroup;
+import top.yunshu.shw.server.exception.BaseException;
 import top.yunshu.shw.server.exception.NoSuchFiledValueException;
 import top.yunshu.shw.server.exception.NullFiledException;
 import top.yunshu.shw.server.service.group.GroupService;
 
+import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -23,6 +29,8 @@ import java.util.stream.Collectors;
  */
 @Service
 public class GroupServiceImpl implements GroupService {
+    private static final Logger logger = LoggerFactory.getLogger(GroupServiceImpl.class);
+
     private final StudentGroupDao studentGroupDao;
     private final GroupDao groupDao;
 
@@ -32,24 +40,38 @@ public class GroupServiceImpl implements GroupService {
         this.studentGroupDao = studentGroupDao;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    public List<Group> findStudentAllGroups(String studentNumber) {
-        return studentGroupDao.findAllByStudentNumber(studentNumber).parallelStream()
-                .map(s -> groupDao.findById(s.getGroupID()))
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .peek(group -> {
-                    //学生获取所有群组时间应为加入群组的时间而不是群组创建的时间
-                    StudentGroup studentGroup = studentGroupDao.findByStudentNumberAndGroupID(studentNumber, group.getId());
-                    group.setGmtCreate(studentGroup.getGmtCreate());
-                    group.setGmtModified(studentGroup.getGmtModified());
-                })
-                .collect(Collectors.toList());
+    public Page<Group> findStudentAllGroups(String studentNumber, Pageable pageable) {
+        Page<?> studentGroupPage = studentGroupDao.findAllByStudentNumber(studentNumber, pageable);
+        try {
+            Class<?> name = Class.forName("org.springframework.data.domain.Chunk");
+            Field content = name.getDeclaredField("content");
+            content.setAccessible(true);
+            List<StudentGroup> studentGroupList = (List<StudentGroup>) content.get(studentGroupPage);
+            List<Group> groupList = studentGroupList.parallelStream()
+                    .map(s -> groupDao.findById(s.getGroupID()))
+                    .filter(Optional::isPresent)
+                    .map(Optional::get)
+                    .peek(group -> {
+                        //学生获取所有群组时间应为加入群组的时间而不是群组创建的时间
+                        StudentGroup studentGroup = studentGroupDao.findByStudentNumberAndGroupID(studentNumber, group.getId());
+                        group.setGmtCreate(studentGroup.getGmtCreate());
+                        group.setGmtModified(studentGroup.getGmtModified());
+                    })
+                    .collect(Collectors.toList());
+            content.set(studentGroupPage, groupList);
+        } catch (NoSuchFieldException | ClassNotFoundException | IllegalAccessException e) {
+            logger.error("findStudentAllGroups By Pageable Error: ", e);
+            throw new BaseException("获取失败,联系管理员", HttpStatus.INTERNAL_SERVER_ERROR) {
+            };
+        }
+        return (Page<Group>) studentGroupPage;
     }
 
     @Override
-    public List<Group> findTeacherAllGroups(String id) {
-        return groupDao.findByTeacherNumber(id);
+    public Page<Group> findTeacherAllGroups(String teacherNumber, Pageable pageable) {
+        return groupDao.findByTeacherNumber(teacherNumber, pageable);
     }
 
     @Override

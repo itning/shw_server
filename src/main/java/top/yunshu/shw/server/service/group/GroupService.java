@@ -1,9 +1,9 @@
 package top.yunshu.shw.server.service.group;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import top.yunshu.shw.server.entity.Group;
 import top.yunshu.shw.server.exception.NoSuchFiledValueException;
-
-import java.util.List;
 
 /**
  * 群组服务
@@ -16,9 +16,10 @@ public interface GroupService {
      * 获取学生所在的所有群组
      *
      * @param studentNumber 学生学号
+     * @param pageable      {@link Pageable}
      * @return 学生加入群组集合
      */
-    List<Group> findStudentAllGroups(String studentNumber);
+    Page<Group> findStudentAllGroups(String studentNumber, Pageable pageable);
 
     /**
      * 通过邀请码加入群组
@@ -42,10 +43,11 @@ public interface GroupService {
     /**
      * 获取教师所创建所有群组
      *
-     * @param id 教师ID
+     * @param teacherNumber 教师ID
+     * @param pageable      {@link Pageable}
      * @return 群组集合
      */
-    List<Group> findTeacherAllGroups(String id);
+    Page<Group> findTeacherAllGroups(String teacherNumber, Pageable pageable);
 
     /**
      * 创建新群组

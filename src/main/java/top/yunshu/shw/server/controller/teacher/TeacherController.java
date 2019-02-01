@@ -8,6 +8,9 @@ import org.modelmapper.TypeToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -75,8 +78,10 @@ public class TeacherController {
     @ApiOperation(value = "教师获取创建的所有群组", produces = MediaType.APPLICATION_JSON_UTF8_VALUE,
             response = Group.class, responseContainer = "List")
     @GetMapping("/groups")
-    public Callable<ResponseEntity<RestModel>> getTeacherCreateGroups(@ApiIgnore LoginUser loginUser) {
-        return () -> ResponseEntity.ok(new RestModel<>(groupService.findTeacherAllGroups(loginUser.getNo())));
+    public Callable<ResponseEntity<RestModel>> getTeacherCreateGroups(@ApiIgnore LoginUser loginUser,
+                                                                      @ApiParam("分页信息") @PageableDefault(size = 20, sort = {"gmtCreate"}, direction = Sort.Direction.DESC)
+                                                                              Pageable pageable) {
+        return () -> ResponseEntity.ok(new RestModel<>(groupService.findTeacherAllGroups(loginUser.getNo(), pageable)));
     }
 
     /**

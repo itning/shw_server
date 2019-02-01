@@ -1,8 +1,9 @@
 package top.yunshu.shw.server.dao;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.web.bind.annotation.RestController;
 import top.yunshu.shw.server.entity.Group;
 
 import java.util.List;
@@ -12,7 +13,6 @@ import java.util.List;
  *
  * @author shulu
  */
-@RestController
 public interface GroupDao extends JpaRepository<Group, String> {
     /**
      * 通过邀请码查询群组
@@ -29,6 +29,15 @@ public interface GroupDao extends JpaRepository<Group, String> {
      * @return 群组
      */
     List<Group> findByTeacherNumber(String teacherNumber);
+
+    /**
+     * 通过教师ID查询群组(分页)
+     *
+     * @param teacherNumber 教师ID
+     * @param pageable      {@link Pageable}
+     * @return 群组
+     */
+    Page<Group> findByTeacherNumber(String teacherNumber, Pageable pageable);
 
     /**
      * 查询是否有此验证码

@@ -1,5 +1,7 @@
 package top.yunshu.shw.server.dao;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import top.yunshu.shw.server.entity.StudentGroup;
@@ -20,6 +22,15 @@ public interface StudentGroupDao extends JpaRepository<StudentGroup, StudentGrou
      * @return 学生集合
      */
     List<StudentGroup> findAllByStudentNumber(String studentNumber);
+
+    /**
+     * 根据studentNumber查询学生所在所有群组
+     *
+     * @param studentNumber 学生ID
+     * @param pageable      {@link Pageable}
+     * @return 学生集合
+     */
+    Page<StudentGroup> findAllByStudentNumber(String studentNumber, Pageable pageable);
 
     /**
      * 根据GroupID查询群组内学生
