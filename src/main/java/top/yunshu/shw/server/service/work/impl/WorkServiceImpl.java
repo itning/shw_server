@@ -1,19 +1,23 @@
 package top.yunshu.shw.server.service.work.impl;
 
+import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import top.yunshu.shw.server.dao.*;
 import top.yunshu.shw.server.entity.*;
 import top.yunshu.shw.server.exception.NoSuchFiledValueException;
 import top.yunshu.shw.server.model.WorkDetailsModel;
+import top.yunshu.shw.server.model.WorkModel;
 import top.yunshu.shw.server.service.work.WorkService;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -35,28 +39,60 @@ public class WorkServiceImpl implements WorkService {
 
     private final StudentDao studentDao;
 
+    private final ModelMapper modelMapper;
+
+
     @Autowired
-    public WorkServiceImpl(WorkDao workDao, StudentGroupDao studentGroupDao, UploadDao uploadDao, GroupDao groupDao, StudentDao studentDao) {
+    public WorkServiceImpl(WorkDao workDao, StudentGroupDao studentGroupDao, UploadDao uploadDao, GroupDao groupDao, StudentDao studentDao, ModelMapper modelMapper) {
         this.workDao = workDao;
         this.studentGroupDao = studentGroupDao;
         this.uploadDao = uploadDao;
         this.groupDao = groupDao;
         this.studentDao = studentDao;
+        this.modelMapper = modelMapper;
     }
 
     @Override
     public List<Work> getStudentUnDoneWork(String studentId) {
-        return studentGroupDao.findGroupIdByStudentNumber(studentId).parallelStream().map(workDao::findAllByGroupIdAndEnabledIsTrue).flatMap(Collection::stream).filter(work -> !uploadDao.existsByStudentIdAndWorkId(studentId, work.getId())).collect(Collectors.toList());
+        return studentGroupDao.findGroupIdByStudentNumber(studentId)
+                .parallelStream()
+                .map(workDao::findAllByGroupIdAndEnabledIsTrue)
+                .flatMap(Collection::stream)
+                .filter(work -> !uploadDao.existsByStudentIdAndWorkId(studentId, work.getId()))
+                .sorted(Comparator.comparing(Work::getGmtCreate).reversed())
+                .collect(Collectors.toList());
     }
 
     @Override
     public List<Work> getStudentDoneWork(String studentId) {
-        return studentGroupDao.findGroupIdByStudentNumber(studentId).parallelStream().map(workDao::findAllByGroupId).flatMap(Collection::stream).filter(work -> uploadDao.existsByStudentIdAndWorkId(studentId, work.getId())).collect(Collectors.toList());
+        return studentGroupDao.findGroupIdByStudentNumber(studentId)
+                .parallelStream()
+                .map(workDao::findAllByGroupId)
+                .flatMap(Collection::stream)
+                .filter(work -> uploadDao.existsByStudentIdAndWorkId(studentId, work.getId()))
+                .sorted(Comparator.comparing(Work::getGmtCreate).reversed())
+                .collect(Collectors.toList());
     }
 
     @Override
-    public List<Work> getTeacherAllWork(String teacherNumber) {
-        return groupDao.findByTeacherNumber(teacherNumber).parallelStream().map(group -> workDao.findAllByGroupId(group.getId())).flatMap(Collection::stream).collect(Collectors.toList());
+    public Page<WorkModel> getTeacherAllWork(String teacherNumber, Pageable pageable) {
+        List<Work> workList = groupDao.findByTeacherNumber(teacherNumber)
+                .parallelStream()
+                .map(group -> workDao.findAllByGroupId(group.getId()))
+                .flatMap(Collection::stream)
+                .sorted(Comparator.comparing(Work::getGmtCreate).reversed())
+                .collect(Collectors.toList());
+        //页数*每页条数
+        int to = (pageable.getPageNumber() + 1) * pageable.getPageSize();
+        int toIndex = to > workList.size() ? workList.size() : to;
+        List<Work> works;
+        try {
+            works = workList.subList(Math.toIntExact(pageable.getOffset()), toIndex);
+        } catch (Exception e) {
+            works = new ArrayList<>(0);
+        }
+        return new PageImpl<>(modelMapper.map(works, new TypeToken<List<WorkModel>>() {
+        }.getType()), pageable, workList.size());
     }
 
     @Override

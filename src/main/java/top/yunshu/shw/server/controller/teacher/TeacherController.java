@@ -149,10 +149,11 @@ public class TeacherController {
     @ApiOperation(value = "获取教师所有作业", produces = MediaType.APPLICATION_JSON_UTF8_VALUE,
             response = WorkModel.class, responseContainer = "List")
     @GetMapping("/works")
-    public Callable<ResponseEntity<RestModel>> getTeacherWorks(@ApiIgnore LoginUser loginUser) {
+    public Callable<ResponseEntity<RestModel>> getTeacherWorks(@ApiIgnore LoginUser loginUser,
+                                                               @ApiParam("分页信息") @PageableDefault(size = 20, sort = {"gmtCreate"}, direction = Sort.Direction.DESC)
+                                                                       Pageable pageable) {
         logger.debug("get teacher works");
-        return () -> ResponseEntity.ok(new RestModel<>(modelMapper.map(workService.getTeacherAllWork(loginUser.getNo()), new TypeToken<List<WorkModel>>() {
-        }.getType())));
+        return () -> ResponseEntity.ok(new RestModel<>(workService.getTeacherAllWork(loginUser.getNo(), pageable)));
     }
 
     /**

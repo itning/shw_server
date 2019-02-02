@@ -15,8 +15,8 @@ import top.yunshu.shw.server.exception.BaseException;
 import top.yunshu.shw.server.exception.NoSuchFiledValueException;
 import top.yunshu.shw.server.exception.NullFiledException;
 import top.yunshu.shw.server.service.group.GroupService;
+import top.yunshu.shw.server.util.PageContentUtils;
 
-import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -45,10 +45,7 @@ public class GroupServiceImpl implements GroupService {
     public Page<Group> findStudentAllGroups(String studentNumber, Pageable pageable) {
         Page<?> studentGroupPage = studentGroupDao.findAllByStudentNumber(studentNumber, pageable);
         try {
-            Class<?> name = Class.forName("org.springframework.data.domain.Chunk");
-            Field content = name.getDeclaredField("content");
-            content.setAccessible(true);
-            List<StudentGroup> studentGroupList = (List<StudentGroup>) content.get(studentGroupPage);
+            List<StudentGroup> studentGroupList = (List<StudentGroup>) PageContentUtils.getContentField().get(studentGroupPage);
             List<Group> groupList = studentGroupList.parallelStream()
                     .map(s -> groupDao.findById(s.getGroupID()))
                     .filter(Optional::isPresent)
@@ -60,8 +57,8 @@ public class GroupServiceImpl implements GroupService {
                         group.setGmtModified(studentGroup.getGmtModified());
                     })
                     .collect(Collectors.toList());
-            content.set(studentGroupPage, groupList);
-        } catch (NoSuchFieldException | ClassNotFoundException | IllegalAccessException e) {
+            PageContentUtils.getContentField().set(studentGroupPage, groupList);
+        } catch (IllegalAccessException e) {
             logger.error("findStudentAllGroups By Pageable Error: ", e);
             throw new BaseException("获取失败,联系管理员", HttpStatus.INTERNAL_SERVER_ERROR) {
             };
@@ -84,6 +81,9 @@ public class GroupServiceImpl implements GroupService {
     public Group joinGroup(String code, String studentId) {
         if (!groupDao.existsAllByCode(code)) {
             throw new NoSuchFiledValueException("群ID不存在", HttpStatus.NOT_FOUND);
+        }
+        if (studentGroupDao.findByStudentNumberAndGroupID(studentId, code) != null) {
+            throw new NoSuchFiledValueException("已加入过该群", HttpStatus.CONFLICT);
         }
         Group group = groupDao.findByCode(code);
         StudentGroup studentGroup = new StudentGroup(studentId, group.getId());

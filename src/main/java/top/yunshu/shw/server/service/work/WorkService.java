@@ -1,7 +1,10 @@
 package top.yunshu.shw.server.service.work;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import top.yunshu.shw.server.entity.Work;
 import top.yunshu.shw.server.model.WorkDetailsModel;
+import top.yunshu.shw.server.model.WorkModel;
 
 import java.util.List;
 
@@ -31,9 +34,10 @@ public interface WorkService {
      * 获取教师的所有作业信息
      *
      * @param teacherNumber 教师编号
+     * @param pageable      {@link Pageable}
      * @return 作业信息集合
      */
-    List<Work> getTeacherAllWork(String teacherNumber);
+    Page<WorkModel> getTeacherAllWork(String teacherNumber, Pageable pageable);
 
     /**
      * 根据群ID获取教师的作业信息
