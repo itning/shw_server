@@ -56,53 +56,47 @@ public class WorkServiceImpl implements WorkService {
     }
 
     @Override
-    public List<Work> getStudentUnDoneWork(String studentId) {
-        return studentGroupDao.findGroupIdByStudentNumber(studentId)
+    public Page<WorkModel> getStudentUnDoneWork(String studentId, Pageable pageable) {
+        List<Work> workList = studentGroupDao.findGroupIdByStudentNumber(studentId)
                 .parallelStream()
                 .map(workDao::findAllByGroupIdAndEnabledIsTrue)
                 .flatMap(Collection::stream)
                 .filter(work -> !uploadDao.existsByStudentIdAndWorkId(studentId, work.getId()))
                 .sorted(Comparator.comparing(Work::getGmtCreate).reversed())
                 .collect(Collectors.toList());
+        return getWorkModels(pageable, workList);
     }
 
     @Override
-    public List<Work> getStudentDoneWork(String studentId) {
-        return studentGroupDao.findGroupIdByStudentNumber(studentId)
+    public Page<WorkModel> getStudentDoneWork(String studentId, Pageable pageable) {
+        List<Work> workList = studentGroupDao.findGroupIdByStudentNumber(studentId)
                 .parallelStream()
                 .map(workDao::findAllByGroupId)
                 .flatMap(Collection::stream)
                 .filter(work -> uploadDao.existsByStudentIdAndWorkId(studentId, work.getId()))
                 .sorted(Comparator.comparing(Work::getGmtCreate).reversed())
                 .collect(Collectors.toList());
+        return getWorkModels(pageable, workList);
     }
 
     @Override
     public Page<WorkModel> getTeacherAllWork(String teacherNumber, Pageable pageable) {
-        //TODO 直接查所有分页意义不大，解决：Cache List<Work>
         List<Work> workList = groupDao.findByTeacherNumber(teacherNumber)
                 .parallelStream()
                 .map(group -> workDao.findAllByGroupId(group.getId()))
                 .flatMap(Collection::stream)
                 .sorted(Comparator.comparing(Work::getGmtCreate).reversed())
                 .collect(Collectors.toList());
-        //页数*每页条数
-        int to = (pageable.getPageNumber() + 1) * pageable.getPageSize();
-        int toIndex = to > workList.size() ? workList.size() : to;
-        List<Work> works;
-        try {
-            works = workList.subList(Math.toIntExact(pageable.getOffset()), toIndex);
-        } catch (Exception e) {
-            works = new ArrayList<>(0);
-        }
-        return new PageImpl<>(modelMapper.map(works, new TypeToken<List<WorkModel>>() {
-        }.getType()), pageable, workList.size());
+        return getWorkModels(pageable, workList);
     }
 
     @Override
-    public List<Work> getTeacherWork(String teacherNumber, String groupId) {
+    public Page<WorkModel> getTeacherWork(String teacherNumber, String groupId, Pageable pageable) {
         Group group = groupDao.findById(groupId).orElseThrow(() -> new NoSuchFiledValueException("群ID: " + groupId + "不存在", HttpStatus.NOT_FOUND));
-        return workDao.findAllByGroupId(group.getId());
+        Page<Work> workPage = workDao.findAllByGroupId(group.getId(), pageable);
+        List<Work> workPageContent = workPage.getContent();
+        return new PageImpl<>(modelMapper.map(workPageContent, new TypeToken<List<WorkModel>>() {
+        }.getType()), pageable, workPage.getTotalElements());
     }
 
     @Override
@@ -160,5 +154,27 @@ public class WorkServiceImpl implements WorkService {
             return workDetailsModel;
         }).collect(Collectors.toList());
         return new PageImpl<>(workDetailsModels, pageable, studentGroupDao.countAllByGroupID(work.getGroupId()));
+    }
+
+    /**
+     * 分页获取WorkModel
+     *
+     * @param pageable {@link Pageable}
+     * @param workList 作业集合
+     * @return WorkModel
+     */
+    private Page<WorkModel> getWorkModels(Pageable pageable, List<Work> workList) {
+        //TODO 直接查所有分页意义不大，解决：Cache List<Work>
+        //页数*每页条数
+        int to = (pageable.getPageNumber() + 1) * pageable.getPageSize();
+        int toIndex = to > workList.size() ? workList.size() : to;
+        List<Work> works;
+        try {
+            works = workList.subList(Math.toIntExact(pageable.getOffset()), toIndex);
+        } catch (Exception e) {
+            works = new ArrayList<>(0);
+        }
+        return new PageImpl<>(modelMapper.map(works, new TypeToken<List<WorkModel>>() {
+        }.getType()), pageable, workList.size());
     }
 }

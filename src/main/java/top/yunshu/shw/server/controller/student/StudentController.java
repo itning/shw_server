@@ -3,8 +3,6 @@ package top.yunshu.shw.server.controller.student;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import org.modelmapper.ModelMapper;
-import org.modelmapper.TypeToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +30,6 @@ import top.yunshu.shw.server.util.FileUtils;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.Callable;
 
@@ -53,8 +50,6 @@ public class StudentController {
 
     private final WorkService workService;
 
-    private final ModelMapper modelMapper;
-
     private final UploadService uploadService;
 
     private final StudentGroupService studentGroupService;
@@ -62,10 +57,9 @@ public class StudentController {
     private final FileService fileService;
 
     @Autowired
-    public StudentController(GroupService groupService, WorkService workService, ModelMapper modelMapper, UploadService uploadService, StudentGroupService studentGroupService, FileService fileService) {
+    public StudentController(GroupService groupService, WorkService workService, UploadService uploadService, StudentGroupService studentGroupService, FileService fileService) {
         this.groupService = groupService;
         this.workService = workService;
-        this.modelMapper = modelMapper;
         this.uploadService = uploadService;
         this.studentGroupService = studentGroupService;
         this.fileService = fileService;
@@ -94,10 +88,11 @@ public class StudentController {
     @ApiOperation(value = "获取学生所有未上传作业", produces = MediaType.APPLICATION_JSON_UTF8_VALUE,
             response = WorkModel.class, responseContainer = "List")
     @GetMapping("/works/un_done")
-    public Callable<ResponseEntity<RestModel>> getAllUnDoneWorks(@ApiIgnore LoginUser loginUser) {
+    public Callable<ResponseEntity<RestModel>> getAllUnDoneWorks(@ApiIgnore LoginUser loginUser,
+                                                                 @ApiParam("分页信息") @PageableDefault(size = 20, sort = {"gmtCreate"}, direction = Sort.Direction.DESC)
+                                                                         Pageable pageable) {
         logger.debug("get all un done works");
-        return () -> ResponseEntity.ok(new RestModel<>(modelMapper.map(workService.getStudentUnDoneWork(loginUser.getNo()), new TypeToken<List<WorkModel>>() {
-        }.getType())));
+        return () -> ResponseEntity.ok(new RestModel<>(workService.getStudentUnDoneWork(loginUser.getNo(), pageable)));
     }
 
     /**
@@ -108,10 +103,11 @@ public class StudentController {
     @ApiOperation(value = "获取学生所有已上传作业", produces = MediaType.APPLICATION_JSON_UTF8_VALUE,
             response = WorkModel.class, responseContainer = "List")
     @GetMapping("/works/done")
-    public Callable<ResponseEntity<RestModel>> getAllDoneWorks(@ApiIgnore LoginUser loginUser) {
+    public Callable<ResponseEntity<RestModel>> getAllDoneWorks(@ApiIgnore LoginUser loginUser,
+                                                               @ApiParam("分页信息") @PageableDefault(size = 20, sort = {"gmtCreate"}, direction = Sort.Direction.DESC)
+                                                                       Pageable pageable) {
         logger.debug("get all done works");
-        return () -> ResponseEntity.ok(new RestModel<>(modelMapper.map(workService.getStudentDoneWork(loginUser.getNo()), new TypeToken<List<WorkModel>>() {
-        }.getType())));
+        return () -> ResponseEntity.ok(new RestModel<>(workService.getStudentDoneWork(loginUser.getNo(), pageable)));
     }
 
     /**

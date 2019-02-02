@@ -3,8 +3,6 @@ package top.yunshu.shw.server.controller.teacher;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import org.modelmapper.ModelMapper;
-import org.modelmapper.TypeToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +28,6 @@ import top.yunshu.shw.server.util.FileUtils;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
@@ -52,8 +49,6 @@ public class TeacherController {
 
     private final WorkService workService;
 
-    private final ModelMapper modelMapper;
-
     private final FileService fileService;
 
     private final UploadService uploadService;
@@ -61,10 +56,9 @@ public class TeacherController {
     private final ConfigService configService;
 
     @Autowired
-    public TeacherController(GroupService groupService, WorkService workService, ModelMapper modelMapper, FileService fileService, UploadService uploadService, ConfigService configService) {
+    public TeacherController(GroupService groupService, WorkService workService, FileService fileService, UploadService uploadService, ConfigService configService) {
         this.groupService = groupService;
         this.workService = workService;
-        this.modelMapper = modelMapper;
         this.fileService = fileService;
         this.uploadService = uploadService;
         this.configService = configService;
@@ -166,10 +160,11 @@ public class TeacherController {
             response = WorkModel.class, responseContainer = "List")
     @GetMapping("/work/{groupId}")
     public Callable<ResponseEntity<RestModel>> getTeacherWork(@ApiIgnore LoginUser loginUser,
-                                                              @ApiParam(value = "群ID", required = true) @PathVariable String groupId) {
+                                                              @ApiParam(value = "群ID", required = true) @PathVariable String groupId,
+                                                              @ApiParam("分页信息") @PageableDefault(size = 20, sort = {"gmtCreate"}, direction = Sort.Direction.DESC)
+                                                                      Pageable pageable) {
         logger.debug("get teacher work");
-        return () -> ResponseEntity.ok(new RestModel<>(modelMapper.map(workService.getTeacherWork(loginUser.getNo(), groupId), new TypeToken<List<WorkModel>>() {
-        }.getType())));
+        return () -> ResponseEntity.ok(new RestModel<>(workService.getTeacherWork(loginUser.getNo(), groupId, pageable)));
     }
 
     /**

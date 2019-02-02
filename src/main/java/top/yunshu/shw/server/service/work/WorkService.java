@@ -6,8 +6,6 @@ import top.yunshu.shw.server.entity.Work;
 import top.yunshu.shw.server.model.WorkDetailsModel;
 import top.yunshu.shw.server.model.WorkModel;
 
-import java.util.List;
-
 /**
  * 作业服务
  *
@@ -18,17 +16,19 @@ public interface WorkService {
      * 获取学生未交作业
      *
      * @param studentId 学生学号
+     * @param pageable  {@link Pageable}
      * @return 未交作业集合
      */
-    List<Work> getStudentUnDoneWork(String studentId);
+    Page<WorkModel> getStudentUnDoneWork(String studentId, Pageable pageable);
 
     /**
      * 获取学生已交作业
      *
      * @param studentId 学生学号
+     * @param pageable  {@link Pageable}
      * @return 已交作业集合
      */
-    List<Work> getStudentDoneWork(String studentId);
+    Page<WorkModel> getStudentDoneWork(String studentId, Pageable pageable);
 
     /**
      * 获取教师的所有作业信息
@@ -44,9 +44,10 @@ public interface WorkService {
      *
      * @param teacherNumber 教师编号
      * @param groupId       群ID
+     * @param pageable      {@link Pageable}
      * @return 作业信息集合
      */
-    List<Work> getTeacherWork(String teacherNumber, String groupId);
+    Page<WorkModel> getTeacherWork(String teacherNumber, String groupId, Pageable pageable);
 
     /**
      * 创建作业
