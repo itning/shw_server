@@ -231,9 +231,11 @@ public class TeacherController {
             response = WorkDetailsModel.class, responseContainer = "List")
     @GetMapping("/work_detail/{workId}")
     public Callable<ResponseEntity<RestModel>> getTeacherWorkDetails(@ApiIgnore LoginUser loginUser,
-                                                                     @ApiParam(value = "作业ID", required = true) @PathVariable String workId) {
+                                                                     @ApiParam(value = "作业ID", required = true) @PathVariable String workId,
+                                                                     @ApiParam("分页信息") @PageableDefault(size = 20, sort = {"studentNumber"}, direction = Sort.Direction.ASC)
+                                                                             Pageable pageable) {
         logger.debug("get teacher work detail, work id " + workId);
-        return () -> ResponseEntity.ok(new RestModel<>(workService.getWorkDetailByWorkId(loginUser.getNo(), workId)));
+        return () -> ResponseEntity.ok(new RestModel<>(workService.getWorkDetailByWorkId(loginUser.getNo(), workId, pageable)));
     }
 
     /**

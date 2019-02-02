@@ -80,7 +80,8 @@ public interface WorkService {
      *
      * @param teacherNumber 教师编号
      * @param workId        作业ID
+     * @param pageable      {@link Pageable}
      * @return 作业上交情况集合
      */
-    List<WorkDetailsModel> getWorkDetailByWorkId(String teacherNumber, String workId);
+    Page<WorkDetailsModel> getWorkDetailByWorkId(String teacherNumber, String workId, Pageable pageable);
 }

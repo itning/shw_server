@@ -11,7 +11,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import top.yunshu.shw.server.dao.*;
-import top.yunshu.shw.server.entity.*;
+import top.yunshu.shw.server.entity.Group;
+import top.yunshu.shw.server.entity.Student;
+import top.yunshu.shw.server.entity.Upload;
+import top.yunshu.shw.server.entity.Work;
 import top.yunshu.shw.server.exception.NoSuchFiledValueException;
 import top.yunshu.shw.server.model.WorkDetailsModel;
 import top.yunshu.shw.server.model.WorkModel;
@@ -76,6 +79,7 @@ public class WorkServiceImpl implements WorkService {
 
     @Override
     public Page<WorkModel> getTeacherAllWork(String teacherNumber, Pageable pageable) {
+        //TODO 直接查所有分页意义不大，解决：Cache List<Work>
         List<Work> workList = groupDao.findByTeacherNumber(teacherNumber)
                 .parallelStream()
                 .map(group -> workDao.findAllByGroupId(group.getId()))
@@ -133,15 +137,14 @@ public class WorkServiceImpl implements WorkService {
     }
 
     @Override
-    public List<WorkDetailsModel> getWorkDetailByWorkId(String teacherNumber, String workId) {
+    public Page<WorkDetailsModel> getWorkDetailByWorkId(String teacherNumber, String workId, Pageable pageable) {
         Work work = workDao.findById(workId).orElseThrow(() -> new NoSuchFiledValueException("作业ID: " + workId + "不存在", HttpStatus.NOT_FOUND));
         Group group = groupDao.findById(work.getGroupId()).orElseThrow(() -> new NoSuchFiledValueException("群ID: " + work.getGroupId() + "不存在", HttpStatus.NOT_FOUND));
         if (!group.getTeacherNumber().equals(teacherNumber)) {
             throw new NoSuchFiledValueException("作业ID: " + workId + "不存在", HttpStatus.FORBIDDEN);
         }
         //所有加入该群组的学生
-        List<StudentGroup> studentGroupList = studentGroupDao.findAllByGroupID(work.getGroupId());
-        return studentGroupList.parallelStream().map(studentGroup -> {
+        List<WorkDetailsModel> workDetailsModels = studentGroupDao.findAllByGroupID(work.getGroupId(), pageable).getContent().parallelStream().map(studentGroup -> {
             //根据学生学号和作业ID查找所有已上传的信息
             Upload upload = uploadDao.findUploadByStudentIdAndWorkId(studentGroup.getStudentNumber(), workId);
             //查找学生信息
@@ -156,5 +159,6 @@ public class WorkServiceImpl implements WorkService {
             workDetailsModel.setGroupName(group.getGroupName());
             return workDetailsModel;
         }).collect(Collectors.toList());
+        return new PageImpl<>(workDetailsModels, pageable, studentGroupDao.countAllByGroupID(work.getGroupId()));
     }
 }

@@ -33,12 +33,37 @@ public interface StudentGroupDao extends JpaRepository<StudentGroup, StudentGrou
     Page<StudentGroup> findAllByStudentNumber(String studentNumber, Pageable pageable);
 
     /**
+     * 根据studentNumber查询学生所在所有群组的数量
+     *
+     * @param studentNumber 学生ID
+     * @return 数量
+     */
+    long countAllByStudentNumber(String studentNumber);
+
+    /**
      * 根据GroupID查询群组内学生
      *
      * @param groupId 群组ID
      * @return 学生集合
      */
     List<StudentGroup> findAllByGroupID(String groupId);
+
+    /**
+     * 根据GroupID查询群组内学生
+     *
+     * @param groupId  群组ID
+     * @param pageable {@link Pageable}
+     * @return 学生集合
+     */
+    Page<StudentGroup> findAllByGroupID(String groupId, Pageable pageable);
+
+    /**
+     * 根据GroupID查询群组内学生数量
+     *
+     * @param groupId 群组ID
+     * @return 数量
+     */
+    long countAllByGroupID(String groupId);
 
     /**
      * 根据学生学号查询所加入的群ID
