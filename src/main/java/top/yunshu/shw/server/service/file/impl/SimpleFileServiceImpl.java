@@ -165,7 +165,7 @@ public class SimpleFileServiceImpl implements FileService {
             } else {
                 TeacherController.packMap.put(workId, "OK");
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             TeacherController.packMap.put(workId, "ERROR:" + e.getMessage());
             throw new FileException(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
