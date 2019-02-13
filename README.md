@@ -6,6 +6,26 @@
 
 数据库：MySql
 
+# 获取发布版本
+
+## Releases
+
+[点我进入Releases页面](https://github.com/YunShuSoftwareStudio/shw_server/releases)
+
+## Docker
+
+1. 拉取镜像
+
+   `sudo docker pull registry.cn-beijing.aliyuncs.com/itning/shw_server`
+
+2. 运行镜像
+
+   ```shell
+   sudo docker run -p 80:8080 -e MYSQL_URL=192.168.66.88:3306 -it registry.cn-beijing.aliyuncs.com/itning/shw_server
+   ```
+
+   **其中MYSQL_URL参数值为MySql数据库服务器地址(带端口号)**
+
 # API文档
 
 [HTML版本](https://itning.github.io/shw/)
