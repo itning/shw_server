@@ -1,0 +1,25 @@
+# 开发环境
+server:
+  port: 8080
+spring:
+  datasource:
+    url: jdbc:mysql://${MYSQL_URL}/shw${datasource_url_end_str}
+    username: root
+    password: kingston
+  jpa:
+    show-sql: true
+logging:
+  level: debug
+  level.top: debug
+cas:
+  debug: true
+  login-success-url: http://localhost:8090
+  local-server-url: http://localhost:8080
+  exclude:
+    - '/config'
+    - '/student/down'
+    - '/teacher/down'
+    - '/swagger'
+    - '/webjars'
+    - '/v2'
+    - '/csrf'
