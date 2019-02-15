@@ -1,3 +1,17 @@
+# 作业管理系统服务端
+
+[![GitHub stars](https://img.shields.io/github/stars/YunShuSoftwareStudio/shw_server.svg)](https://github.com/YunShuSoftwareStudio/shw_server/stargazers)
+[![GitHub forks](https://img.shields.io/github/forks/YunShuSoftwareStudio/shw_server.svg)](https://github.com/YunShuSoftwareStudio/shw_server/network)
+[![GitHub watchers](https://img.shields.io/github/watchers/YunShuSoftwareStudio/shw_server.svg?style=social&label=Watch)]()
+[![GitHub followers](https://img.shields.io/github/followers/itning.svg?style=social&label=Follow)]()
+[![GitHub issues](https://img.shields.io/github/issues/YunShuSoftwareStudio/shw_server.svg)](https://github.com/YunShuSoftwareStudio/shw_server/issues)
+
+[![GitHub license](https://img.shields.io/github/license/YunShuSoftwareStudio/shw_server.svg)](https://github.com/YunShuSoftwareStudio/shw_server/blob/master/LICENSE)
+[![GitHub last commit](https://img.shields.io/github/last-commit/YunShuSoftwareStudio/shw_server.svg)]()
+[![GitHub release](https://img.shields.io/github/release/YunShuSoftwareStudio/shw_server.svg)](https://github.com/YunShuSoftwareStudio/shw_server/releases)
+[![GitHub repo size in bytes](https://img.shields.io/github/repo-size/YunShuSoftwareStudio/shw_server.svg)]()
+[![language](https://img.shields.io/badge/language-JAVA-orange.svg)]()
+
 # 架构
 
 前端：Vue.Js
@@ -30,7 +44,7 @@
 
 [HTML版本](https://itning.github.io/shw/)
 
-[https://github.com/YunShuSoftwareStudio/shw_server/blob/master/api.md](https://github.com/YunShuSoftwareStudio/shw_server/blob/master/api.md)
+[Markdown版本](https://github.com/YunShuSoftwareStudio/shw_server/blob/master/api.md)
 
 # 表字段实体属性
 
