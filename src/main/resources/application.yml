@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: docker
+    active: dev
   jpa:
     hibernate:
       ddl-auto: update
