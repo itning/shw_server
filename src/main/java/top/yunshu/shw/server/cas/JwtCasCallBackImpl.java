@@ -23,6 +23,8 @@ import java.net.URLEncoder;
 import java.util.Arrays;
 import java.util.Map;
 
+import static org.springframework.http.HttpHeaders.*;
+
 /**
  * Jwt实现
  *
@@ -136,11 +138,12 @@ public class JwtCasCallBackImpl implements ICasCallback {
      * @param req  {@link HttpServletRequest}
      */
     private void allowCors(HttpServletResponse resp, HttpServletRequest req) {
-        String origin = req.getHeader("Origin");
-        resp.setHeader("Access-Control-Allow-Credentials", "true");
-        resp.setHeader("Access-Control-Allow-Origin", origin);
-        resp.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS,DELETE,PUT,PATCH");
-        resp.setHeader("Access-Control-Allow-Headers", req.getHeader("Access-Control-Request-Headers"));
+        String origin = req.getHeader(ORIGIN);
+        resp.setHeader(ACCESS_CONTROL_ALLOW_CREDENTIALS, "true");
+        resp.setHeader(ACCESS_CONTROL_ALLOW_ORIGIN, origin);
+        resp.setHeader(ACCESS_CONTROL_ALLOW_METHODS, "POST,GET,OPTIONS,DELETE,PUT,PATCH");
+        resp.setHeader(ACCESS_CONTROL_ALLOW_HEADERS, req.getHeader(ACCESS_CONTROL_REQUEST_HEADERS));
+        resp.setIntHeader(ACCESS_CONTROL_MAX_AGE, 2592000);
     }
 
     /**
