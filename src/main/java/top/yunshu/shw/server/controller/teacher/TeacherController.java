@@ -314,12 +314,14 @@ public class TeacherController {
                     zipOut.putNextEntry(new ZipEntry(file.getName()));
                     IOUtils.copy(input, zipOut);
                 } catch (Exception e) {
-                    logger.error("Copy File To Zip File Error: ", e);
-                    throw new FileException(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+                    throw new RuntimeException(e.getClass().getName() + "::" + e.getMessage());
                 }
             });
             zipOut.close();
         } catch (Exception e) {
+            if (e.getMessage().contains("中止")) {
+                return;
+            }
             logger.error("Copy File To Zip File Error: ", e);
             throw new FileException(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
