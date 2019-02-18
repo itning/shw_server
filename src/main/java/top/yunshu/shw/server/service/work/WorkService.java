@@ -6,6 +6,8 @@ import top.yunshu.shw.server.entity.Work;
 import top.yunshu.shw.server.model.WorkDetailsModel;
 import top.yunshu.shw.server.model.WorkModel;
 
+import java.util.Optional;
+
 /**
  * 作业服务
  *
@@ -85,4 +87,12 @@ public interface WorkService {
      * @return 作业上交情况集合
      */
     Page<WorkDetailsModel> getWorkDetailByWorkId(String teacherNumber, String workId, Pageable pageable);
+
+    /**
+     * 获取一个作业信息
+     *
+     * @param workId 作业ID
+     * @return 作业信息
+     */
+    Optional<Work> getOneWorkById(String workId);
 }

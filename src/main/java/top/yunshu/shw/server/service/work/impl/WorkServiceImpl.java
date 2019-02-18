@@ -160,6 +160,11 @@ public class WorkServiceImpl implements WorkService {
         return new PageImpl<>(workDetailsModels, pageable, studentGroupDao.countAllByGroupID(work.getGroupId()));
     }
 
+    @Override
+    public Optional<Work> getOneWorkById(String workId) {
+        return workDao.findById(workId);
+    }
+
     /**
      * 分页获取WorkModel
      *

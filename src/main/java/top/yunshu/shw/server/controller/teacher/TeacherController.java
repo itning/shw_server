@@ -3,6 +3,7 @@ package top.yunshu.shw.server.controller.teacher;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,9 +28,15 @@ import top.yunshu.shw.server.util.FileUtils;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.Callable;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 /**
  * 教师控制器
@@ -281,6 +288,40 @@ public class TeacherController {
             FileUtils.breakpointResume(file, "application/octet-stream", range, response);
         } else {
             throw new FileException("文件不可读", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    /**
+     * 直接下载所有
+     */
+    @ApiOperation("直接下载所有")
+    @GetMapping("/down_now/{workId}")
+    public void downloadAllFileNow(@ApiParam(value = "作业ID", required = true) @PathVariable String workId,
+                                   @ApiIgnore HttpServletResponse response) {
+        logger.debug("down file, work id: " + workId);
+        Optional<String> config = configService.getConfig(Config.ConfigKey.FILE_REPOSITORY_PATH);
+        if (!config.isPresent()) {
+            throw new FileException("存储目录不存在，请联系管理员", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        try {
+            Work work = workService.getOneWorkById(workId).orElseThrow(() -> new RuntimeException("作业不存在"));
+            String fileName = new String((work.getWorkName() + ".zip").getBytes(), StandardCharsets.ISO_8859_1);
+            response.setHeader("Content-Disposition", "attachment;filename=" + fileName);
+            response.setContentType("application/octet-stream");
+            ZipOutputStream zipOut = new ZipOutputStream(response.getOutputStream());
+            fileService.getAllFiles(workId).forEach(file -> {
+                try (InputStream input = new FileInputStream(file)) {
+                    zipOut.putNextEntry(new ZipEntry(file.getName()));
+                    IOUtils.copy(input, zipOut);
+                } catch (Exception e) {
+                    logger.error("Copy File To Zip File Error: ", e);
+                    throw new FileException(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+                }
+            });
+            zipOut.close();
+        } catch (Exception e) {
+            logger.error("Copy File To Zip File Error: ", e);
+            throw new FileException(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }
