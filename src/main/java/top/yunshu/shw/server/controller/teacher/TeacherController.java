@@ -25,12 +25,16 @@ import top.yunshu.shw.server.service.group.GroupService;
 import top.yunshu.shw.server.service.upload.UploadService;
 import top.yunshu.shw.server.service.work.WorkService;
 import top.yunshu.shw.server.util.FileUtils;
+import top.yunshu.shw.server.util.ZipCompressedFileUtils;
 
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -325,5 +329,56 @@ public class TeacherController {
             logger.error("Copy File To Zip File Error: ", e);
             throw new FileException(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    /**
+     * ZIP文件预览
+     *
+     * @param studentNumber 学生学号
+     * @param workId        作业ID
+     * @return JSON
+     */
+    @ApiOperation("ZIP文件预览")
+    @GetMapping("/zip_preview/{studentNumber}/{workId}")
+    public Callable<String> getZipFilePreview(@ApiIgnore LoginUser loginUser,
+                                              @ApiParam(value = "学生学号", required = true) @PathVariable String studentNumber,
+                                              @ApiParam(value = "作业ID", required = true) @PathVariable String workId) {
+        return () -> {
+            String json;
+            Optional<File> optionalFile = fileService.getFile(studentNumber, workId);
+            if (optionalFile.isPresent()) {
+                File file = optionalFile.get();
+                if (!file.getName().endsWith("zip")) {
+                    return "[]";
+                }
+                json = ZipCompressedFileUtils.getInstance(file)
+                        .readZipFile()
+                        .getJson();
+            } else {
+                json = "[]";
+            }
+            return json;
+        };
+    }
+
+    @GetMapping("/down_in_zip/{studentNumber}/{workId}")
+    public void getDataOfZipFile(@PathVariable String studentNumber,
+                                 @PathVariable String workId,
+                                 @RequestParam String name,
+                                 @ApiIgnore HttpServletResponse response) {
+        fileService.getFile(studentNumber, workId).ifPresent(file -> {
+            try (ServletOutputStream outputStream = response.getOutputStream()) {
+                String contentType = Files.probeContentType(FileSystems.getDefault().getPath(name));
+                if (contentType == null || contentType.equals(MediaType.TEXT_HTML_VALUE)) {
+                    response.setContentType(MediaType.TEXT_PLAIN_VALUE);
+                } else {
+                    response.setContentType(contentType);
+                }
+                ZipCompressedFileUtils.getInstance(file).preview(name, outputStream);
+            } catch (Exception e) {
+                logger.error("get Data Of Zip File error: ", e);
+                throw new FileException(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        });
     }
 }
