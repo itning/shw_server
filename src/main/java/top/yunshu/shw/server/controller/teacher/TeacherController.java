@@ -297,6 +297,9 @@ public class TeacherController {
 
     /**
      * 直接下载所有
+     *
+     * @param workId   作业ID
+     * @param response {@link HttpServletResponse}
      */
     @ApiOperation("直接下载所有")
     @GetMapping("/down_now/{workId}")
@@ -361,11 +364,21 @@ public class TeacherController {
         };
     }
 
+    /**
+     * ZIP文件在线预览
+     *
+     * @param studentNumber 学号
+     * @param workId        作业ID
+     * @param name          ZIP文件内容名
+     * @param encoding      编码
+     * @param response      {@link HttpServletResponse}
+     */
+    @ApiOperation("ZIP文件在线预览")
     @GetMapping("/down_in_zip/{studentNumber}/{workId}")
-    public void getDataOfZipFile(@PathVariable String studentNumber,
-                                 @PathVariable String workId,
-                                 @RequestParam String name,
-                                 @RequestParam(defaultValue = "UTF-8") String encoding,
+    public void getDataOfZipFile(@ApiParam(value = "学生学号", required = true) @PathVariable String studentNumber,
+                                 @ApiParam(value = "作业ID", required = true) @PathVariable String workId,
+                                 @ApiParam(value = "ZIP文件内容名", required = true) @RequestParam String name,
+                                 @ApiParam(value = "编码", defaultValue = "UTF-8") @RequestParam(defaultValue = "UTF-8") String encoding,
                                  @ApiIgnore HttpServletResponse response) {
         fileService.getFile(studentNumber, workId).ifPresent(file -> {
             try (ServletOutputStream outputStream = response.getOutputStream()) {
