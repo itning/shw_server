@@ -118,4 +118,29 @@ public class FileUtils {
             throw new FileException(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    /**
+     * 根据文件扩展名获取MIME类型
+     *
+     * @param extensionName 扩展名
+     * @return MIME类型
+     */
+    public static String getContentTypeByExtensionName(String extensionName) {
+        switch (extensionName) {
+            case "docx":
+                return "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+            case "doc":
+                return "application/msword";
+            case "xls":
+                return "application/vnd.ms-excel";
+            case "xlsx":
+                return "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+            case "ppt":
+                return "application/vnd.ms-powerpoint";
+            case "pptx":
+                return "application/vnd.openxmlformats-officedocument.presentationml.presentation";
+            default:
+                return null;
+        }
+    }
 }

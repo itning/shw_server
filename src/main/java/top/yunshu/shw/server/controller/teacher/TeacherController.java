@@ -365,15 +365,26 @@ public class TeacherController {
     public void getDataOfZipFile(@PathVariable String studentNumber,
                                  @PathVariable String workId,
                                  @RequestParam String name,
+                                 @RequestParam(defaultValue = "UTF-8") String encoding,
                                  @ApiIgnore HttpServletResponse response) {
         fileService.getFile(studentNumber, workId).ifPresent(file -> {
             try (ServletOutputStream outputStream = response.getOutputStream()) {
-                String contentType = Files.probeContentType(FileSystems.getDefault().getPath(name));
-                if (contentType == null || contentType.equals(MediaType.TEXT_HTML_VALUE)) {
-                    response.setContentType(MediaType.TEXT_PLAIN_VALUE);
+                String extensionName = name.substring(name.lastIndexOf(".") + 1);
+                String contentTypeByExtensionName = FileUtils.getContentTypeByExtensionName(extensionName);
+                String setContentType;
+                if (contentTypeByExtensionName == null) {
+                    String contentType = Files.probeContentType(FileSystems.getDefault().getPath(name));
+                    if (contentType == null || contentType.equals(MediaType.TEXT_HTML_VALUE)) {
+                        setContentType = MediaType.TEXT_PLAIN_VALUE;
+                    } else {
+                        setContentType = contentType;
+                    }
                 } else {
-                    response.setContentType(contentType);
+                    setContentType = contentTypeByExtensionName;
                 }
+                logger.debug("get contentType: " + setContentType);
+                response.setContentType(setContentType);
+                response.setCharacterEncoding(encoding);
                 ZipCompressedFileUtils.getInstance(file).preview(name, outputStream);
             } catch (Exception e) {
                 logger.error("get Data Of Zip File error: ", e);
