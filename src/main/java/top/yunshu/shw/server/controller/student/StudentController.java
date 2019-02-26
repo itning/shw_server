@@ -3,6 +3,7 @@ package top.yunshu.shw.server.controller.student;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,9 +28,12 @@ import top.yunshu.shw.server.service.upload.UploadService;
 import top.yunshu.shw.server.service.work.WorkService;
 import top.yunshu.shw.server.util.FileUtils;
 
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.Optional;
 import java.util.concurrent.Callable;
 
@@ -223,5 +227,36 @@ public class StudentController {
         } else {
             response.sendError(HttpStatus.NOT_FOUND.value(), "文件没有找到");
         }
+    }
+
+    /**
+     * 预览文件
+     *
+     * @param studentNumber 学号
+     * @param workId        作业ID
+     * @param encoding      编码
+     * @param response      {@link HttpServletResponse}
+     */
+    @ApiOperation("预览文件")
+    @GetMapping("/down_preview/{studentNumber}/{workId}")
+    public void preview(@ApiParam(value = "学号", required = true) @PathVariable String studentNumber,
+                        @ApiParam(value = "作业ID", required = true) @PathVariable String workId,
+                        @ApiParam(value = "编码", defaultValue = "UTF-8") @RequestParam(defaultValue = "UTF-8") String encoding,
+                        HttpServletResponse response) {
+        response.setCharacterEncoding(encoding);
+        fileService.getFile(studentNumber, workId).ifPresent(file -> {
+            try (ServletOutputStream outputStream = response.getOutputStream();
+                 FileInputStream fileInputStream = new FileInputStream(file)) {
+                String contentType = Files.probeContentType(file.toPath());
+                if (contentType.equals(MediaType.TEXT_HTML_VALUE)) {
+                    response.setContentType(MediaType.TEXT_PLAIN_VALUE);
+                } else {
+                    response.setContentType(contentType);
+                }
+                IOUtils.copy(fileInputStream, outputStream);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 }
