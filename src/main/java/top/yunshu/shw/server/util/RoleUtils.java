@@ -12,7 +12,6 @@ import top.yunshu.shw.server.exception.RoleException;
  */
 public class RoleUtils {
     private static final String USER_TYPE_STUDENT = "99";
-    private static final String USER_TYPE_TEACHER = "13";
 
     private RoleUtils() {
     }
@@ -29,15 +28,4 @@ public class RoleUtils {
         }
     }
 
-    /**
-     * 检查登陆用户是否是教师
-     *
-     * @param loginUser {@link LoginUser}
-     * @throws RoleException 如果不是教师
-     */
-    public static void checkRoleIsTeacher(LoginUser loginUser) {
-        if (!loginUser.getUserType().equals(USER_TYPE_TEACHER)) {
-            throw new RoleException("FORBIDDEN", HttpStatus.FORBIDDEN);
-        }
-    }
 }

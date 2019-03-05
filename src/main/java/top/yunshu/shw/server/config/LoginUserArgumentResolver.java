@@ -13,7 +13,6 @@ import top.yunshu.shw.server.util.JwtUtils;
 import javax.servlet.http.HttpServletRequest;
 
 import static top.yunshu.shw.server.util.RoleUtils.checkRoleIsStudent;
-import static top.yunshu.shw.server.util.RoleUtils.checkRoleIsTeacher;
 
 /**
  * 登陆用户参数
@@ -22,7 +21,6 @@ import static top.yunshu.shw.server.util.RoleUtils.checkRoleIsTeacher;
  */
 public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver {
     private static final Logger logger = LoggerFactory.getLogger(LoginUserArgumentResolver.class);
-    private static final String TEACHER = "/teacher";
     private static final String STUDENT = "/student";
 
     @Override
@@ -37,9 +35,7 @@ public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver 
         logger.info("get login user: " + loginUser);
         HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
         String requestURI = request.getRequestURI();
-        if (requestURI.startsWith(TEACHER)) {
-            checkRoleIsTeacher(loginUser);
-        } else if (requestURI.startsWith(STUDENT)) {
+        if (requestURI.startsWith(STUDENT)) {
             checkRoleIsStudent(loginUser);
         }
         return loginUser;
