@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import top.yunshu.shw.server.dao.GroupDao;
 import top.yunshu.shw.server.dao.StudentGroupDao;
+import top.yunshu.shw.server.dao.WorkDao;
 import top.yunshu.shw.server.entity.Group;
 import top.yunshu.shw.server.entity.StudentGroup;
 import top.yunshu.shw.server.exception.NoSuchFiledValueException;
@@ -32,11 +33,13 @@ public class GroupServiceImpl implements GroupService {
 
     private final StudentGroupDao studentGroupDao;
     private final GroupDao groupDao;
+    private final WorkDao workDao;
 
     @Autowired
-    public GroupServiceImpl(GroupDao groupDao, StudentGroupDao studentGroupDao) {
+    public GroupServiceImpl(GroupDao groupDao, StudentGroupDao studentGroupDao, WorkDao workDao) {
         this.groupDao = groupDao;
         this.studentGroupDao = studentGroupDao;
+        this.workDao = workDao;
     }
 
     @Override
@@ -102,6 +105,7 @@ public class GroupServiceImpl implements GroupService {
             throw new NoSuchFiledValueException("id: " + id + " not found", HttpStatus.NOT_FOUND);
         }
         studentGroupDao.findAllByGroupID(id).forEach(studentGroupDao::delete);
+        workDao.findAllByGroupId(id).forEach(workDao::delete);
         groupDao.delete(group);
     }
 
