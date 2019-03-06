@@ -101,6 +101,7 @@ public class GroupServiceImpl implements GroupService {
         if (!group.getTeacherNumber().equals(teacherNumber)) {
             throw new NoSuchFiledValueException("id: " + id + " not found", HttpStatus.NOT_FOUND);
         }
+        studentGroupDao.findAllByGroupID(id).forEach(studentGroupDao::delete);
         groupDao.delete(group);
     }
 
