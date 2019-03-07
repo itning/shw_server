@@ -1,5 +1,7 @@
 package top.yunshu.shw.server.entity;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -11,54 +13,88 @@ import java.util.Date;
  * 通知
  *
  * @author shulu
+ * @author itning
  */
+@ApiModel(description = "通知")
 @Entity
 @Table(name = "notice", indexes = {
-        @Index(name = "student_number_index", columnList = "student_number")
+        @Index(name = "receive_id_index", columnList = "receive_id")
 })
 public class Notice implements Serializable {
     /**
      * 标识通知
      */
+    @ApiModelProperty(required = true, value = "标识通知")
     @Id
     @Column(length = 50)
     private String id;
     /**
-     * 邀请人
+     * 发送者昵称
      */
-    @Column(nullable = false)
-    private String invitePeopleName;
+    @ApiModelProperty(required = true, value = "发送者昵称")
+    @Column(name = "send_name", nullable = false, length = 50)
+    private String sendName;
     /**
-     * 邀请加入的群组ID
+     * 发送者ID
      */
-    @Column(nullable = false)
-    private String inviteGroupId;
+    @ApiModelProperty(required = true, value = "发送者ID")
+    @Column(name = "send_id", nullable = false, length = 50)
+    private String sendId;
     /**
-     * 被邀请人学号
+     * 接收者ID
      */
-    @Column(name = "student_number", nullable = false, length = 50)
-    private String studentNumber;
+    @ApiModelProperty(required = true, value = "接收者ID")
+    @Column(name = "receive_id", nullable = false, length = 50)
+    private String receiveId;
+    /**
+     * 接收者昵称
+     */
+    @ApiModelProperty(required = true, value = "接收者昵称")
+    @Column(name = "receive_name", nullable = false, length = 50)
+    private String receiveName;
+    /**
+     * 通知标题
+     */
+    @ApiModelProperty(required = true, value = "通知标题")
+    @Column(name = "title", nullable = false, length = 50)
+    private String title;
+    /**
+     * 通知内容
+     */
+    @ApiModelProperty(required = true, value = "通知内容")
+    @Column(name = "content", nullable = false)
+    private String content;
     /**
      * 创建时间
      */
+    @ApiModelProperty(required = true, value = "创建时间")
     @Column(nullable = false)
     @CreationTimestamp
     private Date gmtCreate;
     /**
      * 更新时间
      */
+    @ApiModelProperty(required = true, value = "更新时间")
     @Column(nullable = false)
     @UpdateTimestamp
     private Date gmtModified;
 
-    public Notice() {
-    }
-
-    public Notice(String id, String invitePeopleName, String inviteGroupId, String studentNumber) {
-        this.id = id;
-        this.invitePeopleName = invitePeopleName;
-        this.inviteGroupId = inviteGroupId;
-        this.studentNumber = studentNumber;
+    public static Notice createReviewInstance(String workId,
+                                              String studentId,
+                                              String sendName,
+                                              String sendId,
+                                              String receiveId,
+                                              String receiveName,
+                                              String workName) {
+        Notice notice = new Notice();
+        notice.setId(studentId + workId);
+        notice.setSendName(sendName);
+        notice.setSendId(sendId);
+        notice.setReceiveId(receiveId);
+        notice.setReceiveName(receiveName);
+        notice.setTitle("作业批阅通知");
+        notice.setContent(workName + "已经被批改");
+        return notice;
     }
 
     public String getId() {
@@ -69,28 +105,52 @@ public class Notice implements Serializable {
         this.id = id;
     }
 
-    public String getInvitePeopleName() {
-        return invitePeopleName;
+    public String getSendName() {
+        return sendName;
     }
 
-    public void setInvitePeopleName(String invitePeopleName) {
-        this.invitePeopleName = invitePeopleName;
+    public void setSendName(String sendName) {
+        this.sendName = sendName;
     }
 
-    public String getInviteGroupId() {
-        return inviteGroupId;
+    public String getSendId() {
+        return sendId;
     }
 
-    public void setInviteGroupId(String inviteGroupId) {
-        this.inviteGroupId = inviteGroupId;
+    public void setSendId(String sendId) {
+        this.sendId = sendId;
     }
 
-    public String getStudentNumber() {
-        return studentNumber;
+    public String getReceiveId() {
+        return receiveId;
     }
 
-    public void setStudentNumber(String studentNumber) {
-        this.studentNumber = studentNumber;
+    public void setReceiveId(String receiveId) {
+        this.receiveId = receiveId;
+    }
+
+    public String getReceiveName() {
+        return receiveName;
+    }
+
+    public void setReceiveName(String receiveName) {
+        this.receiveName = receiveName;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
     }
 
     public Date getGmtCreate() {
@@ -113,9 +173,12 @@ public class Notice implements Serializable {
     public String toString() {
         return "Notice{" +
                 "id='" + id + '\'' +
-                ", invitePeopleName='" + invitePeopleName + '\'' +
-                ", inviteGroupId='" + inviteGroupId + '\'' +
-                ", studentNumber='" + studentNumber + '\'' +
+                ", sendName='" + sendName + '\'' +
+                ", sendId='" + sendId + '\'' +
+                ", receiveId='" + receiveId + '\'' +
+                ", receiveName='" + receiveName + '\'' +
+                ", title='" + title + '\'' +
+                ", content='" + content + '\'' +
                 ", gmtCreate=" + gmtCreate +
                 ", gmtModified=" + gmtModified +
                 '}';

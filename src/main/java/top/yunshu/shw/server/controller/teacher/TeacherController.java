@@ -421,7 +421,7 @@ public class TeacherController {
                                            @ApiParam(value = "作业ID", required = true) @PathVariable String workId,
                                            @ApiParam(value = "批阅信息", required = true) @RequestParam String review) {
         logger.debug("review work , work id: " + workId + " student id: " + studentId);
-        uploadService.reviewWork(workId, studentId, review);
+        uploadService.reviewWork(loginUser, workId, studentId, review);
         return ResponseEntity.noContent().build();
     }
 

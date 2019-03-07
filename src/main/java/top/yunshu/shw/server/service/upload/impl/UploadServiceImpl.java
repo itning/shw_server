@@ -4,8 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import top.yunshu.shw.server.dao.NoticeDao;
 import top.yunshu.shw.server.dao.UploadDao;
 import top.yunshu.shw.server.dao.WorkDao;
+import top.yunshu.shw.server.entity.LoginUser;
+import top.yunshu.shw.server.entity.Notice;
 import top.yunshu.shw.server.entity.Upload;
 import top.yunshu.shw.server.entity.Work;
 import top.yunshu.shw.server.exception.NullFiledException;
@@ -25,10 +28,13 @@ public class UploadServiceImpl implements UploadService {
 
     private final WorkDao workDao;
 
+    private final NoticeDao noticeDao;
+
     @Autowired
-    public UploadServiceImpl(UploadDao uploadDao, WorkDao workDao) {
+    public UploadServiceImpl(UploadDao uploadDao, WorkDao workDao, NoticeDao noticeDao) {
         this.uploadDao = uploadDao;
         this.workDao = workDao;
+        this.noticeDao = noticeDao;
     }
 
 
@@ -72,13 +78,18 @@ public class UploadServiceImpl implements UploadService {
     }
 
     @Override
-    public void reviewWork(String workId, String studentId, String review) {
+    public void reviewWork(LoginUser loginUser, String workId, String studentId, String review) {
         Upload upload = uploadDao.findUploadByStudentIdAndWorkId(studentId, workId);
         if (upload == null) {
             throw new NullFiledException("不存在该作业", HttpStatus.NOT_FOUND);
         }
         upload.setReview(review);
         uploadDao.save(upload);
+        if (!noticeDao.findById(studentId + workId).isPresent()) {
+            String workName = workDao.findById(workId).map(Work::getWorkName).orElse("N/A");
+            Notice notice = Notice.createReviewInstance(workId, studentId, loginUser.getName(), loginUser.getNo(), studentId, "", workName);
+            noticeDao.save(notice);
+        }
     }
 
     @Override

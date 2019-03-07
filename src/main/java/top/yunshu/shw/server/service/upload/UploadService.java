@@ -1,6 +1,7 @@
 package top.yunshu.shw.server.service.upload;
 
 import org.springframework.web.multipart.MultipartFile;
+import top.yunshu.shw.server.entity.LoginUser;
 import top.yunshu.shw.server.entity.Upload;
 
 /**
@@ -47,11 +48,12 @@ public interface UploadService {
     /**
      * 批阅作业
      *
+     * @param loginUser 登陆用户
      * @param workId    作业ID
      * @param studentId 学生ID
      * @param review    批阅信息
      */
-    void reviewWork(String workId, String studentId, String review);
+    void reviewWork(LoginUser loginUser, String workId, String studentId, String review);
 
     /**
      * 获取批阅信息

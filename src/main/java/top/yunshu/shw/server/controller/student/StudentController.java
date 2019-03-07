@@ -16,13 +16,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import springfox.documentation.annotations.ApiIgnore;
-import top.yunshu.shw.server.entity.Group;
-import top.yunshu.shw.server.entity.LoginUser;
-import top.yunshu.shw.server.entity.RestModel;
-import top.yunshu.shw.server.entity.Upload;
+import top.yunshu.shw.server.entity.*;
 import top.yunshu.shw.server.model.WorkModel;
 import top.yunshu.shw.server.service.file.FileService;
 import top.yunshu.shw.server.service.group.GroupService;
+import top.yunshu.shw.server.service.notice.NoticeService;
 import top.yunshu.shw.server.service.student.group.StudentGroupService;
 import top.yunshu.shw.server.service.upload.UploadService;
 import top.yunshu.shw.server.service.work.WorkService;
@@ -60,13 +58,16 @@ public class StudentController {
 
     private final FileService fileService;
 
+    private final NoticeService noticeService;
+
     @Autowired
-    public StudentController(GroupService groupService, WorkService workService, UploadService uploadService, StudentGroupService studentGroupService, FileService fileService) {
+    public StudentController(GroupService groupService, WorkService workService, UploadService uploadService, StudentGroupService studentGroupService, FileService fileService, NoticeService noticeService) {
         this.groupService = groupService;
         this.workService = workService;
         this.uploadService = uploadService;
         this.studentGroupService = studentGroupService;
         this.fileService = fileService;
+        this.noticeService = noticeService;
     }
 
     /**
@@ -258,5 +259,47 @@ public class StudentController {
                 throw new RuntimeException(e);
             }
         });
+    }
+
+    /**
+     * 获取学生所有通知
+     *
+     * @return ResponseEntity
+     */
+    @ApiOperation(value = "获取学生所有通知", produces = MediaType.APPLICATION_JSON_UTF8_VALUE,
+            response = Notice.class, responseContainer = "List")
+    @GetMapping("/notices")
+    public Callable<ResponseEntity<RestModel>> getAllNotices(@ApiIgnore LoginUser loginUser) {
+        logger.debug("get all notices");
+        return () -> ResponseEntity.ok(new RestModel<>(noticeService.getAllNoticeByStudentId(loginUser.getNo())));
+    }
+
+    /**
+     * 根据作业ID获取批阅信息
+     *
+     * @param workId 作业ID
+     * @return ResponseEntity
+     */
+    @ApiOperation(value = "根据作业ID获取批阅信息", produces = MediaType.APPLICATION_JSON_UTF8_VALUE, response = String.class)
+    @GetMapping("/review/{workId}")
+    public Callable<ResponseEntity<RestModel>> getReviewByStudentId(@ApiIgnore LoginUser loginUser,
+                                                                    @ApiParam(value = "作业ID", required = true) @PathVariable String workId) {
+        logger.debug("get all notices");
+        return () -> ResponseEntity.ok(new RestModel<>(uploadService.reviewWork(workId, loginUser.getNo())));
+    }
+
+    /**
+     * 根据通知ID清除通知
+     *
+     * @param noticeId 通知ID
+     * @return ResponseEntity
+     */
+    @ApiOperation("根据通知ID清除通知")
+    @DeleteMapping("/notice/{noticeId}")
+    public ResponseEntity<Void> delNoticeById(@ApiIgnore LoginUser loginUser,
+                                              @ApiParam(value = "通知ID", required = true) @PathVariable String noticeId) {
+        logger.debug("del notice id " + noticeId);
+        noticeService.delNoticeById(noticeId);
+        return ResponseEntity.noContent().build();
     }
 }
