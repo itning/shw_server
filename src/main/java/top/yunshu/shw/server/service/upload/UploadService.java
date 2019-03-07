@@ -43,4 +43,22 @@ public interface UploadService {
      * @return 上传集合
      */
     long getUploadSum(String workId);
+
+    /**
+     * 批阅作业
+     *
+     * @param workId    作业ID
+     * @param studentId 学生ID
+     * @param review    批阅信息
+     */
+    void reviewWork(String workId, String studentId, String review);
+
+    /**
+     * 获取批阅信息
+     *
+     * @param workId    作业ID
+     * @param studentId 学生ID
+     * @return 批阅信息
+     */
+    String reviewWork(String workId, String studentId);
 }

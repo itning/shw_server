@@ -405,4 +405,39 @@ public class TeacherController {
             }
         });
     }
+
+    /**
+     * 更新作业批阅信息
+     *
+     * @param studentId 学生ID
+     * @param workId    作业ID
+     * @param review    批阅信息
+     * @return ResponseEntity
+     */
+    @ApiOperation("更新作业批阅信息")
+    @PatchMapping("/review/{studentId}/{workId}")
+    public ResponseEntity<Void> reviewWork(@ApiIgnore LoginUser loginUser,
+                                           @ApiParam(value = "学生ID", required = true) @PathVariable String studentId,
+                                           @ApiParam(value = "作业ID", required = true) @PathVariable String workId,
+                                           @ApiParam(value = "批阅信息", required = true) @RequestParam String review) {
+        logger.debug("review work , work id: " + workId + " student id: " + studentId);
+        uploadService.reviewWork(workId, studentId, review);
+        return ResponseEntity.noContent().build();
+    }
+
+    /**
+     * 获取作业批阅信息
+     *
+     * @param studentId 学生ID
+     * @param workId    作业ID
+     * @return ResponseEntity
+     */
+    @ApiOperation(value = "获取作业批阅信息", produces = MediaType.APPLICATION_JSON_UTF8_VALUE, response = String.class)
+    @GetMapping("/review/{studentId}/{workId}")
+    public Callable<ResponseEntity<RestModel>> getWorkReview(@ApiIgnore LoginUser loginUser,
+                                                             @ApiParam(value = "学生ID", required = true) @PathVariable String studentId,
+                                                             @ApiParam(value = "作业ID", required = true) @PathVariable String workId) {
+        logger.debug("get work review detail, work id " + workId + " student id: " + studentId);
+        return () -> ResponseEntity.ok(new RestModel<>(uploadService.reviewWork(workId, studentId)));
+    }
 }

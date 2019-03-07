@@ -70,4 +70,19 @@ public class UploadServiceImpl implements UploadService {
     public long getUploadSum(String workId) {
         return uploadDao.findSizeByWorkId(workId).stream().mapToLong(Long::longValue).sum();
     }
+
+    @Override
+    public void reviewWork(String workId, String studentId, String review) {
+        Upload upload = uploadDao.findUploadByStudentIdAndWorkId(studentId, workId);
+        if (upload == null) {
+            throw new NullFiledException("不存在该作业", HttpStatus.NOT_FOUND);
+        }
+        upload.setReview(review);
+        uploadDao.save(upload);
+    }
+
+    @Override
+    public String reviewWork(String workId, String studentId) {
+        return uploadDao.findReviewByStudentIdAndWorkId(studentId, workId);
+    }
 }

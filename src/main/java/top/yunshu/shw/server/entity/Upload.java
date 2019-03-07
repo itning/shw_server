@@ -55,6 +55,12 @@ public class Upload implements Serializable {
     @Column(nullable = false)
     private long size;
     /**
+     * 批阅信息
+     */
+    @ApiModelProperty(value = "批阅信息")
+    @Column(nullable = true, columnDefinition = "mediumtext")
+    private String review;
+    /**
      * 创建时间
      */
     @ApiModelProperty(required = true, value = "创建时间")
@@ -112,6 +118,14 @@ public class Upload implements Serializable {
         this.size = size;
     }
 
+    public String getReview() {
+        return review;
+    }
+
+    public void setReview(String review) {
+        this.review = review;
+    }
+
     public Date getGmtCreate() {
         return gmtCreate;
     }
@@ -136,6 +150,7 @@ public class Upload implements Serializable {
                 ", mime='" + mime + '\'' +
                 ", extensionName='" + extensionName + '\'' +
                 ", size=" + size +
+                ", review='" + review + '\'' +
                 ", gmtCreate=" + gmtCreate +
                 ", gmtModified=" + gmtModified +
                 '}';
