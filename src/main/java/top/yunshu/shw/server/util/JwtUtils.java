@@ -29,7 +29,7 @@ public class JwtUtils {
                 //SECRET_KEY是加密算法对应的密钥，这里使用额是HS256加密算法
                 .signWith(SignatureAlgorithm.HS256, PRIVATE_KEY)
                 //expTime是过期时间
-                .setExpiration(new Date(System.currentTimeMillis() + 30 * 60 * 1000))
+                .setExpiration(new Date(System.currentTimeMillis() + 60 * 60 * 1000))
                 .claim(LOGIN_USER, MAPPER.writeValueAsString(o))
                 //令牌的发行者
                 .setIssuer("itning")

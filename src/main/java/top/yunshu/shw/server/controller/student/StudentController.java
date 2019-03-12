@@ -248,12 +248,20 @@ public class StudentController {
         fileService.getFile(studentNumber, workId).ifPresent(file -> {
             try (ServletOutputStream outputStream = response.getOutputStream();
                  FileInputStream fileInputStream = new FileInputStream(file)) {
-                String contentType = Files.probeContentType(file.toPath());
-                if (contentType.equals(MediaType.TEXT_HTML_VALUE)) {
-                    response.setContentType(MediaType.TEXT_PLAIN_VALUE);
+                String extensionName = file.getName().substring(file.getName().lastIndexOf(".") + 1);
+                String contentTypeByExtensionName = FileUtils.getContentTypeByExtensionName(extensionName);
+                String setContentType;
+                if (contentTypeByExtensionName == null) {
+                    String contentType = Files.probeContentType(file.toPath());
+                    if (contentType == null || contentType.equals(MediaType.TEXT_HTML_VALUE)) {
+                        setContentType = MediaType.TEXT_PLAIN_VALUE;
+                    } else {
+                        setContentType = contentType;
+                    }
                 } else {
-                    response.setContentType(contentType);
+                    setContentType = contentTypeByExtensionName;
                 }
+                logger.debug("get contentType: " + setContentType);
                 IOUtils.copy(fileInputStream, outputStream);
             } catch (Exception e) {
                 throw new RuntimeException(e);
