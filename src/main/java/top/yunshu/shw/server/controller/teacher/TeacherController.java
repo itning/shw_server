@@ -25,16 +25,16 @@ import top.yunshu.shw.server.service.group.GroupService;
 import top.yunshu.shw.server.service.upload.UploadService;
 import top.yunshu.shw.server.service.work.WorkService;
 import top.yunshu.shw.server.util.FileUtils;
+import top.yunshu.shw.server.util.Office2PdfUtils;
 import top.yunshu.shw.server.util.ZipCompressedFileUtils;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -383,6 +383,28 @@ public class TeacherController {
         fileService.getFile(studentNumber, workId).ifPresent(file -> {
             try (ServletOutputStream outputStream = response.getOutputStream()) {
                 String extensionName = name.substring(name.lastIndexOf(".") + 1);
+                if (Arrays.asList("xls", "xlsx", "doc", "docx").contains(extensionName)) {
+                    String tempFilePath = configService.getConfig(Config.ConfigKey.TEMP_DIR).orElse(System.getProperty("java.io.tmpdir")) + File.separator + studentNumber + workId + "zip.pdf";
+                    File tempFile = new File(tempFilePath);
+                    if (!tempFile.exists()) {
+                        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                        ZipCompressedFileUtils.getInstance(file).preview(name, byteArrayOutputStream);
+                        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(byteArrayOutputStream.toByteArray());
+                        logger.debug("start convert " + file.getPath() + " to pdf");
+                        long lastTimeMillis = System.currentTimeMillis();
+                        FileOutputStream fileOutputStream = new FileOutputStream(tempFile);
+                        Office2PdfUtils.convert2Pdf(byteArrayInputStream, fileOutputStream, extensionName);
+                        logger.debug("end convert and use time: " + (System.currentTimeMillis() - lastTimeMillis));
+                        fileOutputStream.close();
+                        byteArrayInputStream.close();
+                        byteArrayOutputStream.close();
+                    }
+                    response.setContentType(MediaType.APPLICATION_PDF_VALUE);
+                    FileInputStream tempFileInputStream = new FileInputStream(tempFilePath);
+                    IOUtils.copy(tempFileInputStream, outputStream);
+                    tempFileInputStream.close();
+                    return;
+                }
                 String contentTypeByExtensionName = FileUtils.getContentTypeByExtensionName(extensionName);
                 String setContentType;
                 if (contentTypeByExtensionName == null) {
