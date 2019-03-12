@@ -1,8 +1,15 @@
 package top.yunshu.shw.server.util;
 
+import com.lowagie.text.Font;
+import com.lowagie.text.pdf.BaseFont;
+import fr.opensagres.xdocreport.itext.extension.font.ITextFontRegistry;
 import org.apache.poi.xwpf.converter.pdf.PdfConverter;
+import org.apache.poi.xwpf.converter.pdf.PdfOptions;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.awt.*;
 import java.io.*;
 
 /**
@@ -11,6 +18,9 @@ import java.io.*;
  * @author itning
  */
 public class Office2PdfUtils {
+    private static final Logger logger = LoggerFactory.getLogger(Office2PdfUtils.class);
+    private static final String FONT_PATH = Office2PdfUtils.class.getResource("/SIMHEI.TTF").getPath().substring(1);
+
     private Office2PdfUtils() {
     }
 
@@ -69,7 +79,20 @@ public class Office2PdfUtils {
     }
 
     private static void doDOCX2PDF(InputStream inputStream, OutputStream outputStream) throws IOException {
+        logger.debug("font path: " + FONT_PATH);
+        ITextFontRegistry iTextFontRegistry = new ITextFontRegistry() {
+            @Override
+            public Font getFont(String familyName, String encoding, float size, int style, Color color) {
+                BaseFont base = null;
+                try {
+                    base = BaseFont.createFont(FONT_PATH, BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
+                } catch (Exception e) {
+                    logger.error(e.getMessage());
+                }
+                return new Font(base, size, style, color);
+            }
+        };
         XWPFDocument document = new XWPFDocument(inputStream);
-        PdfConverter.getInstance().convert(document, outputStream, null);
+        PdfConverter.getInstance().convert(document, outputStream, PdfOptions.create().fontProvider(iTextFontRegistry));
     }
 }
