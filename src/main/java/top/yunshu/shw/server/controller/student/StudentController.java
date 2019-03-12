@@ -264,6 +264,12 @@ public class StudentController {
                         Office2PdfUtils.convert2Pdf(file, tempFile);
                         logger.debug("end convert and use time: " + (System.currentTimeMillis() - lastTimeMillis));
                     }
+                    if (tempFile.length() == 0) {
+                        boolean delete = tempFile.delete();
+                        logger.debug("delete " + delete);
+                        throw new RuntimeException("转换失败");
+                    }
+
                     response.setContentType(MediaType.APPLICATION_PDF_VALUE);
                     FileInputStream tempFileInputStream = new FileInputStream(tempFilePath);
                     IOUtils.copy(tempFileInputStream, outputStream);

@@ -1,8 +1,7 @@
 package top.yunshu.shw.server.util;
 
-import com.documents4j.api.DocumentType;
-import com.documents4j.api.IConverter;
-import com.documents4j.job.LocalConverter;
+import org.apache.poi.xwpf.converter.pdf.PdfConverter;
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
 
 import java.io.*;
 
@@ -58,46 +57,19 @@ public class Office2PdfUtils {
     }
 
     private static void doXLS2PDF(InputStream inputStream, OutputStream outputStream) throws IOException {
-        IConverter converter = LocalConverter.builder().build();
-        converter
-                .convert(inputStream)
-                .as(DocumentType.XLS)
-                .to(outputStream)
-                .as(DocumentType.PDF)
-                .execute();
-        outputStream.close();
+
     }
 
     private static void doXLSX2PDF(InputStream inputStream, OutputStream outputStream) throws IOException {
-        IConverter converter = LocalConverter.builder().build();
-        converter
-                .convert(inputStream)
-                .as(DocumentType.XLSX)
-                .to(outputStream)
-                .as(DocumentType.PDF)
-                .execute();
-        outputStream.close();
+
     }
 
     private static void doDOC2PDF(InputStream inputStream, OutputStream outputStream) throws IOException {
-        IConverter converter = LocalConverter.builder().build();
-        converter
-                .convert(inputStream)
-                .as(DocumentType.DOC)
-                .to(outputStream)
-                .as(DocumentType.PDF)
-                .execute();
-        outputStream.close();
+
     }
 
     private static void doDOCX2PDF(InputStream inputStream, OutputStream outputStream) throws IOException {
-        IConverter converter = LocalConverter.builder().build();
-        converter
-                .convert(inputStream)
-                .as(DocumentType.DOCX)
-                .to(outputStream)
-                .as(DocumentType.PDF)
-                .execute();
-        outputStream.close();
+        XWPFDocument document = new XWPFDocument(inputStream);
+        PdfConverter.getInstance().convert(document, outputStream, null);
     }
 }

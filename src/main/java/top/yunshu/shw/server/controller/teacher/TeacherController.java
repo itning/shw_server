@@ -399,6 +399,11 @@ public class TeacherController {
                         byteArrayInputStream.close();
                         byteArrayOutputStream.close();
                     }
+                    if (tempFile.length() == 0) {
+                        boolean delete = tempFile.delete();
+                        logger.debug("deleted: " + delete);
+                        throw new RuntimeException("转换失败");
+                    }
                     response.setContentType(MediaType.APPLICATION_PDF_VALUE);
                     FileInputStream tempFileInputStream = new FileInputStream(tempFilePath);
                     IOUtils.copy(tempFileInputStream, outputStream);

@@ -10,7 +10,7 @@
     </parent>
     <groupId>top.yunshu</groupId>
     <artifactId>shw_server</artifactId>
-    <version>1.5.3-RELEASE</version>
+    <version>1.5.4-RELEASE</version>
     <name>shw_server</name>
     <description>Student HomeWork Management System</description>
 
@@ -101,23 +101,11 @@
             <artifactId>springfox-swagger-ui</artifactId>
             <version>${springfox.version}</version>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/com.documents4j/documents4j-local -->
+        <!-- https://mvnrepository.com/artifact/fr.opensagres.xdocreport/org.apache.poi.xwpf.converter.pdf -->
         <dependency>
-            <groupId>com.documents4j</groupId>
-            <artifactId>documents4j-local</artifactId>
-            <version>1.0.3</version>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/com.documents4j/documents4j-transformer-msoffice-word -->
-        <dependency>
-            <groupId>com.documents4j</groupId>
-            <artifactId>documents4j-transformer-msoffice-word</artifactId>
-            <version>1.0.3</version>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/com.documents4j/documents4j-transformer-msoffice-excel -->
-        <dependency>
-            <groupId>com.documents4j</groupId>
-            <artifactId>documents4j-transformer-msoffice-excel</artifactId>
-            <version>1.0.3</version>
+            <groupId>fr.opensagres.xdocreport</groupId>
+            <artifactId>org.apache.poi.xwpf.converter.pdf</artifactId>
+            <version>1.0.6</version>
         </dependency>
 
         <dependency>
