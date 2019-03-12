@@ -1,6 +1,8 @@
 package top.yunshu.shw.server.util;
 
 import org.apache.catalina.connector.ClientAbortException;
+import org.apache.commons.codec.binary.Hex;
+import org.apache.poi.util.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -8,11 +10,9 @@ import org.springframework.web.multipart.MultipartFile;
 import top.yunshu.shw.server.exception.FileException;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.RandomAccessFile;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
 
 /**
  * 文件工具类
@@ -141,6 +141,17 @@ public class FileUtils {
                 return "application/vnd.openxmlformats-officedocument.presentationml.presentation";
             default:
                 return null;
+        }
+    }
+
+    public static String getFileMD5(File file) {
+        try (FileInputStream fileInputStream = new FileInputStream(file)) {
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            byte[] md5Bytes = md.digest(IOUtils.toByteArray(fileInputStream));
+            return Hex.encodeHexString(md5Bytes);
+        } catch (Exception e) {
+            logger.error("getFileMD5 method error: ", e);
+            throw new RuntimeException(e);
         }
     }
 }

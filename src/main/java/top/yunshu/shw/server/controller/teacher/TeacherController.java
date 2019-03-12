@@ -384,7 +384,7 @@ public class TeacherController {
             try (ServletOutputStream outputStream = response.getOutputStream()) {
                 String extensionName = name.substring(name.lastIndexOf(".") + 1);
                 if (Arrays.asList("xls", "xlsx", "doc", "docx").contains(extensionName)) {
-                    String tempFilePath = configService.getConfig(Config.ConfigKey.TEMP_DIR).orElse(System.getProperty("java.io.tmpdir")) + File.separator + studentNumber + workId + "zip.pdf";
+                    String tempFilePath = configService.getConfig(Config.ConfigKey.TEMP_DIR).orElse(System.getProperty("java.io.tmpdir")) + File.separator + FileUtils.getFileMD5(file) + "zip.pdf";
                     File tempFile = new File(tempFilePath);
                     if (!tempFile.exists()) {
                         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
