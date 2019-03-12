@@ -19,4 +19,3 @@ cas:
     - '/config'
     - '/student/down'
     - '/teacher/down'
-    - '/webjars'
