@@ -18,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 import springfox.documentation.annotations.ApiIgnore;
 import top.yunshu.shw.server.entity.*;
 import top.yunshu.shw.server.model.WorkModel;
+import top.yunshu.shw.server.service.config.ConfigService;
 import top.yunshu.shw.server.service.file.FileService;
 import top.yunshu.shw.server.service.group.GroupService;
 import top.yunshu.shw.server.service.notice.NoticeService;
@@ -25,6 +26,7 @@ import top.yunshu.shw.server.service.student.group.StudentGroupService;
 import top.yunshu.shw.server.service.upload.UploadService;
 import top.yunshu.shw.server.service.work.WorkService;
 import top.yunshu.shw.server.util.FileUtils;
+import top.yunshu.shw.server.util.Office2PdfUtils;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
@@ -32,6 +34,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.Arrays;
 import java.util.Optional;
 import java.util.concurrent.Callable;
 
@@ -60,14 +63,17 @@ public class StudentController {
 
     private final NoticeService noticeService;
 
+    private final ConfigService configService;
+
     @Autowired
-    public StudentController(GroupService groupService, WorkService workService, UploadService uploadService, StudentGroupService studentGroupService, FileService fileService, NoticeService noticeService) {
+    public StudentController(GroupService groupService, WorkService workService, UploadService uploadService, StudentGroupService studentGroupService, FileService fileService, NoticeService noticeService, ConfigService configService) {
         this.groupService = groupService;
         this.workService = workService;
         this.uploadService = uploadService;
         this.studentGroupService = studentGroupService;
         this.fileService = fileService;
         this.noticeService = noticeService;
+        this.configService = configService;
     }
 
     /**
@@ -249,6 +255,23 @@ public class StudentController {
             try (ServletOutputStream outputStream = response.getOutputStream();
                  FileInputStream fileInputStream = new FileInputStream(file)) {
                 String extensionName = file.getName().substring(file.getName().lastIndexOf(".") + 1);
+                if (Arrays.asList("xls", "xlsx", "doc", "docx").contains(extensionName)) {
+                    String tempFilePath = configService.getConfig(Config.ConfigKey.TEMP_DIR).orElse(System.getProperty("java.io.tmpdir")) + File.separator + studentNumber + workId + ".pdf";
+                    File tempFile = new File(tempFilePath);
+                    if (!tempFile.exists()) {
+                        logger.debug("start convert " + file.getPath() + " to pdf");
+                        long lastTimeMillis = System.currentTimeMillis();
+                        Office2PdfUtils.convert2Pdf(file, tempFile);
+                        logger.debug("end convert and use time: " + (System.currentTimeMillis() - lastTimeMillis));
+                    }
+                    response.setContentType(MediaType.APPLICATION_PDF_VALUE);
+                    FileInputStream tempFileInputStream = new FileInputStream(tempFilePath);
+                    IOUtils.copy(tempFileInputStream, outputStream);
+
+                    fileInputStream.close();
+                    tempFileInputStream.close();
+                    return;
+                }
                 String contentTypeByExtensionName = FileUtils.getContentTypeByExtensionName(extensionName);
                 String setContentType;
                 if (contentTypeByExtensionName == null) {
@@ -262,6 +285,7 @@ public class StudentController {
                     setContentType = contentTypeByExtensionName;
                 }
                 logger.debug("get contentType: " + setContentType);
+                response.setContentType(setContentType);
                 IOUtils.copy(fileInputStream, outputStream);
             } catch (Exception e) {
                 throw new RuntimeException(e);
