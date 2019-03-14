@@ -1,6 +1,5 @@
 package top.yunshu.shw.server.util;
 
-import java.io.FileInputStream;
 import java.io.InputStream;
 
 
@@ -8,14 +7,12 @@ import java.io.InputStream;
  * @author itning
  */
 final class Office2PdfLicense {
-    private static final String LICENSE_PATH = Office2PdfLicense.class.getResource("/license.xml").getPath().substring(1);
-
     /**
      * 获取Word的license签字验证
      */
     static boolean getWordLicense() {
         boolean result = false;
-        try (InputStream is = new FileInputStream(LICENSE_PATH)) {
+        try (InputStream is = Office2PdfLicense.class.getResource("/license.xml").openStream()) {
             com.aspose.words.License aposeLic = new com.aspose.words.License();
             aposeLic.setLicense(is);
             result = true;
@@ -30,7 +27,7 @@ final class Office2PdfLicense {
      */
     static boolean getExcelLicense() {
         boolean result = false;
-        try (InputStream is = new FileInputStream(LICENSE_PATH)) {
+        try (InputStream is = Office2PdfLicense.class.getResource("/license.xml").openStream()) {
             com.aspose.cells.License aposeLic = new com.aspose.cells.License();
             aposeLic.setLicense(is);
             result = true;
@@ -45,7 +42,7 @@ final class Office2PdfLicense {
      */
     static boolean getPPTLicense() {
         boolean result = false;
-        try (InputStream is = new FileInputStream(LICENSE_PATH)) {
+        try (InputStream is = Office2PdfLicense.class.getResource("/license.xml").openStream()) {
             com.aspose.slides.License aposeLic = new com.aspose.slides.License();
             aposeLic.setLicense(is);
             result = true;
