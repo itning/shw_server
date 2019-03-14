@@ -8,6 +8,9 @@ import com.aspose.words.IWarningCallback;
 import com.aspose.words.WarningType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import top.yunshu.shw.server.config.SpringContextHelper;
+import top.yunshu.shw.server.entity.Config;
+import top.yunshu.shw.server.service.config.ConfigService;
 
 import java.io.*;
 
@@ -18,8 +21,7 @@ import java.io.*;
  */
 public final class Office2PdfUtils {
     private static final Logger logger = LoggerFactory.getLogger(Office2PdfUtils.class);
-    private static final String FONT_NAME = "SIMSUN";
-    private static final String FONT_PATH = Office2PdfUtils.class.getResource("/").getPath().substring(1);
+    private static final String FONT_NAME = "simsun";
 
     private Office2PdfUtils() {
     }
@@ -71,12 +73,12 @@ public final class Office2PdfUtils {
             throw new RuntimeException("doExcel2PDF Error: License Error");
         }
         try {
-            FontSettings.setFontsFolder(FONT_PATH, true);
+            String fontDir = SpringContextHelper.getBean(ConfigService.class).getConfig(Config.ConfigKey.FONT_DIR).orElse("");
+            FontSettings.setFontsFolder(fontDir, true);
             FontSettings.setDefaultFontName(FONT_NAME);
             Workbook wb = new Workbook(inputStream);
             wb.save(outputStream, com.aspose.cells.SaveFormat.PDF);
         } catch (Exception e) {
-            logger.error("FONT_PATH: " + FONT_PATH);
             logger.error("doExcel2PDF Error: ", e);
             throw new RuntimeException(e);
         } finally {
@@ -91,7 +93,8 @@ public final class Office2PdfUtils {
             throw new RuntimeException("doWord2PDF Error: License Error");
         }
         try {
-            FontSettings.setFontsFolder(FONT_PATH, true);
+            String fontDir = SpringContextHelper.getBean(ConfigService.class).getConfig(Config.ConfigKey.FONT_DIR).orElse("");
+            FontSettings.setFontsFolder(fontDir, true);
             FontSettings.setDefaultFontName(FONT_NAME);
             Document doc = new Document(inputStream);
             IWarningCallback callback = info -> {
@@ -102,7 +105,6 @@ public final class Office2PdfUtils {
             doc.setWarningCallback(callback);
             doc.save(outputStream, com.aspose.words.SaveFormat.PDF);
         } catch (Exception e) {
-            logger.error("FONT_PATH: " + FONT_PATH);
             logger.error("doWord2PDF Error: ", e);
             throw new RuntimeException(e);
         } finally {
@@ -117,12 +119,12 @@ public final class Office2PdfUtils {
             throw new RuntimeException("doPowerPoint2PDF Error: License Error");
         }
         try {
-            FontSettings.setFontsFolder(FONT_PATH, true);
+            String fontDir = SpringContextHelper.getBean(ConfigService.class).getConfig(Config.ConfigKey.FONT_DIR).orElse("");
+            FontSettings.setFontsFolder(fontDir, true);
             FontSettings.setDefaultFontName(FONT_NAME);
             Presentation ppt = new Presentation(inputStream);
             ppt.save(outputStream, com.aspose.slides.SaveFormat.Pdf);
         } catch (Exception e) {
-            logger.error("FONT_PATH: " + FONT_PATH);
             logger.error("doPowerPoint2PDF Error: ", e);
             throw new RuntimeException(e);
         } finally {

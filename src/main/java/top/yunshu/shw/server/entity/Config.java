@@ -49,7 +49,11 @@ public class Config implements Serializable {
         /**
          * 本地服务地址
          */
-        LOCAL_SERVER_URL("local_server_url");
+        LOCAL_SERVER_URL("local_server_url"),
+        /**
+         * 字体文件目录
+         */
+        FONT_DIR("font_dir");
         private String key;
 
         ConfigKey(String key) {

@@ -137,6 +137,19 @@
             <input class="mdui-btn mdui-btn-raised mdui-ripple mdui-color-theme-accent" type="submit" value="保存"/>
         </div>
     </form>
+    <form th:action="@{/config/fontDir}" method="post" onsubmit="return onSave('font_dir_url')"
+          class="mdui-card">
+        <div class="mdui-card-content">
+            <div class="mdui-textfield mdui-textfield-floating-label">
+                <label class="mdui-textfield-label">字体文件目录(必须设置,否则解析中文乱码)</label>
+                <!--/*@thymesVar id="font_dir" type="java.lang.String"*/-->
+                <input class="mdui-textfield-input" id="font_dir_url" name="name" type="text"
+                       th:value="${font_dir}"/>
+                <div class="mdui-textfield-error">必填</div>
+            </div>
+            <input class="mdui-btn mdui-btn-raised mdui-ripple mdui-color-theme-accent" type="submit" value="保存"/>
+        </div>
+    </form>
     <form th:action="@{/config/user}" method="post" class="mdui-card">
         <div class="mdui-card-content">
             <div class="mdui-textfield mdui-textfield-floating-label">

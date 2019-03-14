@@ -264,6 +264,26 @@ public class AdminController {
     }
 
     /**
+     * 设置字体文件目录
+     *
+     * @param name    目录
+     * @param session {@link HttpSession}
+     * @return "redirect:/config"
+     */
+    @ApiOperation("设置字体文件目录")
+    @PostMapping("/config/fontDir")
+    public String saveFontDir(@ApiParam(value = "字体文件目录", required = true) String name,
+                              @ApiIgnore HttpSession session) {
+        if (session.getAttribute(USER) == null) {
+            return "redirect:/config/login";
+        }
+        if (StringUtils.isNotBlank(name)) {
+            configService.saveConfig(Config.ConfigKey.FONT_DIR, name);
+        }
+        return "redirect:/config";
+    }
+
+    /**
      * 设置CAS SERVER
      *
      * @param name    URL
