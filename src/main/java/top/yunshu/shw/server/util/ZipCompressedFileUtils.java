@@ -21,7 +21,7 @@ import java.util.zip.ZipInputStream;
  *
  * @author itning
  */
-public class ZipCompressedFileUtils {
+public final class ZipCompressedFileUtils {
     private static final Logger logger = LoggerFactory.getLogger(ZipCompressedFileUtils.class);
 
     private static final Gson GSON = new Gson();

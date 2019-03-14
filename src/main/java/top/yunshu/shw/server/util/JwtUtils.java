@@ -14,7 +14,7 @@ import java.util.Date;
  *
  * @author itning
  */
-public class JwtUtils {
+public final class JwtUtils {
     private static final String PRIVATE_KEY = "hxcshw";
     private static final String LOGIN_USER = "loginUser";
     private static final String DEFAULT_STR = "null";

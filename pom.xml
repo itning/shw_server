@@ -10,7 +10,7 @@
     </parent>
     <groupId>top.yunshu</groupId>
     <artifactId>shw_server</artifactId>
-    <version>1.5.6-RELEASE</version>
+    <version>1.6.0-RELEASE</version>
     <name>shw_server</name>
     <description>Student HomeWork Management System</description>
 
@@ -21,6 +21,8 @@
         <cas.spring.boot.starter.version>1.0.6-RELEASE</cas.spring.boot.starter.version>
         <springfox.version>2.9.2</springfox.version>
         <jib.maven.plugin.version>1.0.1</jib.maven.plugin.version>
+        <common.io.version>2.6</common.io.version>
+        <itning.aspose.version>1.0.0</itning.aspose.version>
     </properties>
 
     <dependencies>
@@ -73,6 +75,11 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/commons-codec/commons-codec -->
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+        </dependency>
         <!-- https://mvnrepository.com/artifact/com.google.code.gson/gson -->
         <dependency>
             <groupId>com.google.code.gson</groupId>
@@ -101,12 +108,29 @@
             <artifactId>springfox-swagger-ui</artifactId>
             <version>${springfox.version}</version>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/fr.opensagres.xdocreport/org.apache.poi.xwpf.converter.pdf -->
+        <!-- https://mvnrepository.com/artifact/commons-io/commons-io -->
         <dependency>
-            <groupId>fr.opensagres.xdocreport</groupId>
-            <artifactId>org.apache.poi.xwpf.converter.pdf</artifactId>
-            <version>1.0.6</version>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>${common.io.version}</version>
         </dependency>
+        <!--这个依赖为本地依赖  开始-->
+        <dependency>
+            <groupId>top.itning.aspose</groupId>
+            <artifactId>cells</artifactId>
+            <version>${itning.aspose.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>top.itning.aspose</groupId>
+            <artifactId>slides</artifactId>
+            <version>${itning.aspose.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>top.itning.aspose</groupId>
+            <artifactId>words</artifactId>
+            <version>${itning.aspose.version}</version>
+        </dependency>
+        <!--这个依赖为本地依赖  结束-->
 
         <dependency>
             <groupId>org.springframework.boot</groupId>

@@ -1,15 +1,11 @@
 package top.yunshu.shw.server.util;
 
-import com.lowagie.text.Font;
-import com.lowagie.text.pdf.BaseFont;
-import fr.opensagres.xdocreport.itext.extension.font.ITextFontRegistry;
-import org.apache.poi.xwpf.converter.pdf.PdfConverter;
-import org.apache.poi.xwpf.converter.pdf.PdfOptions;
-import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import com.aspose.cells.Workbook;
+import com.aspose.slides.Presentation;
+import com.aspose.words.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.awt.*;
 import java.io.*;
 
 /**
@@ -17,9 +13,8 @@ import java.io.*;
  *
  * @author itning
  */
-public class Office2PdfUtils {
+public final class Office2PdfUtils {
     private static final Logger logger = LoggerFactory.getLogger(Office2PdfUtils.class);
-    private static final String FONT_PATH = Office2PdfUtils.class.getResource("/SIMHEI.TTF").getPath().substring(1);
 
     private Office2PdfUtils() {
     }
@@ -35,19 +30,18 @@ public class Office2PdfUtils {
     public static void convert2Pdf(InputStream inputStream, OutputStream outputStream, String extensionName) throws Exception {
         switch (extensionName) {
             case "doc":
-                doDOC2PDF(inputStream, outputStream);
-                break;
             case "docx":
-                doDOCX2PDF(inputStream, outputStream);
+                doWord2PDF(inputStream, outputStream);
                 break;
             case "xls":
-                doXLS2PDF(inputStream, outputStream);
-                break;
             case "xlsx":
-                doXLSX2PDF(inputStream, outputStream);
+                doExcel2PDF(inputStream, outputStream);
+                break;
+            case "ppt":
+            case "pptx":
+                doPowerPoint2PDF(inputStream, outputStream);
                 break;
             default:
-                // Now we can`t convert ppt and pptx file to pdf
                 // Default do nothing
         }
     }
@@ -66,33 +60,54 @@ public class Office2PdfUtils {
         convert2Pdf(fileInputStream, fileOutputStream, extensionName);
     }
 
-    private static void doXLS2PDF(InputStream inputStream, OutputStream outputStream) throws IOException {
-
+    private static void doExcel2PDF(InputStream inputStream, OutputStream outputStream) throws IOException {
+        if (!Office2PdfLicense.getExcelLicense()) {
+            logger.error("doExcel2PDF Error: License Error");
+            throw new RuntimeException("doExcel2PDF Error: License Error");
+        }
+        try {
+            Workbook wb = new Workbook(inputStream);
+            wb.save(outputStream, com.aspose.cells.SaveFormat.PDF);
+        } catch (Exception e) {
+            logger.error("doExcel2PDF Error: ", e);
+            throw new RuntimeException(e);
+        } finally {
+            outputStream.close();
+            inputStream.close();
+        }
     }
 
-    private static void doXLSX2PDF(InputStream inputStream, OutputStream outputStream) throws IOException {
-
+    private static void doWord2PDF(InputStream inputStream, OutputStream outputStream) throws IOException {
+        if (!Office2PdfLicense.getWordLicense()) {
+            logger.error("doWord2PDF Error: License Error");
+            throw new RuntimeException("doWord2PDF Error: License Error");
+        }
+        try {
+            Document doc = new Document(inputStream);
+            doc.save(outputStream, com.aspose.words.SaveFormat.PDF);
+        } catch (Exception e) {
+            logger.error("doWord2PDF Error: ", e);
+            throw new RuntimeException(e);
+        } finally {
+            outputStream.close();
+            inputStream.close();
+        }
     }
 
-    private static void doDOC2PDF(InputStream inputStream, OutputStream outputStream) throws IOException {
-
-    }
-
-    private static void doDOCX2PDF(InputStream inputStream, OutputStream outputStream) throws IOException {
-        logger.debug("font path: " + FONT_PATH);
-        ITextFontRegistry iTextFontRegistry = new ITextFontRegistry() {
-            @Override
-            public Font getFont(String familyName, String encoding, float size, int style, Color color) {
-                BaseFont base = null;
-                try {
-                    base = BaseFont.createFont(FONT_PATH, BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
-                } catch (Exception e) {
-                    logger.error(e.getMessage());
-                }
-                return new Font(base, size, style, color);
-            }
-        };
-        XWPFDocument document = new XWPFDocument(inputStream);
-        PdfConverter.getInstance().convert(document, outputStream, PdfOptions.create().fontProvider(iTextFontRegistry));
+    private static void doPowerPoint2PDF(InputStream inputStream, OutputStream outputStream) throws IOException {
+        if (!Office2PdfLicense.getPPTLicense()) {
+            logger.error("doPowerPoint2PDF Error: License Error");
+            throw new RuntimeException("doPowerPoint2PDF Error: License Error");
+        }
+        try {
+            Presentation ppt = new Presentation(inputStream);
+            ppt.save(outputStream, com.aspose.slides.SaveFormat.Pdf);
+        } catch (Exception e) {
+            logger.error("doPowerPoint2PDF Error: ", e);
+            throw new RuntimeException(e);
+        } finally {
+            outputStream.close();
+            inputStream.close();
+        }
     }
 }

@@ -255,7 +255,7 @@ public class StudentController {
             try (ServletOutputStream outputStream = response.getOutputStream();
                  FileInputStream fileInputStream = new FileInputStream(file)) {
                 String extensionName = file.getName().substring(file.getName().lastIndexOf(".") + 1);
-                if (Arrays.asList("xls", "xlsx", "doc", "docx").contains(extensionName)) {
+                if (Arrays.asList("xls", "xlsx", "doc", "docx", "ppt", "pptx").contains(extensionName.toLowerCase())) {
                     String tempFilePath = configService.getConfig(Config.ConfigKey.TEMP_DIR).orElse(System.getProperty("java.io.tmpdir")) + File.separator + FileUtils.getFileMD5(file) + ".pdf";
                     File tempFile = new File(tempFilePath);
                     if (!tempFile.exists()) {

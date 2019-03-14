@@ -10,7 +10,7 @@ import top.yunshu.shw.server.exception.RoleException;
  *
  * @author itning
  */
-public class RoleUtils {
+public final class RoleUtils {
     private static final String USER_TYPE_STUDENT = "99";
 
     private RoleUtils() {

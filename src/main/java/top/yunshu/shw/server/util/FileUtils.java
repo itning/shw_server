@@ -2,7 +2,7 @@ package top.yunshu.shw.server.util;
 
 import org.apache.catalina.connector.ClientAbortException;
 import org.apache.commons.codec.binary.Hex;
-import org.apache.poi.util.IOUtils;
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -19,7 +19,7 @@ import java.security.MessageDigest;
  *
  * @author itning
  */
-public class FileUtils {
+public final class FileUtils {
     private static final Logger logger = LoggerFactory.getLogger(FileUtils.class);
     private static final String RANGE_SEPARATOR = "-";
     private static final String RANGE_CONTAINS = "bytes=";
