@@ -34,9 +34,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.Arrays;
 import java.util.Optional;
 import java.util.concurrent.Callable;
+
+import static top.yunshu.shw.server.util.Office2PdfUtils.OFFICE_EXTENSION_NAME;
 
 
 /**
@@ -253,7 +254,7 @@ public class StudentController {
             try (ServletOutputStream outputStream = response.getOutputStream();
                  FileInputStream fileInputStream = new FileInputStream(file)) {
                 String extensionName = file.getName().substring(file.getName().lastIndexOf(".") + 1);
-                if (Arrays.asList("xls", "xlsx", "doc", "docx", "ppt", "pptx").contains(extensionName.toLowerCase())) {
+                if (OFFICE_EXTENSION_NAME.contains(extensionName.toLowerCase())) {
                     String tempFilePath = configService.getConfig(Config.ConfigKey.TEMP_DIR).orElse(System.getProperty("java.io.tmpdir")) + File.separator + FileUtils.getFileMD5(file) + ".pdf";
                     File tempFile = new File(tempFilePath);
                     if (!tempFile.exists()) {

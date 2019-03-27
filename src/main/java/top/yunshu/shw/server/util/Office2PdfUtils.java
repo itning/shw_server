@@ -13,6 +13,8 @@ import top.yunshu.shw.server.entity.Config;
 import top.yunshu.shw.server.service.config.ConfigService;
 
 import java.io.*;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Office to Pdf Utils
@@ -22,6 +24,7 @@ import java.io.*;
 public final class Office2PdfUtils {
     private static final Logger logger = LoggerFactory.getLogger(Office2PdfUtils.class);
     private static final String FONT_NAME = "simsun";
+    public static final List<String> OFFICE_EXTENSION_NAME = Arrays.asList("xls", "xlsx", "doc", "docx", "ppt", "pptx");
 
     private Office2PdfUtils() {
     }

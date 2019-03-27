@@ -3,6 +3,7 @@ package top.yunshu.shw.server.controller.teacher;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +16,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
+import top.yunshu.shw.server.dao.StudentDao;
 import top.yunshu.shw.server.entity.*;
 import top.yunshu.shw.server.exception.FileException;
 import top.yunshu.shw.server.model.WorkDetailsModel;
@@ -35,13 +37,14 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.Callable;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
+
+import static top.yunshu.shw.server.util.Office2PdfUtils.OFFICE_EXTENSION_NAME;
 
 /**
  * 教师控制器
@@ -66,6 +69,10 @@ public class TeacherController {
     private final UploadService uploadService;
 
     private final ConfigService configService;
+
+    @Deprecated
+    @Autowired
+    private StudentDao studentDao;
 
     @Autowired
     public TeacherController(GroupService groupService, WorkService workService, FileService fileService, UploadService uploadService, ConfigService configService) {
@@ -323,7 +330,16 @@ public class TeacherController {
             ZipOutputStream zipOut = new ZipOutputStream(response.getOutputStream());
             fileService.getAllFiles(workId).forEach(file -> {
                 try (InputStream input = new FileInputStream(file)) {
-                    zipOut.putNextEntry(new ZipEntry(file.getName()));
+                    // 强制 姓名+学号
+                    String name = file.getName();
+                    if (StringUtils.isNumeric(name)) {
+                        // Find Student Name
+                        String nameByNo = studentDao.findNameByNo(name);
+                        if (nameByNo != null) {
+                            name = nameByNo + name;
+                        }
+                    }
+                    zipOut.putNextEntry(new ZipEntry(name));
                     IOUtils.copy(input, zipOut);
                 } catch (Exception e) {
                     throw new RuntimeException(e.getClass().getName() + "::" + e.getMessage());
@@ -388,7 +404,7 @@ public class TeacherController {
         fileService.getFile(studentNumber, workId).ifPresent(file -> {
             try (ServletOutputStream outputStream = response.getOutputStream()) {
                 String extensionName = name.substring(name.lastIndexOf(".") + 1);
-                if (Arrays.asList("xls", "xlsx", "doc", "docx", "ppt", "pptx").contains(extensionName.toLowerCase())) {
+                if (OFFICE_EXTENSION_NAME.contains(extensionName.toLowerCase())) {
                     String tempFilePath = configService.getConfig(Config.ConfigKey.TEMP_DIR).orElse(System.getProperty("java.io.tmpdir")) + File.separator + FileUtils.getFileMD5(file) + "zip.pdf";
                     File tempFile = new File(tempFilePath);
                     if (!tempFile.exists()) {
