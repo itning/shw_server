@@ -177,7 +177,6 @@ public class StudentController {
                                            @ApiParam(value = "作业ID", required = true) @PathVariable String workId,
                                            @ApiParam(value = "上传的作业", required = true) @RequestParam("file") MultipartFile file) {
         logger.debug("upload file , work id: " + workId);
-        fileService.uploadFile(file, loginUser.getNo(), workId);
         uploadService.uploadFile(file, loginUser.getNo(), workId);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
@@ -193,7 +192,6 @@ public class StudentController {
     public ResponseEntity<Void> deleteUploadWork(@ApiIgnore LoginUser loginUser,
                                                  @ApiParam(value = "作业ID", required = true) @PathVariable String workId) {
         logger.debug("delete Upload Work , workId: " + workId);
-        fileService.delFile(loginUser.getNo(), workId);
         uploadService.delUploadInfoByWorkId(loginUser.getNo(), workId);
         return ResponseEntity.noContent().build();
     }

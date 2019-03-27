@@ -3,6 +3,7 @@ package top.yunshu.shw.server.dao;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import top.yunshu.shw.server.entity.Work;
 
 import java.util.List;
@@ -44,4 +45,14 @@ public interface WorkDao extends JpaRepository<Work, String> {
      * @return 做业集合
      */
     List<Work> findAllByGroupIdAndEnabledIsTrue(String groupId);
+
+    /**
+     * 根据作业ID查文件命名规范
+     *
+     * @param workId 作业ID
+     * @return 文件名规范
+     */
+    @SuppressWarnings("SpringDataRepositoryMethodReturnTypeInspection")
+    @Query("select w.fileNameFormat from Work w where w.id=?1")
+    String findFileNameFormatById(String workId);
 }

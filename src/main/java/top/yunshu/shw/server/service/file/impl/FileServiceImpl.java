@@ -7,16 +7,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 import top.yunshu.shw.server.controller.teacher.TeacherController;
+import top.yunshu.shw.server.dao.FileDao;
+import top.yunshu.shw.server.dao.StudentDao;
 import top.yunshu.shw.server.dao.UploadDao;
+import top.yunshu.shw.server.dao.WorkDao;
 import top.yunshu.shw.server.entity.Config;
-import top.yunshu.shw.server.entity.Upload;
 import top.yunshu.shw.server.exception.FileException;
 import top.yunshu.shw.server.exception.NoSuchFiledValueException;
 import top.yunshu.shw.server.service.config.ConfigService;
 import top.yunshu.shw.server.service.file.FileService;
-import top.yunshu.shw.server.util.FileUtils;
+import top.yunshu.shw.server.util.FileNameSpecificationUtils;
 
 import java.io.*;
 import java.util.Arrays;
@@ -32,61 +33,25 @@ import java.util.zip.ZipOutputStream;
  * @author itning
  */
 @Service
-public class SimpleFileServiceImpl implements FileService {
-    private static final Logger logger = LoggerFactory.getLogger(SimpleFileServiceImpl.class);
+public class FileServiceImpl implements FileService {
+    private static final Logger logger = LoggerFactory.getLogger(FileServiceImpl.class);
     private final ConfigService configService;
 
     private final UploadDao uploadDao;
 
+    private final FileDao fileDao;
+
+    private final StudentDao studentDao;
+
+    private final WorkDao workDao;
+
     @Autowired
-    public SimpleFileServiceImpl(ConfigService configService, UploadDao uploadDao) {
+    public FileServiceImpl(ConfigService configService, UploadDao uploadDao, FileDao fileDao, StudentDao studentDao, WorkDao workDao) {
         this.configService = configService;
         this.uploadDao = uploadDao;
-    }
-
-    @Override
-    public void uploadFile(MultipartFile file, String studentNumber, String workId) {
-        // Path:
-        // FILE_REPOSITORY_PATH/workId/file
-        Optional<String> pathOption = configService.getConfig(Config.ConfigKey.FILE_REPOSITORY_PATH);
-        if (pathOption.isPresent()) {
-            String path = pathOption.get();
-            String extensionName = FileUtils.getExtensionName(file);
-            try {
-                File f = new File(path);
-                if (f.isDirectory()) {
-                    File workDir = new File(f + File.separator + workId);
-                    if (!workDir.exists()) {
-                        if (!workDir.mkdir()) {
-                            throw new RuntimeException("创建存储目录错误，请联系管理员");
-                        }
-                    }
-                    file.transferTo(new File(workDir + File.separator + studentNumber + extensionName));
-                    if (!new File(workDir + File.separator + studentNumber + extensionName).exists()) {
-                        throw new RuntimeException("上传失败");
-                    }
-                    System.gc();
-                } else {
-                    throw new RuntimeException("存储目录错误，请联系管理员");
-                }
-            } catch (Exception e) {
-                throw new FileException(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-            }
-        } else {
-            throw new FileException("存储目录不存在，请联系管理员", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    @Override
-    public void delFile(String studentNumber, String workId) {
-        if (!uploadDao.existsByStudentIdAndWorkId(studentNumber, workId)) {
-            throw new NoSuchFiledValueException("作业不存在", HttpStatus.NOT_FOUND);
-        }
-        configService.getConfig(Config.ConfigKey.FILE_REPOSITORY_PATH).ifPresent(path -> {
-            Upload upload = uploadDao.findUploadByStudentIdAndWorkId(studentNumber, workId);
-            //noinspection ResultOfMethodCallIgnored
-            new File(path + File.separator + workId + File.separator + studentNumber + upload.getExtensionName()).delete();
-        });
+        this.fileDao = fileDao;
+        this.studentDao = studentDao;
+        this.workDao = workDao;
     }
 
     @Override
@@ -94,29 +59,15 @@ public class SimpleFileServiceImpl implements FileService {
         if (!uploadDao.existsByStudentIdAndWorkId(studentNumber, workId)) {
             throw new NoSuchFiledValueException("作业不存在", HttpStatus.NOT_FOUND);
         }
-        Optional<String> pathOption = configService.getConfig(Config.ConfigKey.FILE_REPOSITORY_PATH);
-        if (pathOption.isPresent()) {
-            String path = pathOption.get();
-            Upload upload = uploadDao.findUploadByStudentIdAndWorkId(studentNumber, workId);
-            return Optional.of(new File(path + File.separator + workId + File.separator + studentNumber + upload.getExtensionName()));
-        }
-        return Optional.empty();
+        String[] safeString = FileNameSpecificationUtils.safeGetStudentNameAndFileNameFormat(studentDao, workDao, studentNumber, workId);
+        String extensionName = uploadDao.findExtensionNameByStudentIdAndWorkId(studentNumber, workId);
+        String fileName = FileNameSpecificationUtils.getFileName(studentNumber, safeString[0], safeString[1]);
+        return fileDao.findFile(workId, studentNumber, fileName + extensionName);
     }
 
     @Override
     public List<File> getAllFiles(String workId) {
-        Optional<String> config = configService.getConfig(Config.ConfigKey.FILE_REPOSITORY_PATH);
-        if (config.isPresent()) {
-            String path = config.get();
-            File workDir = new File(path + File.separator + workId);
-            File[] files = workDir.listFiles();
-            if (files != null) {
-                return Arrays.asList(files);
-            } else {
-                throw new FileException("作业未找到", HttpStatus.NOT_FOUND);
-            }
-        }
-        throw new FileException("存储目录不存在，请联系管理员", HttpStatus.INTERNAL_SERVER_ERROR);
+        return fileDao.getWorkOfFiles(workId);
     }
 
     @Async("asyncServiceExecutor")

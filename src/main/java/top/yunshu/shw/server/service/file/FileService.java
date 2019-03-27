@@ -1,8 +1,5 @@
 package top.yunshu.shw.server.service.file;
 
-import org.springframework.web.multipart.MultipartFile;
-import top.yunshu.shw.server.exception.FileException;
-
 import java.io.File;
 import java.util.List;
 import java.util.Optional;
@@ -13,24 +10,6 @@ import java.util.Optional;
  * @author itning
  */
 public interface FileService {
-    /**
-     * 上传文件
-     *
-     * @param file          {@link MultipartFile}
-     * @param studentNumber 学号
-     * @param workId        作业ID
-     * @throws FileException 文件异常
-     */
-    void uploadFile(MultipartFile file, String studentNumber, String workId);
-
-    /**
-     * 删除文件
-     *
-     * @param studentNumber 学号
-     * @param workId        作业ID
-     */
-    void delFile(String studentNumber, String workId);
-
     /**
      * 获取文件
      *
@@ -52,6 +31,8 @@ public interface FileService {
      * 打包文件
      *
      * @param workId 作业ID
+     * @deprecated 存在线程安全问题
      */
+    @Deprecated
     void unpackFiles(String workId);
 }

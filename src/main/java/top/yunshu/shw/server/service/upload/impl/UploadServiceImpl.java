@@ -4,9 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import top.yunshu.shw.server.dao.NoticeDao;
-import top.yunshu.shw.server.dao.UploadDao;
-import top.yunshu.shw.server.dao.WorkDao;
+import top.yunshu.shw.server.dao.*;
 import top.yunshu.shw.server.entity.LoginUser;
 import top.yunshu.shw.server.entity.Notice;
 import top.yunshu.shw.server.entity.Upload;
@@ -14,6 +12,7 @@ import top.yunshu.shw.server.entity.Work;
 import top.yunshu.shw.server.exception.NullFiledException;
 import top.yunshu.shw.server.exception.PermissionsException;
 import top.yunshu.shw.server.service.upload.UploadService;
+import top.yunshu.shw.server.util.FileNameSpecificationUtils;
 import top.yunshu.shw.server.util.FileUtils;
 
 /**
@@ -30,11 +29,17 @@ public class UploadServiceImpl implements UploadService {
 
     private final NoticeDao noticeDao;
 
+    private final FileDao fileDao;
+
+    private final StudentDao studentDao;
+
     @Autowired
-    public UploadServiceImpl(UploadDao uploadDao, WorkDao workDao, NoticeDao noticeDao) {
+    public UploadServiceImpl(UploadDao uploadDao, WorkDao workDao, NoticeDao noticeDao, FileDao fileDao, StudentDao studentDao) {
         this.uploadDao = uploadDao;
         this.workDao = workDao;
         this.noticeDao = noticeDao;
+        this.fileDao = fileDao;
+        this.studentDao = studentDao;
     }
 
 
@@ -58,17 +63,21 @@ public class UploadServiceImpl implements UploadService {
             throw new PermissionsException("不能删除未启用作业");
         }
         Upload upload = uploadDao.findUploadByStudentIdAndWorkId(studentId, workId);
+        String[] format = FileNameSpecificationUtils.safeGetStudentNameAndFileNameFormat(studentDao, workDao, studentId, workId);
+        fileDao.deleteFile(workId, studentId, FileNameSpecificationUtils.getFileName(studentId, format[0], format[1]) + upload.getExtensionName());
         uploadDao.delete(upload);
     }
 
     @Override
     public void uploadFile(MultipartFile file, String studentNumber, String workId) {
+        String[] format = FileNameSpecificationUtils.safeGetStudentNameAndFileNameFormat(studentDao, workDao, studentNumber, workId);
         Upload upload = new Upload();
         upload.setStudentId(studentNumber);
         upload.setWorkId(workId);
         upload.setMime(file.getContentType());
         upload.setSize(file.getSize());
         upload.setExtensionName(FileUtils.getExtensionName(file));
+        fileDao.createFile(file, workId, studentNumber, FileNameSpecificationUtils.getFileName(studentNumber, format[0], format[1]));
         uploadDao.save(upload);
     }
 

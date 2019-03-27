@@ -24,6 +24,7 @@ import top.yunshu.shw.server.service.file.FileService;
 import top.yunshu.shw.server.service.group.GroupService;
 import top.yunshu.shw.server.service.upload.UploadService;
 import top.yunshu.shw.server.service.work.WorkService;
+import top.yunshu.shw.server.util.FileNameSpecificationUtils;
 import top.yunshu.shw.server.util.FileUtils;
 import top.yunshu.shw.server.util.Office2PdfUtils;
 import top.yunshu.shw.server.util.ZipCompressedFileUtils;
@@ -190,9 +191,11 @@ public class TeacherController {
     @PostMapping("/work")
     public ResponseEntity<Work> addWork(@ApiIgnore LoginUser loginUser,
                                         @ApiParam(value = "作业名", required = true) @RequestParam String workName,
-                                        @ApiParam(value = "群ID", required = true) @RequestParam String groupId) {
+                                        @ApiParam(value = "群ID", required = true) @RequestParam String groupId,
+                                        @ApiParam(value = "文件名规范", defaultValue = FileNameSpecificationUtils.NAME_AND_STUDENT_NUMBER)
+                                        @RequestParam(required = false, defaultValue = FileNameSpecificationUtils.NAME_AND_STUDENT_NUMBER) String fileFormat) {
         logger.debug("add work , workName: " + workName);
-        return ResponseEntity.status(HttpStatus.CREATED).body(workService.createWork(workName, groupId, "", true));
+        return ResponseEntity.status(HttpStatus.CREATED).body(workService.createWork(workName, groupId, fileFormat, true));
     }
 
     /**
@@ -249,7 +252,9 @@ public class TeacherController {
      *
      * @param workId 作业ID
      * @return ResponseEntity
+     * @deprecated 打包存在线程安全问题
      */
+    @Deprecated
     @ApiOperation(value = "打包", notes = "下载所有作业之前必须先调用该API")
     @GetMapping("/pack/{workId}")
     public ResponseEntity<RestModel> pack(@ApiIgnore LoginUser loginUser,
