@@ -330,13 +330,15 @@ public class TeacherController {
             ZipOutputStream zipOut = new ZipOutputStream(response.getOutputStream());
             fileService.getAllFiles(workId).forEach(file -> {
                 try (InputStream input = new FileInputStream(file)) {
-                    // 强制 姓名+学号
-                    String name = file.getName();
+                    // 强制 姓名+学号\
+                    int i = file.getName().lastIndexOf(".");
+                    String name = file.getName().substring(0, i);
                     if (StringUtils.isNumeric(name)) {
                         // Find Student Name
                         String nameByNo = studentDao.findNameByNo(name);
                         if (nameByNo != null) {
-                            name = nameByNo + name;
+                            String exName = file.getName().substring(i);
+                            name = nameByNo + name + exName;
                         }
                     }
                     zipOut.putNextEntry(new ZipEntry(name));
