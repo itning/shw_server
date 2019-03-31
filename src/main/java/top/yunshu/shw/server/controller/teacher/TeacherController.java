@@ -193,6 +193,7 @@ public class TeacherController {
      * @param groupId  群ID
      * @return ResponseEntity
      */
+    @SuppressWarnings("unused")
     @ApiOperation(value = "添加作业", produces = MediaType.APPLICATION_JSON_UTF8_VALUE,
             response = Work.class)
     @PostMapping("/work")
@@ -212,6 +213,7 @@ public class TeacherController {
      * @param enabled 开启状态
      * @return ResponseEntity
      */
+    @SuppressWarnings("unused")
     @ApiOperation("更新作业启用状态")
     @PatchMapping("/work/{workId}/{enabled}")
     public ResponseEntity<Void> updateWorkEnabled(@ApiIgnore LoginUser loginUser,
@@ -262,6 +264,7 @@ public class TeacherController {
      * @deprecated 打包存在线程安全问题
      */
     @Deprecated
+    @SuppressWarnings("unused")
     @ApiOperation(value = "打包", notes = "下载所有作业之前必须先调用该API")
     @GetMapping("/pack/{workId}")
     public ResponseEntity<RestModel> pack(@ApiIgnore LoginUser loginUser,
@@ -364,6 +367,7 @@ public class TeacherController {
      * @param workId        作业ID
      * @return JSON
      */
+    @SuppressWarnings("unused")
     @ApiOperation("ZIP文件预览")
     @GetMapping("/zip_preview/{studentNumber}/{workId}")
     public Callable<String> getZipFilePreview(@ApiIgnore LoginUser loginUser,
@@ -482,6 +486,7 @@ public class TeacherController {
      * @param workId    作业ID
      * @return ResponseEntity
      */
+    @SuppressWarnings("unused")
     @ApiOperation(value = "获取作业批阅信息", produces = MediaType.APPLICATION_JSON_UTF8_VALUE, response = String.class)
     @GetMapping("/review/{studentId}/{workId}")
     public Callable<ResponseEntity<RestModel>> getWorkReview(@ApiIgnore LoginUser loginUser,

@@ -331,6 +331,7 @@ public class StudentController {
      * @param noticeId 通知ID
      * @return ResponseEntity
      */
+    @SuppressWarnings("unused")
     @ApiOperation("根据通知ID清除通知")
     @DeleteMapping("/notice/{noticeId}")
     public ResponseEntity<Void> delNoticeById(@ApiIgnore LoginUser loginUser,
