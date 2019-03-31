@@ -20,6 +20,7 @@ import top.yunshu.shw.server.model.WorkDetailsModel;
 import top.yunshu.shw.server.model.WorkModel;
 import top.yunshu.shw.server.service.work.WorkService;
 
+import javax.transaction.Transactional;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -29,6 +30,7 @@ import java.util.stream.Collectors;
  * @author itning
  */
 @Service
+@Transactional(rollbackOn = Exception.class)
 public class WorkServiceImpl implements WorkService {
     private static final Logger logger = LoggerFactory.getLogger(WorkServiceImpl.class);
 

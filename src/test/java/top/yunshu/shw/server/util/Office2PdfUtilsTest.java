@@ -3,6 +3,7 @@ package top.yunshu.shw.server.util;
 import org.junit.Test;
 
 import java.io.File;
+import java.util.concurrent.Callable;
 
 public class Office2PdfUtilsTest {
     @Test
@@ -30,7 +31,19 @@ public class Office2PdfUtilsTest {
         System.out.println(fileMD5);
     }
 
+    @Test
+    public void testIn() {
+        System.out.println(in().toString());
+        System.out.println(in().toString());
+        System.out.println(in().toString());
+        System.out.println(in().toString());
+    }
+
     private static void dos(String inputFile, String outputFile) throws Exception {
         Office2PdfUtils.convert2Pdf(new File(inputFile), new File(outputFile));
+    }
+
+    private Callable<String> in() {
+        return () -> "1`";
     }
 }

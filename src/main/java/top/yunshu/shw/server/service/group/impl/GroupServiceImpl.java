@@ -8,16 +8,18 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import top.yunshu.shw.server.dao.GroupDao;
-import top.yunshu.shw.server.dao.StudentGroupDao;
-import top.yunshu.shw.server.dao.WorkDao;
+import top.yunshu.shw.server.dao.*;
 import top.yunshu.shw.server.entity.Group;
 import top.yunshu.shw.server.entity.StudentGroup;
+import top.yunshu.shw.server.entity.Upload;
+import top.yunshu.shw.server.entity.Work;
 import top.yunshu.shw.server.exception.NoSuchFiledValueException;
 import top.yunshu.shw.server.exception.NullFiledException;
 import top.yunshu.shw.server.service.group.GroupService;
 
+import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -28,18 +30,21 @@ import java.util.stream.Collectors;
  * @author shulu
  */
 @Service
+@Transactional(rollbackOn = Exception.class)
 public class GroupServiceImpl implements GroupService {
     private static final Logger logger = LoggerFactory.getLogger(GroupServiceImpl.class);
 
     private final StudentGroupDao studentGroupDao;
     private final GroupDao groupDao;
     private final WorkDao workDao;
+    private final UploadDao uploadDao;
 
     @Autowired
-    public GroupServiceImpl(GroupDao groupDao, StudentGroupDao studentGroupDao, WorkDao workDao) {
+    public GroupServiceImpl(GroupDao groupDao, StudentGroupDao studentGroupDao, WorkDao workDao, UploadDao uploadDao) {
         this.groupDao = groupDao;
         this.studentGroupDao = studentGroupDao;
         this.workDao = workDao;
+        this.uploadDao = uploadDao;
     }
 
     @Override
@@ -94,7 +99,15 @@ public class GroupServiceImpl implements GroupService {
         if (studentGroup == null) {
             throw new NullFiledException("找不到群记录,刷新重试", HttpStatus.NOT_FOUND);
         }
+        //学生群组删除
         studentGroupDao.delete(studentGroup);
+        //TODO 历史上传文件删除
+        //上传记录删除
+        List<Upload> willDeleteUploadList = workDao.findAllByGroupId(groupId).stream()
+                .map(work -> uploadDao.findUploadByStudentIdAndWorkId(studentId, work.getId()))
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
+        uploadDao.deleteAll(willDeleteUploadList);
     }
 
 
@@ -104,8 +117,13 @@ public class GroupServiceImpl implements GroupService {
         if (!group.getTeacherNumber().equals(teacherNumber)) {
             throw new NoSuchFiledValueException("id: " + id + " not found", HttpStatus.NOT_FOUND);
         }
+        List<Work> workList = workDao.findAllByGroupId(id);
+        List<Upload> willDeleteUploadList = workList.stream()
+                .flatMap(work -> uploadDao.findAllByWorkId(work.getId()).stream())
+                .collect(Collectors.toList());
+        uploadDao.deleteAll(willDeleteUploadList);
         studentGroupDao.findAllByGroupID(id).forEach(studentGroupDao::delete);
-        workDao.findAllByGroupId(id).forEach(workDao::delete);
+        workList.forEach(workDao::delete);
         groupDao.delete(group);
     }
 

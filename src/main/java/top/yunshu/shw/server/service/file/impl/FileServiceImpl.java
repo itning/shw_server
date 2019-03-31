@@ -19,6 +19,7 @@ import top.yunshu.shw.server.service.config.ConfigService;
 import top.yunshu.shw.server.service.file.FileService;
 import top.yunshu.shw.server.util.FileNameSpecificationUtils;
 
+import javax.transaction.Transactional;
 import java.io.*;
 import java.util.Arrays;
 import java.util.List;
@@ -33,6 +34,7 @@ import java.util.zip.ZipOutputStream;
  * @author itning
  */
 @Service
+@Transactional(rollbackOn = Exception.class)
 public class FileServiceImpl implements FileService {
     private static final Logger logger = LoggerFactory.getLogger(FileServiceImpl.class);
     private final ConfigService configService;

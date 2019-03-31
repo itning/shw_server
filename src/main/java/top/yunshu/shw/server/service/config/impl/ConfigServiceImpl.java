@@ -7,6 +7,7 @@ import top.yunshu.shw.server.dao.ConfigDao;
 import top.yunshu.shw.server.entity.Config;
 import top.yunshu.shw.server.service.config.ConfigService;
 
+import javax.transaction.Transactional;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
@@ -17,6 +18,7 @@ import java.util.Optional;
  * @author itning
  */
 @Service
+@Transactional(rollbackOn = Exception.class)
 public class ConfigServiceImpl implements ConfigService {
     private final ConfigDao configDao;
     private final CasProperties casProperties;

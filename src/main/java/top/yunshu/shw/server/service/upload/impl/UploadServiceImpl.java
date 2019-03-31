@@ -15,12 +15,15 @@ import top.yunshu.shw.server.service.upload.UploadService;
 import top.yunshu.shw.server.util.FileNameSpecificationUtils;
 import top.yunshu.shw.server.util.FileUtils;
 
+import javax.transaction.Transactional;
+
 /**
  * 上传历史服务实现
  *
  * @author itning
  */
 @Service
+@Transactional(rollbackOn = Exception.class)
 public class UploadServiceImpl implements UploadService {
 
     private final UploadDao uploadDao;

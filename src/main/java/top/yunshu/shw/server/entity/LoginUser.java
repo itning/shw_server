@@ -8,6 +8,14 @@ import java.io.Serializable;
  * @author itning
  */
 public class LoginUser implements Serializable {
+    /**
+     * 学生用户
+     */
+    public static final String STUDENT_USER = "99";
+    /**
+     * 教师用户
+     */
+    public static final String TEACHER_USER = "13";
 
     /**
      * id : ID

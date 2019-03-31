@@ -11,8 +11,6 @@ import top.yunshu.shw.server.exception.RoleException;
  * @author itning
  */
 public final class RoleUtils {
-    private static final String USER_TYPE_STUDENT = "99";
-
     private RoleUtils() {
     }
 
@@ -23,7 +21,7 @@ public final class RoleUtils {
      * @throws RoleException 如果不是学生
      */
     public static void checkRoleIsStudent(LoginUser loginUser) {
-        if (!loginUser.getUserType().equals(USER_TYPE_STUDENT)) {
+        if (!loginUser.getUserType().equals(LoginUser.STUDENT_USER)) {
             throw new RoleException("FORBIDDEN", HttpStatus.FORBIDDEN);
         }
     }

@@ -61,4 +61,12 @@ public interface UploadDao extends JpaRepository<Upload, UploadPrimaryKey> {
     @SuppressWarnings("SpringDataRepositoryMethodReturnTypeInspection")
     @Query("select u.extensionName from Upload u where u.studentId=?1 and u.workId=?2")
     String findExtensionNameByStudentIdAndWorkId(String studentId, String workId);
+
+    /**
+     * 根据作业ID查询所有上传记录
+     *
+     * @param workId 作业ID
+     * @return 上传历史集合
+     */
+    List<Upload> findAllByWorkId(String workId);
 }

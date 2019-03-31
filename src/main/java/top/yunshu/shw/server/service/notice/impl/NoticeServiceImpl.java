@@ -8,6 +8,7 @@ import top.yunshu.shw.server.entity.Notice;
 import top.yunshu.shw.server.exception.NoSuchFiledValueException;
 import top.yunshu.shw.server.service.notice.NoticeService;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 /**
@@ -16,6 +17,7 @@ import java.util.List;
  * @author itning
  */
 @Service
+@Transactional(rollbackOn = Exception.class)
 public class NoticeServiceImpl implements NoticeService {
 
     private final NoticeDao noticeDao;

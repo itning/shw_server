@@ -5,7 +5,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.boot.web.servlet.MultipartConfigFactory;
 import org.springframework.context.annotation.Bean;
-import org.springframework.stereotype.Component;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.web.socket.server.standard.ServerEndpointExporter;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
@@ -19,7 +19,7 @@ import javax.servlet.MultipartConfigElement;
  *
  * @author itning
  */
-@Component
+@Configuration
 public class BeansConfig {
     /**
      * <p>Add ModelMapper Bean</p>
