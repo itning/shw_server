@@ -21,6 +21,8 @@
 
 数据库：MySql
 
+缓存：Redis
+
 # 获取发布版本
 
 ## Releases
