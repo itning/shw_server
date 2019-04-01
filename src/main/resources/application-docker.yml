@@ -8,6 +8,9 @@ spring:
     password: ${MYSQL_PASSWORD}
   jpa:
     show-sql: false
+  redis:
+    host: ${REDIS_HOST}
+    port: ${REDIS_PORT}
 logging:
   level: warn
   level.top: warn

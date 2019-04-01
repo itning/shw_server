@@ -3,12 +3,18 @@ package top.yunshu.shw.server.service.group.impl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import top.yunshu.shw.server.dao.*;
+import top.yunshu.shw.server.dao.GroupDao;
+import top.yunshu.shw.server.dao.StudentGroupDao;
+import top.yunshu.shw.server.dao.UploadDao;
+import top.yunshu.shw.server.dao.WorkDao;
 import top.yunshu.shw.server.entity.Group;
 import top.yunshu.shw.server.entity.StudentGroup;
 import top.yunshu.shw.server.entity.Upload;
@@ -47,6 +53,7 @@ public class GroupServiceImpl implements GroupService {
         this.uploadDao = uploadDao;
     }
 
+    @Cacheable(cacheNames = "groupOfStudent", key = "#studentNumber+#pageable")
     @Override
     public Page<Group> findStudentAllGroups(String studentNumber, Pageable pageable) {
         List<Group> groupList = studentGroupDao.findAllByStudentNumber(studentNumber, pageable)
@@ -65,21 +72,31 @@ public class GroupServiceImpl implements GroupService {
         return new PageImpl<>(groupList, pageable, studentGroupDao.countAllByStudentNumber(studentNumber));
     }
 
+    @Cacheable(cacheNames = "groupOfTeacher", key = "#teacherNumber+#pageable")
     @Override
     public Page<Group> findTeacherAllGroups(String teacherNumber, Pageable pageable) {
         return groupDao.findByTeacherNumber(teacherNumber, pageable);
     }
 
+    @Caching(evict = {
+            @CacheEvict(cacheNames = "groupOfTeacher", key = "'regex:'+#teacherId+'*'"),
+            @CacheEvict(cacheNames = "isHaveAnyGroup", key = "#teacherId")
+    })
     @Override
     public Group createGroup(String groupName, String teacherName, String teacherId) {
         String id = UUID.randomUUID().toString().replace("-", "");
         return groupDao.save(new Group(id, groupName, teacherName, teacherId, id));
     }
 
+    @Caching(evict = {
+            @CacheEvict(cacheNames = "groupOfStudent", key = "'regex:'+#studentId+'*'"),
+            //学生加入群组,教师作业详情缓存清空
+            @CacheEvict(cacheNames = "workDetail", allEntries = true)
+    })
     @Override
     public Group joinGroup(String code, String studentId) {
         if (!groupDao.existsAllByCode(code)) {
-            throw new NoSuchFiledValueException("群ID不存在", HttpStatus.NOT_FOUND);
+            throw new NoSuchFiledValueException("邀请码过期或不存在", HttpStatus.NOT_FOUND);
         }
         if (studentGroupDao.findByStudentNumberAndGroupID(studentId, code) != null) {
             throw new NoSuchFiledValueException("已加入过该群", HttpStatus.CONFLICT);
@@ -90,6 +107,11 @@ public class GroupServiceImpl implements GroupService {
         return group;
     }
 
+    @Caching(evict = {
+            @CacheEvict(cacheNames = "groupOfStudent", key = "'regex:'+#studentId+'*'"),
+            //学生退出群组,教师作业详情缓存清空
+            @CacheEvict(cacheNames = "workDetail", allEntries = true)
+    })
     @Override
     public void dropOutGroup(String groupId, String studentId) {
         if (!groupDao.existsById(groupId)) {
@@ -110,7 +132,13 @@ public class GroupServiceImpl implements GroupService {
         uploadDao.deleteAll(willDeleteUploadList);
     }
 
-
+    @Caching(evict = {
+            @CacheEvict(cacheNames = "groupOfStudent", allEntries = true),
+            @CacheEvict(cacheNames = "groupOfTeacher", key = "'regex:'+#teacherNumber+'*'"),
+            @CacheEvict(cacheNames = "isHaveAnyGroup", key = "#teacherNumber"),
+            @CacheEvict(cacheNames = "findGroupNameByGroupId", key = "#id"),
+            @CacheEvict(cacheNames = "findTeacherNameById", key = "#id")
+    })
     @Override
     public void deleteGroup(String id, String teacherNumber) {
         Group group = groupDao.findById(id).orElseThrow(() -> new NoSuchFiledValueException("id: " + id + " not found", HttpStatus.NOT_FOUND));
@@ -127,6 +155,11 @@ public class GroupServiceImpl implements GroupService {
         groupDao.delete(group);
     }
 
+    @Caching(evict = {
+            @CacheEvict(cacheNames = "groupOfStudent", allEntries = true),
+            @CacheEvict(cacheNames = "groupOfTeacher", key = "'regex:'+#teacherNumber+'*'"),
+            @CacheEvict(cacheNames = "findGroupNameByGroupId", key = "#id")
+    })
     @Override
     public Group updateGroup(String id, String name, String teacherNumber) {
         Group group = groupDao.findById(id).orElseThrow(() -> new NoSuchFiledValueException("id: " + id + " not found ", HttpStatus.NOT_FOUND));
@@ -137,6 +170,7 @@ public class GroupServiceImpl implements GroupService {
         return groupDao.save(group);
     }
 
+    @Cacheable(cacheNames = "findGroupNameByGroupId", key = "#groupId")
     @Override
     public String findGroupNameByGroupId(String groupId) {
         if (!groupDao.existsById(groupId)) {
@@ -145,6 +179,7 @@ public class GroupServiceImpl implements GroupService {
         return groupDao.findNameById(groupId);
     }
 
+    @Cacheable(cacheNames = "findTeacherNameById", key = "#groupId")
     @Override
     public String findTeacherNameById(String groupId) {
         if (!groupDao.existsById(groupId)) {
@@ -153,6 +188,7 @@ public class GroupServiceImpl implements GroupService {
         return groupDao.findTeacherNameById(groupId);
     }
 
+    @Cacheable(cacheNames = "isHaveAnyGroup", key = "#teacherNumber")
     @Override
     public boolean isHaveAnyGroup(String teacherNumber) {
         return !groupDao.findByTeacherNumber(teacherNumber).isEmpty();

@@ -1,6 +1,9 @@
 package top.yunshu.shw.server.service.config.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 import top.itning.cas.CasProperties;
 import top.yunshu.shw.server.dao.ConfigDao;
@@ -78,16 +81,22 @@ public class ConfigServiceImpl implements ConfigService {
         }
     }
 
+    @Cacheable(cacheNames = "allConfigs")
     @Override
     public List<Config> getAllConfigs() {
         return configDao.findAll();
     }
 
+    @Cacheable(cacheNames = "config", key = "#configKey.key")
     @Override
     public Optional<String> getConfig(Config.ConfigKey configKey) {
         return configDao.findById(configKey.getKey()).map(Config::getValue);
     }
 
+    @Caching(evict = {
+            @CacheEvict(cacheNames = "allConfigs", allEntries = true),
+            @CacheEvict(cacheNames = "config", key = "#configKey.key")
+    })
     @Override
     public void saveConfig(Config.ConfigKey configKey, String value) {
         Config config = new Config();

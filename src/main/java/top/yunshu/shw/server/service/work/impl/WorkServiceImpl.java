@@ -5,6 +5,9 @@ import org.modelmapper.TypeToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -57,6 +60,7 @@ public class WorkServiceImpl implements WorkService {
         this.modelMapper = modelMapper;
     }
 
+    @Cacheable(cacheNames = "studentUndoneWork", key = "#studentId+#pageable")
     @Override
     public Page<WorkModel> getStudentUnDoneWork(String studentId, Pageable pageable) {
         List<Work> workList = studentGroupDao.findGroupIdByStudentNumber(studentId)
@@ -69,6 +73,7 @@ public class WorkServiceImpl implements WorkService {
         return getWorkModels(pageable, workList);
     }
 
+    @Cacheable(cacheNames = "studentDoneWork", key = "#studentId+#pageable")
     @Override
     public Page<WorkModel> getStudentDoneWork(String studentId, Pageable pageable) {
         List<Work> workList = studentGroupDao.findGroupIdByStudentNumber(studentId)
@@ -85,6 +90,7 @@ public class WorkServiceImpl implements WorkService {
         return getWorkModels(pageable, workList);
     }
 
+    @Cacheable(cacheNames = "work", key = "#teacherNumber+#pageable")
     @Override
     public Page<WorkModel> getTeacherAllWork(String teacherNumber, Pageable pageable) {
         List<Work> workList = groupDao.findByTeacherNumber(teacherNumber)
@@ -96,6 +102,7 @@ public class WorkServiceImpl implements WorkService {
         return getWorkModels(pageable, workList);
     }
 
+    @Cacheable(cacheNames = "work", key = "#teacherNumber+#groupId+#pageable")
     @Override
     public Page<WorkModel> getTeacherWork(String teacherNumber, String groupId, Pageable pageable) {
         Group group = groupDao.findById(groupId).orElseThrow(() -> new NoSuchFiledValueException("群ID: " + groupId + "不存在", HttpStatus.NOT_FOUND));
@@ -105,6 +112,10 @@ public class WorkServiceImpl implements WorkService {
         }.getType()), pageable, workPage.getTotalElements());
     }
 
+    @Caching(evict = {
+            @CacheEvict(cacheNames = "studentUndoneWork", allEntries = true),
+            @CacheEvict(cacheNames = "work", allEntries = true)
+    })
     @Override
     public Work createWork(String workName, String groupId, String format, boolean enabled) {
         if (!groupDao.existsById(groupId)) {
@@ -119,6 +130,10 @@ public class WorkServiceImpl implements WorkService {
         return workDao.save(work);
     }
 
+    @Caching(evict = {
+            @CacheEvict(cacheNames = "studentUndoneWork", allEntries = true),
+            @CacheEvict(cacheNames = "work", allEntries = true)
+    })
     @Override
     public void changeEnabledWord(String workId, boolean enabled) {
         Work work = workDao.findById(workId).orElseThrow(() -> new NoSuchFiledValueException("作业ID: " + workId + "不存在", HttpStatus.NOT_FOUND));
@@ -126,6 +141,12 @@ public class WorkServiceImpl implements WorkService {
         workDao.save(work);
     }
 
+    @Caching(evict = {
+            @CacheEvict(cacheNames = "studentDoneWork", allEntries = true),
+            @CacheEvict(cacheNames = "studentUndoneWork", allEntries = true),
+            @CacheEvict(cacheNames = "work", key = "'regex:'+#teacherNumber+'*'"),
+            @CacheEvict(cacheNames = "workDetail", key = "'regex:'+#workId+'*'")
+    })
     @Override
     public void delWork(String workId, String teacherNumber) {
         Work work = workDao.findById(workId).orElseThrow(() -> new NoSuchFiledValueException("作业ID: " + workId + "不存在", HttpStatus.NOT_FOUND));
@@ -134,8 +155,10 @@ public class WorkServiceImpl implements WorkService {
             throw new NoSuchFiledValueException("Forbidden", HttpStatus.FORBIDDEN);
         }
         workDao.delete(work);
+        uploadDao.deleteAll(uploadDao.findAllByWorkId(workId));
     }
 
+    @Cacheable(cacheNames = "workDetail", key = "#workId+#teacherNumber+#pageable")
     @Override
     public Page<WorkDetailsModel> getWorkDetailByWorkId(String teacherNumber, String workId, Pageable pageable) {
         Work work = workDao.findById(workId).orElseThrow(() -> new NoSuchFiledValueException("作业ID: " + workId + "不存在", HttpStatus.NOT_FOUND));
@@ -175,7 +198,6 @@ public class WorkServiceImpl implements WorkService {
      * @return WorkModel
      */
     private Page<WorkModel> getWorkModels(Pageable pageable, List<Work> workList) {
-        //TODO 直接查所有分页意义不大，解决：Cache List<Work>
         //页数*每页条数
         int to = (pageable.getPageNumber() + 1) * pageable.getPageSize();
         int toIndex = to > workList.size() ? workList.size() : to;

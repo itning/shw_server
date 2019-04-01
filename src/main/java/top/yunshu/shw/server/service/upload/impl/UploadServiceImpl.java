@@ -1,6 +1,8 @@
 package top.yunshu.shw.server.service.upload.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -51,6 +53,11 @@ public class UploadServiceImpl implements UploadService {
         return uploadDao.findUploadByStudentIdAndWorkId(studentId, workId);
     }
 
+    @Caching(evict = {
+            @CacheEvict(cacheNames = "studentDoneWork", allEntries = true),
+            @CacheEvict(cacheNames = "studentUndoneWork", allEntries = true),
+            @CacheEvict(cacheNames = "workDetail", allEntries = true)
+    })
     @Override
     public void delUploadInfoByWorkId(String studentId, String workId) {
         if (!uploadDao.existsByStudentIdAndWorkId(studentId, workId)) {
@@ -71,6 +78,11 @@ public class UploadServiceImpl implements UploadService {
         uploadDao.delete(upload);
     }
 
+    @Caching(evict = {
+            @CacheEvict(cacheNames = "studentDoneWork", allEntries = true),
+            @CacheEvict(cacheNames = "studentUndoneWork", allEntries = true),
+            @CacheEvict(cacheNames = "workDetail", allEntries = true)
+    })
     @Override
     public void uploadFile(MultipartFile file, String studentNumber, String workId) {
         String[] format = FileNameSpecificationUtils.safeGetStudentNameAndFileNameFormat(studentDao, workDao, studentNumber, workId);

@@ -8,6 +8,9 @@ spring:
     password: kingston
   jpa:
     show-sql: true
+  redis:
+    host: locahost
+    port: 6379
 logging:
   level: debug
   level.top: debug

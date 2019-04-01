@@ -17,6 +17,20 @@ spring:
     multipart:
       max-file-size: 1024MB
       max-request-size: 1024MB
+  cache:
+    type: redis
+  redis:
+    jedis:
+      pool:
+        max-idle: 8
+        min-idle: 0
+        max-active: 8
+        max-wait: -1
+    database: 0
+  data:
+    redis:
+      repositories:
+        enabled: false
 cas:
   server-url: http://login.greathiit.com
   login-url: http://login.greathiit.com/login
