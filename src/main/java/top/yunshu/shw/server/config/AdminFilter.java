@@ -13,6 +13,7 @@ import java.io.IOException;
  */
 public class AdminFilter implements Filter {
     private static final String USER = "user";
+    private static final String ACTUATOR_BASE_PATH = "/config/actuator";
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
@@ -24,6 +25,10 @@ public class AdminFilter implements Filter {
         HttpServletResponse resp = (HttpServletResponse) response;
         HttpServletRequest req = (HttpServletRequest) request;
         HttpSession session = req.getSession();
+        if (req.getServletPath().startsWith(ACTUATOR_BASE_PATH)) {
+            chain.doFilter(request, response);
+            return;
+        }
         if (session.getAttribute(USER) == null) {
             resp.sendRedirect(req.getServletContext().getContextPath() + "/config/login");
             return;

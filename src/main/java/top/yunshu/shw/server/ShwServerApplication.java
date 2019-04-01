@@ -25,6 +25,11 @@ public class ShwServerApplication {
         logger.info("MYSQL::url: " + System.getenv("MYSQL_URL"));
         logger.info("MYSQL::username: " + System.getenv("MYSQL_USERNAME"));
         logger.info("MYSQL::password: " + System.getenv("MYSQL_PASSWORD"));
+        logger.info("REDIS::HOST: " + System.getenv("REDIS_HOST"));
+        logger.info("REDIS::PORT: " + System.getenv("REDIS_PORT"));
+        logger.info("ADMIN_SERVER::URL: " + System.getenv("ADMIN_SERVER_URL"));
+        logger.info("ADMIN_SERVER::USERNAME: " + System.getenv("ADMIN_SERVER_USERNAME"));
+        logger.info("ADMIN_SERVER::PASSWORD: " + System.getenv("ADMIN_SERVER_PASSWORD"));
         SpringApplication.run(ShwServerApplication.class, args);
     }
 

@@ -43,6 +43,9 @@ management:
   endpoints:
     web:
       exposure:
-        include: loggers
+        include: '*'
       base-path: /config/actuator
+  endpoint:
+    health:
+      show-details: always
 datasource_url_end_str: ?createDatabaseIfNotExist=true&useUnicode=true&characterEncoding=UTF-8&useSSL=false&autoReconnect=true&failOverReadOnly=false&connectTimeout=0&serverTimezone=Asia/Shanghai&useLegacyDatetimeCode=false

@@ -11,6 +11,12 @@ spring:
   redis:
     host: ${REDIS_HOST}
     port: ${REDIS_PORT}
+  boot:
+    admin:
+      client:
+        url: ${ADMIN_SERVER_URL}
+        username: ${ADMIN_SERVER_USERNAME}
+        password: ${ADMIN_SERVER_PASSWORD}
 logging:
   level: warn
   level.top: warn
