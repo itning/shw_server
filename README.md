@@ -41,7 +41,18 @@
    sudo docker run -p 80:8080 -e MYSQL_URL=192.168.66.1:3306 -e MYSQL_USERNAME=root -e MYSQL_PASSWORD=root -e REDIS_HOST=192.168.66.1 -e REDIS_PORT=6379 -e ADMIN_SERVER_URL=http://lcoalhost:8888 -e ADMIN_SERVER_USERNAME=admin -e ADMIN_SERVER_PASSWORD=admin -it registry.cn-beijing.aliyuncs.com/itning/shw_server:latest
    ```
 
-   **其中MYSQL_URL参数值为MySql数据库服务器地址(带端口号)**
+   | 参数                  | 含义                               |
+   | --------------------- | ---------------------------------- |
+   | MYSQL_URL             | mysql地址                          |
+   | MYSQL_USERNAME        | mysql用户名                        |
+   | MYSQL_PASSWORD        | mysql密码                          |
+   | REDIS_HOST            | redis地址                          |
+   | REDIS_PORT            | redis端口                          |
+   | ADMIN_SERVER_URL      | spring boot admin server服务端地址 |
+   | ADMIN_SERVER_USERNAME | spring boot admin server用户名     |
+   | ADMIN_SERVER_PASSWORD | spring boot admin server密码       |
+
+   
 
 # API文档
 
