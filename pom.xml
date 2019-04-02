@@ -20,7 +20,7 @@
         <modelmapper.version>2.3.2</modelmapper.version>
         <cas.spring.boot.starter.version>1.0.6-RELEASE</cas.spring.boot.starter.version>
         <springfox.version>2.9.2</springfox.version>
-        <jib.maven.plugin.version>1.0.1</jib.maven.plugin.version>
+        <jib.maven.plugin.version>1.0.2</jib.maven.plugin.version>
         <common.io.version>2.6</common.io.version>
         <itning.aspose.version>1.0.0</itning.aspose.version>
         <spring-boot-admin.version>2.1.3</spring-boot-admin.version>
@@ -190,7 +190,7 @@
                 <configuration>
                     <from>
                         <!--base image-->
-                        <image>registry.docker-cn.com/library/openjdk:alpine</image>
+                        <image>rggb8uln.mirror.aliyuncs.com/library/openjdk:alpine</image>
                     </from>
                     <to>
                         <image>registry.cn-beijing.aliyuncs.com/itning/shw_server</image>
