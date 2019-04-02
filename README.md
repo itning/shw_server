@@ -15,6 +15,16 @@
 
 # 架构
 
+这是一个前后端分离项目，这里是后端工程。
+
+B/S架构，通信采用RESTful API，使用JSON数据格式，身份验证使用JWT技术。
+
+部署推荐使用Docker进行部署。
+
+Redis缓存支持，使用``Spring Boot Admin``监控APP状态。
+
+集群化部署，无痛水平扩展
+
 前端：Vue.Js
 
 后端：Spring Boot
