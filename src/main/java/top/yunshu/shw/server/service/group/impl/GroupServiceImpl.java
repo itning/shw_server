@@ -110,7 +110,9 @@ public class GroupServiceImpl implements GroupService {
     @Caching(evict = {
             @CacheEvict(cacheNames = "groupOfStudent", key = "'regex:'+#studentId+'*'"),
             //学生退出群组,教师作业详情缓存清空
-            @CacheEvict(cacheNames = "workDetail", allEntries = true)
+            @CacheEvict(cacheNames = "workDetail", allEntries = true),
+            @CacheEvict(cacheNames = "studentDoneWork", key = "'regex:'+#studentId+'*'"),
+            @CacheEvict(cacheNames = "studentUndoneWork", key = "'regex:'+#studentId+'*'"),
     })
     @Override
     public void dropOutGroup(String groupId, String studentId) {
@@ -137,7 +139,10 @@ public class GroupServiceImpl implements GroupService {
             @CacheEvict(cacheNames = "groupOfTeacher", key = "'regex:'+#teacherNumber+'*'"),
             @CacheEvict(cacheNames = "isHaveAnyGroup", key = "#teacherNumber"),
             @CacheEvict(cacheNames = "findGroupNameByGroupId", key = "#id"),
-            @CacheEvict(cacheNames = "findTeacherNameById", key = "#id")
+            @CacheEvict(cacheNames = "findTeacherNameById", key = "#id"),
+            @CacheEvict(cacheNames = "studentDoneWork", allEntries = true),
+            @CacheEvict(cacheNames = "studentUndoneWork", allEntries = true),
+            @CacheEvict(cacheNames = "work", key = "'regex:'+#teacherNumber+'*'")
     })
     @Override
     public void deleteGroup(String id, String teacherNumber) {
@@ -158,7 +163,9 @@ public class GroupServiceImpl implements GroupService {
     @Caching(evict = {
             @CacheEvict(cacheNames = "groupOfStudent", allEntries = true),
             @CacheEvict(cacheNames = "groupOfTeacher", key = "'regex:'+#teacherNumber+'*'"),
-            @CacheEvict(cacheNames = "findGroupNameByGroupId", key = "#id")
+            @CacheEvict(cacheNames = "findGroupNameByGroupId", key = "#id"),
+            @CacheEvict(cacheNames = "studentDoneWork", allEntries = true),
+            @CacheEvict(cacheNames = "studentUndoneWork", allEntries = true)
     })
     @Override
     public Group updateGroup(String id, String name, String teacherNumber) {
