@@ -1,3 +1,4 @@
+
 spring:
   profiles:
     active: docker
@@ -31,6 +32,8 @@ spring:
     redis:
       repositories:
         enabled: false
+  application:
+    name: SHW
 cas:
   server-url: http://login.greathiit.com
   login-url: http://login.greathiit.com/login
