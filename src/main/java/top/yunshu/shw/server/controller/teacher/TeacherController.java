@@ -3,7 +3,6 @@ package top.yunshu.shw.server.controller.teacher;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,7 +15,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
-import top.yunshu.shw.server.dao.StudentDao;
 import top.yunshu.shw.server.entity.*;
 import top.yunshu.shw.server.exception.FileException;
 import top.yunshu.shw.server.model.WorkDetailsModel;
@@ -69,10 +67,6 @@ public class TeacherController {
     private final UploadService uploadService;
 
     private final ConfigService configService;
-
-    @Deprecated
-    @Autowired
-    private StudentDao studentDao;
 
     @Autowired
     public TeacherController(GroupService groupService, WorkService workService, FileService fileService, UploadService uploadService, ConfigService configService) {
@@ -333,18 +327,7 @@ public class TeacherController {
             ZipOutputStream zipOut = new ZipOutputStream(response.getOutputStream());
             fileService.getAllFiles(workId).forEach(file -> {
                 try (InputStream input = new FileInputStream(file)) {
-                    // 强制 姓名+学号\
-                    int i = file.getName().lastIndexOf(".");
-                    String name = file.getName().substring(0, i);
-                    if (StringUtils.isNumeric(name)) {
-                        // Find Student Name
-                        String nameByNo = studentDao.findNameByNo(name);
-                        if (nameByNo != null) {
-                            String exName = file.getName().substring(i);
-                            name = nameByNo + name + exName;
-                        }
-                    }
-                    zipOut.putNextEntry(new ZipEntry(name));
+                    zipOut.putNextEntry(new ZipEntry(file.getName()));
                     IOUtils.copy(input, zipOut);
                 } catch (Exception e) {
                     throw new RuntimeException(e.getClass().getName() + "::" + e.getMessage());
