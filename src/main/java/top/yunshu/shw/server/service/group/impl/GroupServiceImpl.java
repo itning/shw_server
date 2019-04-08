@@ -165,7 +165,8 @@ public class GroupServiceImpl implements GroupService {
             @CacheEvict(cacheNames = "groupOfTeacher", key = "'regex:'+#teacherNumber+'*'"),
             @CacheEvict(cacheNames = "findGroupNameByGroupId", key = "#id"),
             @CacheEvict(cacheNames = "studentDoneWork", allEntries = true),
-            @CacheEvict(cacheNames = "studentUndoneWork", allEntries = true)
+            @CacheEvict(cacheNames = "studentUndoneWork", allEntries = true),
+            @CacheEvict(cacheNames = "work", key = "'regex:'+#teacherNumber+'*'")
     })
     @Override
     public Group updateGroup(String id, String name, String teacherNumber) {

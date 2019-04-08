@@ -10,7 +10,7 @@
     </parent>
     <groupId>top.yunshu</groupId>
     <artifactId>shw_server</artifactId>
-    <version>1.7.3-RELEASE</version>
+    <version>1.7.4-RELEASE</version>
     <name>shw_server</name>
     <description>Student HomeWork Management System</description>
 
