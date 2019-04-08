@@ -3,6 +3,7 @@ package top.yunshu.shw.server.config;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.MethodParameter;
+import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
@@ -30,7 +31,7 @@ public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver 
 
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
-        String authorization = webRequest.getHeader("Authorization");
+        String authorization = webRequest.getHeader(HttpHeaders.AUTHORIZATION);
         LoginUser loginUser = JwtUtils.getLoginUser(authorization);
         logger.info("get login user: " + loginUser);
         HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();

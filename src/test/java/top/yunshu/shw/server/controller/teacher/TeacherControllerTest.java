@@ -6,6 +6,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -28,7 +29,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = ShwServerApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class TeacherControllerTest {
-    private static final String Authorization = "Authorization";
 
     @Autowired
     private WebApplicationContext webApplicationContext;
@@ -63,7 +63,7 @@ public class TeacherControllerTest {
     public void getTeacherCreateGroups() throws Exception {
         MvcResult mvcResult = mockMvc.perform(
                 get("/teacher/groups")
-                        .header(Authorization, authorizationValue)
+                        .header(HttpHeaders.AUTHORIZATION, authorizationValue)
                         .accept(MediaType.APPLICATION_JSON_UTF8)
         )
                 .andExpect(request().asyncStarted())
@@ -79,7 +79,7 @@ public class TeacherControllerTest {
         String newGroupName = UUID.randomUUID().toString();
         mockMvc.perform(
                 post("/teacher/group")
-                        .header(Authorization, authorizationValue)
+                        .header(HttpHeaders.AUTHORIZATION, authorizationValue)
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
                         .content("groupName=" + newGroupName)
         )
@@ -91,7 +91,7 @@ public class TeacherControllerTest {
     public void deleteGroup() throws Exception {
         mockMvc.perform(
                 delete("/teacher/group/{id}", "bc25f27ab0ac4dc9ba349c57598cec23")
-                        .header(Authorization, authorizationValue)
+                        .header(HttpHeaders.AUTHORIZATION, authorizationValue)
         )
                 .andExpect(status().isNoContent())
                 .andDo(print());

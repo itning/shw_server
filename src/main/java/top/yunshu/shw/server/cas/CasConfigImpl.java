@@ -6,6 +6,7 @@ import org.dom4j.DocumentHelper;
 import org.dom4j.Node;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 import top.itning.cas.ICasConfig;
 
@@ -23,7 +24,6 @@ import java.util.Map;
 @Component
 public class CasConfigImpl implements ICasConfig {
     private static final Logger logger = LoggerFactory.getLogger(CasConfigImpl.class);
-    private static final String CAS_HEADER = "Authorization";
 
     @Override
     public Map<String, String> analysisBody2Map(String body) {
@@ -47,7 +47,7 @@ public class CasConfigImpl implements ICasConfig {
 
     @Override
     public boolean isLogin(HttpServletResponse resp, HttpServletRequest req) {
-        return StringUtils.isNotBlank(req.getHeader(CAS_HEADER));
+        return StringUtils.isNotBlank(req.getHeader(HttpHeaders.AUTHORIZATION));
     }
 
     @Override
