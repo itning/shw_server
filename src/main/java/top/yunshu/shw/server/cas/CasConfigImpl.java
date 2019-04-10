@@ -1,20 +1,13 @@
 package top.yunshu.shw.server.cas;
 
 import org.apache.commons.lang3.StringUtils;
-import org.dom4j.Document;
-import org.dom4j.DocumentHelper;
-import org.dom4j.Node;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
-import top.itning.cas.ICasConfig;
+import top.itning.cas.AbstractCasConfigImpl;
+import top.itning.cas.CasProperties;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Cas配置实现
@@ -22,27 +15,9 @@ import java.util.Map;
  * @author itning
  */
 @Component
-public class CasConfigImpl implements ICasConfig {
-    private static final Logger logger = LoggerFactory.getLogger(CasConfigImpl.class);
-
-    @Override
-    public Map<String, String> analysisBody2Map(String body) {
-        Map<String, String> map = new HashMap<>(16);
-        try {
-            Document doc = DocumentHelper.parseText(body);
-            Node successNode = doc.selectSingleNode("//cas:authenticationSuccess");
-            if (successNode != null) {
-                List<Node> attributesNode = doc.selectNodes("//cas:attributes/*");
-                attributesNode.forEach(defaultElement -> map.put(defaultElement.getName(), defaultElement.getText()));
-                logger.debug("Get Map: " + map);
-            } else {
-                //认证失败
-                logger.error("AUTHENTICATION failed : cas:authenticationSuccess Not Found");
-            }
-        } catch (Exception e) {
-            logger.error("AUTHENTICATION failed and Catch Exception: ", e);
-        }
-        return map;
+public class CasConfigImpl extends AbstractCasConfigImpl {
+    CasConfigImpl(CasProperties casProperties) {
+        super(casProperties);
     }
 
     @Override

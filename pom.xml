@@ -10,7 +10,7 @@
     </parent>
     <groupId>top.yunshu</groupId>
     <artifactId>shw_server</artifactId>
-    <version>1.7.4-RELEASE</version>
+    <version>1.7.5-RELEASE</version>
     <name>shw_server</name>
     <description>Student HomeWork Management System</description>
 
@@ -107,7 +107,7 @@
         <dependency>
             <groupId>com.github.itning</groupId>
             <artifactId>cas-spring-boot-starter</artifactId>
-            <version>${cas.spring.boot.starter.version}</version>
+            <version>1.0.7-RELEASE</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/io.springfox/springfox-swagger2 -->
         <dependency>

@@ -1,14 +1,13 @@
 package top.yunshu.shw.server.cas;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
+import top.itning.cas.AbstractCasCallBackImpl;
 import top.itning.cas.CasProperties;
-import top.itning.cas.ICasCallback;
 import top.yunshu.shw.server.dao.StudentDao;
 import top.yunshu.shw.server.entity.LoginUser;
 import top.yunshu.shw.server.entity.RestModel;
@@ -23,27 +22,22 @@ import java.net.URLEncoder;
 import java.util.Arrays;
 import java.util.Map;
 
-import static org.springframework.http.HttpHeaders.*;
-
 /**
  * Jwt实现
  *
  * @author itning
  */
 @Component
-public class JwtCasCallBackImpl implements ICasCallback {
+public class JwtCasCallBackImpl extends AbstractCasCallBackImpl {
     private static final Logger logger = LoggerFactory.getLogger(JwtCasCallBackImpl.class);
-    private static final ObjectMapper MAPPER = new ObjectMapper();
     private static final String LOGIN_NAME = "loginName";
     private static final String STUDENT_USER_TYPE = "99";
-
-    private final CasProperties casProperties;
 
     private final StudentDao studentDao;
 
     @Autowired
     public JwtCasCallBackImpl(CasProperties casProperties, StudentDao studentDao) {
-        this.casProperties = casProperties;
+        super(casProperties);
         this.studentDao = studentDao;
     }
 
@@ -76,11 +70,6 @@ public class JwtCasCallBackImpl implements ICasCallback {
     public void onNeverLogin(HttpServletResponse resp, HttpServletRequest req) throws IOException {
         allowCors(resp, req);
         writeJson2Response(resp, HttpStatus.UNAUTHORIZED, "请先登录");
-    }
-
-    @Override
-    public void onOptionsHttpMethodRequest(HttpServletResponse resp, HttpServletRequest req) {
-        allowCors(resp, req);
     }
 
     /**
@@ -129,21 +118,6 @@ public class JwtCasCallBackImpl implements ICasCallback {
         writer.write(json);
         writer.flush();
         writer.close();
-    }
-
-    /**
-     * 允许跨域(不管客户端地址是什么，全部允许)
-     *
-     * @param resp {@link HttpServletResponse}
-     * @param req  {@link HttpServletRequest}
-     */
-    private void allowCors(HttpServletResponse resp, HttpServletRequest req) {
-        String origin = req.getHeader(ORIGIN);
-        resp.setHeader(ACCESS_CONTROL_ALLOW_CREDENTIALS, "true");
-        resp.setHeader(ACCESS_CONTROL_ALLOW_ORIGIN, origin);
-        resp.setHeader(ACCESS_CONTROL_ALLOW_METHODS, "POST,GET,OPTIONS,DELETE,PUT,PATCH");
-        resp.setHeader(ACCESS_CONTROL_ALLOW_HEADERS, req.getHeader(ACCESS_CONTROL_REQUEST_HEADERS));
-        resp.setIntHeader(ACCESS_CONTROL_MAX_AGE, 2592000);
     }
 
     /**
