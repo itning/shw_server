@@ -18,7 +18,7 @@
         <java.version>1.8</java.version>
         <jjwt.version>0.9.1</jjwt.version>
         <modelmapper.version>2.3.2</modelmapper.version>
-        <cas.spring.boot.starter.version>1.0.6-RELEASE</cas.spring.boot.starter.version>
+        <cas.spring.boot.starter.version>1.0.7-RELEASE</cas.spring.boot.starter.version>
         <springfox.version>2.9.2</springfox.version>
         <jib.maven.plugin.version>1.0.2</jib.maven.plugin.version>
         <common.io.version>2.6</common.io.version>
@@ -107,7 +107,7 @@
         <dependency>
             <groupId>com.github.itning</groupId>
             <artifactId>cas-spring-boot-starter</artifactId>
-            <version>1.0.7-RELEASE</version>
+            <version>${cas.spring.boot.starter.version}</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/io.springfox/springfox-swagger2 -->
         <dependency>
