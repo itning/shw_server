@@ -54,9 +54,9 @@ public class UploadServiceImpl implements UploadService {
     }
 
     @Caching(evict = {
-            @CacheEvict(cacheNames = "studentDoneWork", allEntries = true),
-            @CacheEvict(cacheNames = "studentUndoneWork", allEntries = true),
-            @CacheEvict(cacheNames = "workDetail", allEntries = true)
+            @CacheEvict(cacheNames = "studentDoneWork", key = "'regex:'+#studentId+'*'"),
+            @CacheEvict(cacheNames = "studentUndoneWork", key = "'regex:'+#studentId+'*'"),
+            @CacheEvict(cacheNames = "workDetail", key = "'regex:'+#workId+'*'")
     })
     @Override
     public void delUploadInfoByWorkId(String studentId, String workId) {
@@ -79,9 +79,9 @@ public class UploadServiceImpl implements UploadService {
     }
 
     @Caching(evict = {
-            @CacheEvict(cacheNames = "studentDoneWork", allEntries = true),
-            @CacheEvict(cacheNames = "studentUndoneWork", allEntries = true),
-            @CacheEvict(cacheNames = "workDetail", allEntries = true)
+            @CacheEvict(cacheNames = "studentDoneWork", key = "'regex:'+#studentNumber+'*'"),
+            @CacheEvict(cacheNames = "studentUndoneWork", key = "'regex:'+#studentNumber+'*'"),
+            @CacheEvict(cacheNames = "workDetail", key = "'regex:'+#workId+'*'")
     })
     @Override
     public void uploadFile(MultipartFile file, String studentNumber, String workId) {
