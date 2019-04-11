@@ -23,6 +23,10 @@ public class RestModel<T> implements Serializable {
     public RestModel() {
     }
 
+    public RestModel(HttpStatus status, String msg, T data) {
+        this(status.value(), msg, data);
+    }
+
     public RestModel(int code, String msg, T data) {
         this.code = code;
         this.msg = msg;
@@ -30,7 +34,7 @@ public class RestModel<T> implements Serializable {
     }
 
     public RestModel(T data) {
-        this(HttpStatus.OK.value(), "查询成功", data);
+        this(HttpStatus.OK, "查询成功", data);
     }
 
     public int getCode() {
