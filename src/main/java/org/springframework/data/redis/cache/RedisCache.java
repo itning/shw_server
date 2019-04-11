@@ -15,6 +15,7 @@
  */
 package org.springframework.data.redis.cache;
 
+import org.slf4j.LoggerFactory;
 import org.springframework.cache.support.AbstractValueAdaptingCache;
 import org.springframework.cache.support.NullValue;
 import org.springframework.cache.support.SimpleValueWrapper;
@@ -55,6 +56,10 @@ public class RedisCache extends AbstractValueAdaptingCache {
     private final RedisCacheConfiguration cacheConfig;
     private final ConversionService conversionService;
     private final RedisTemplate redisTemplate;
+
+    static {
+        LoggerFactory.getLogger(RedisCache.class).info("Custom RedisCache Class Success Invoked");
+    }
 
     {
         redisTemplate = SpringContextHelper.getBean("redisTemplate", RedisTemplate.class);
