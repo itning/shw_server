@@ -15,6 +15,7 @@
  */
 package org.springframework.data.redis.cache;
 
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.support.AbstractValueAdaptingCache;
 import org.springframework.cache.support.NullValue;
@@ -35,6 +36,7 @@ import java.lang.reflect.Method;
 import java.nio.ByteBuffer;
 import java.util.Set;
 import java.util.concurrent.Callable;
+import java.util.concurrent.TimeUnit;
 
 /**
  * {@link org.springframework.cache.Cache} implementation using for Redis as underlying store.
@@ -49,6 +51,7 @@ import java.util.concurrent.Callable;
  */
 @SuppressWarnings("all")
 public class RedisCache extends AbstractValueAdaptingCache {
+    private static final Logger logger = LoggerFactory.getLogger(RedisCache.class);
     private static final byte[] BINARY_NULL_VALUE = RedisSerializer.java().serialize(NullValue.INSTANCE);
 
     private final String name;
@@ -58,7 +61,7 @@ public class RedisCache extends AbstractValueAdaptingCache {
     private final RedisTemplate redisTemplate;
 
     static {
-        LoggerFactory.getLogger(RedisCache.class).info("Custom RedisCache Class Success Invoked");
+        logger.info("Custom RedisCache Class Success Invoked");
     }
 
     {
@@ -157,6 +160,16 @@ public class RedisCache extends AbstractValueAdaptingCache {
         }
 
         cacheWriter.put(name, createAndConvertCacheKey(key), serializeCacheValue(cacheValue), cacheConfig.getTtl());
+
+        String inKey = name + "::" + key;
+        if (redisTemplate.hasKey(inKey)) {
+            Boolean expire = redisTemplate.expire(inKey, 120, TimeUnit.MINUTES);
+            if (expire == null || !expire) {
+                logger.warn("redis key: " + inKey + " expire(should true) is " + expire);
+            }
+        } else {
+            logger.warn("redis key: " + inKey + " does not exist");
+        }
     }
 
     /*
