@@ -3,8 +3,8 @@ package top.yunshu.shw.server.cas;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
-import top.itning.cas.AbstractCasConfigImpl;
 import top.itning.cas.CasProperties;
+import top.itning.cas.config.AbstractCasConfigImpl;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
