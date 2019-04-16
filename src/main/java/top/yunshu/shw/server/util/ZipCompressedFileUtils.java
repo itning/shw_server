@@ -33,14 +33,35 @@ public final class ZipCompressedFileUtils {
         return new ZipCompressedFileUtils(file);
     }
 
+    public static ZipCompressedFileUtils getInstance() {
+        return new ZipCompressedFileUtils();
+    }
+
     private ZipCompressedFileUtils(File file) {
         this.file = file;
         this.list = new ArrayList<>();
         this.charset = Charset.forName("gbk");
     }
 
+    private ZipCompressedFileUtils() {
+        this.list = new ArrayList<>();
+        this.charset = Charset.forName("gbk");
+    }
+
     public ZipCompressedFileUtils changeCharset(Charset charset) {
         this.charset = charset;
+        return this;
+    }
+
+    public ZipCompressedFileUtils readZipFileFromInputStream(InputStream in) {
+        try (ZipInputStream zipInputStream = new ZipInputStream(in, charset)) {
+            ZipEntry entry;
+            while ((entry = zipInputStream.getNextEntry()) != null) {
+                readZipEntry(entry);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
         return this;
     }
 
@@ -54,33 +75,36 @@ public final class ZipCompressedFileUtils {
             Enumeration<? extends ZipEntry> entries = zf.entries();
             while (entries.hasMoreElements()) {
                 ZipEntry zipEntry = entries.nextElement();
-                if (zipEntry.isDirectory()) {
-                    logger.debug("D: " + zipEntry.getName());
-                    int i = 0;
-                    Node temp = null;
-                    for (String dir : getArrayOfDir(zipEntry.getName())) {
-                        if (i == 0) {
-                            temp = createRootDir(dir, list);
-                            i++;
-                        } else {
-                            temp = addNewDir(dir, temp);
-                            i++;
-                        }
-                    }
-                } else {
-                    logger.debug("F: " + zipEntry.getName());
-                    String[] dirOfFile = getDirOfFile(zipEntry.getName());
-                    if (dirOfFile.length == 0) {
-                        list.add(new Node().setFile(zipEntry));
-                    } else {
-                        addCompressedFileByDir(dirOfFile, list, zipEntry);
-                    }
-                }
+                readZipEntry(zipEntry);
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
         return this;
+    }
+
+    private void readZipEntry(ZipEntry zipEntry) {
+        if (zipEntry.isDirectory()) {
+            logger.debug("D: " + zipEntry.getName());
+            boolean isRootDir = true;
+            Node temp = null;
+            for (String dir : getArrayOfDir(zipEntry.getName())) {
+                if (isRootDir) {
+                    temp = createRootDir(dir, list);
+                    isRootDir = false;
+                } else {
+                    temp = addNewDir(dir, temp);
+                }
+            }
+        } else {
+            logger.debug("F: " + zipEntry.getName());
+            String[] dirOfFile = getDirOfFile(zipEntry.getName());
+            if (dirOfFile.length == 0) {
+                list.add(new Node().setFile(zipEntry));
+            } else {
+                addCompressedFileByDir(dirOfFile, list, zipEntry);
+            }
+        }
     }
 
     /**
