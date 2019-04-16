@@ -10,7 +10,7 @@
     </parent>
     <groupId>top.yunshu</groupId>
     <artifactId>shw_server</artifactId>
-    <version>1.7.7-RELEASE</version>
+    <version>1.7.8-RELEASE</version>
     <name>shw_server</name>
     <description>Student HomeWork Management System</description>
 
@@ -203,6 +203,12 @@
                             <tag>latest</tag>
                         </tags>
                     </to>
+                    <container>
+                        <jvmFlags>
+                            <jvmFlag>-XX:+UseG1GC</jvmFlag>
+                            <jvmFlag>-XX:+UseTLAB</jvmFlag>
+                        </jvmFlags>
+                    </container>
                 </configuration>
                 <executions>
                     <execution>
