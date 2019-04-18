@@ -65,10 +65,20 @@ public interface WorkService {
     /**
      * 更改作业开启状态
      *
-     * @param workId  作业ID
-     * @param enabled 是否开启
+     * @param teacherNumber 教师ID
+     * @param workId        作业ID
+     * @param enabled       是否开启
      */
-    void changeEnabledWord(String workId, boolean enabled);
+    void changeWorkEnabledStatus(String teacherNumber, String workId, boolean enabled);
+
+    /**
+     * 更改作业名称
+     *
+     * @param teacherNumber 教师ID
+     * @param workId        作业ID
+     * @param workName      新作业名
+     */
+    void changeWorkName(String teacherNumber, String workId, String workName);
 
     /**
      * 删除作业

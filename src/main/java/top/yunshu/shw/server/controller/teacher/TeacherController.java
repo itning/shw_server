@@ -207,14 +207,30 @@ public class TeacherController {
      * @param enabled 开启状态
      * @return ResponseEntity
      */
-    @SuppressWarnings("unused")
     @ApiOperation("更新作业启用状态")
-    @PatchMapping("/work/{workId}/{enabled}")
+    @PatchMapping("/work/enabled/{workId}/{enabled}")
     public ResponseEntity<Void> updateWorkEnabled(@ApiIgnore LoginUser loginUser,
                                                   @ApiParam(value = "作业ID", required = true) @PathVariable String workId,
                                                   @ApiParam(value = "开启状态", required = true) @PathVariable String enabled) {
         logger.debug("up work , work id: " + workId + " enabled: " + enabled);
-        workService.changeEnabledWord(workId, Boolean.parseBoolean(enabled));
+        workService.changeWorkEnabledStatus(loginUser.getNo(), workId, Boolean.parseBoolean(enabled));
+        return ResponseEntity.noContent().build();
+    }
+
+    /**
+     * 更新作业名称
+     *
+     * @param workId   作业ID
+     * @param workName 新名称
+     * @return ResponseEntity
+     */
+    @ApiOperation("更新作业名称")
+    @PatchMapping("/work/name/{workId}/{workName}")
+    public ResponseEntity<Void> updateWorkName(@ApiIgnore LoginUser loginUser,
+                                               @ApiParam(value = "作业ID", required = true) @PathVariable String workId,
+                                               @ApiParam(value = "作业名", required = true) @PathVariable String workName) {
+        logger.debug("up work , work id: " + workId + " name: " + workName);
+        workService.changeWorkName(loginUser.getNo(), workId, workName);
         return ResponseEntity.noContent().build();
     }
 

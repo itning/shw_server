@@ -19,6 +19,7 @@ import top.yunshu.shw.server.entity.Student;
 import top.yunshu.shw.server.entity.Upload;
 import top.yunshu.shw.server.entity.Work;
 import top.yunshu.shw.server.exception.NoSuchFiledValueException;
+import top.yunshu.shw.server.exception.PermissionsException;
 import top.yunshu.shw.server.model.WorkDetailsModel;
 import top.yunshu.shw.server.model.WorkModel;
 import top.yunshu.shw.server.service.work.WorkService;
@@ -135,9 +136,24 @@ public class WorkServiceImpl implements WorkService {
             @CacheEvict(cacheNames = "work", allEntries = true)
     })
     @Override
-    public void changeEnabledWord(String workId, boolean enabled) {
+    public void changeWorkEnabledStatus(String teacherNumber, String workId, boolean enabled) {
         Work work = workDao.findById(workId).orElseThrow(() -> new NoSuchFiledValueException("作业ID: " + workId + "不存在", HttpStatus.NOT_FOUND));
+        checkTeacherWorkModifyPermission(teacherNumber, work);
         work.setEnabled(enabled);
+        workDao.save(work);
+    }
+
+    @Caching(evict = {
+            @CacheEvict(cacheNames = "studentDoneWork", allEntries = true),
+            @CacheEvict(cacheNames = "studentUndoneWork", allEntries = true),
+            @CacheEvict(cacheNames = "work", key = "'regex:'+#teacherNumber+'*'"),
+            @CacheEvict(cacheNames = "workDetail", key = "'regex:'+#workId+'*'")
+    })
+    @Override
+    public void changeWorkName(String teacherNumber, String workId, String workName) {
+        Work work = workDao.findById(workId).orElseThrow(() -> new NoSuchFiledValueException("作业ID: " + workId + "不存在", HttpStatus.NOT_FOUND));
+        checkTeacherWorkModifyPermission(teacherNumber, work);
+        work.setWorkName(workName);
         workDao.save(work);
     }
 
@@ -209,5 +225,22 @@ public class WorkServiceImpl implements WorkService {
         }
         return new PageImpl<>(modelMapper.map(works, new TypeToken<List<WorkModel>>() {
         }.getType()), pageable, workList.size());
+    }
+
+    /**
+     * 检查教师修改作业权限(横向越权检查)
+     *
+     * @param teacherNumber 教师ID
+     * @param work          作业
+     */
+    private void checkTeacherWorkModifyPermission(String teacherNumber, Work work) {
+        String teacherNumberInDao = groupDao.findById(work.getGroupId()).orElseThrow(() -> {
+            logger.error("group id: " + work.getGroupId() + " not found and work id is: " + work.getId());
+            return new NoSuchFiledValueException("该作业所属群ID: " + work.getGroupId() + "没有找到", HttpStatus.NOT_FOUND);
+        }).getTeacherNumber();
+        if (!teacherNumberInDao.equals(teacherNumber)) {
+            logger.warn("Horizontal override permission log: " + teacherNumber);
+            throw new PermissionsException("没有找到");
+        }
     }
 }
