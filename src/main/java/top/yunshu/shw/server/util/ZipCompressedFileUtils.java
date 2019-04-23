@@ -85,7 +85,7 @@ public final class ZipCompressedFileUtils {
 
     private void readZipEntry(ZipEntry zipEntry) {
         if (zipEntry.isDirectory()) {
-            logger.debug("D: " + zipEntry.getName());
+            logger.debug("D: {}", zipEntry.getName());
             boolean isRootDir = true;
             Node temp = null;
             for (String dir : getArrayOfDir(zipEntry.getName())) {
@@ -97,7 +97,7 @@ public final class ZipCompressedFileUtils {
                 }
             }
         } else {
-            logger.debug("F: " + zipEntry.getName());
+            logger.debug("F: {}", zipEntry.getName());
             String[] dirOfFile = getDirOfFile(zipEntry.getName());
             if (dirOfFile.length == 0) {
                 list.add(new Node().setFile(zipEntry));

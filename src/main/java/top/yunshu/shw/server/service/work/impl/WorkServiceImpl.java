@@ -235,7 +235,7 @@ public class WorkServiceImpl implements WorkService {
      */
     private void checkTeacherWorkModifyPermission(String teacherNumber, Work work) {
         String teacherNumberInDao = groupDao.findById(work.getGroupId()).orElseThrow(() -> {
-            logger.error("group id: " + work.getGroupId() + " not found and work id is: " + work.getId());
+            logger.error("group id: {} not found and work id is: {}", work.getGroupId(), work.getId());
             return new NoSuchFiledValueException("该作业所属群ID: " + work.getGroupId() + "没有找到", HttpStatus.NOT_FOUND);
         }).getTeacherNumber();
         if (!teacherNumberInDao.equals(teacherNumber)) {

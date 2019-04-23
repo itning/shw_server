@@ -146,7 +146,7 @@ public class StudentController {
     @PostMapping("/group")
     public ResponseEntity<Group> addGroup(@ApiIgnore LoginUser loginUser,
                                           @ApiParam(value = "邀请码", required = true) @RequestParam String code) {
-        logger.debug("add group , code: " + code);
+        logger.debug("add group , code: {}", code);
         return ResponseEntity.status(HttpStatus.CREATED).body(groupService.joinGroup(code, loginUser.getNo()));
     }
 
@@ -160,7 +160,7 @@ public class StudentController {
     @DeleteMapping("/group/{groupId}")
     public ResponseEntity<Void> dropOutGroup(@ApiIgnore LoginUser loginUser,
                                              @ApiParam(value = "群组ID", required = true) @PathVariable String groupId) {
-        logger.debug("del group , id: " + groupId);
+        logger.debug("del group , id: {}", groupId);
         groupService.dropOutGroup(groupId, loginUser.getNo());
         return ResponseEntity.noContent().build();
     }
@@ -177,7 +177,7 @@ public class StudentController {
     public ResponseEntity<Void> uploadWork(@ApiIgnore LoginUser loginUser,
                                            @ApiParam(value = "作业ID", required = true) @PathVariable String workId,
                                            @ApiParam(value = "上传的作业", required = true) @RequestParam("file") MultipartFile file) {
-        logger.debug("upload file , work id: " + workId);
+        logger.debug("upload file , work id: {}", workId);
         uploadService.uploadFile(file, loginUser.getNo(), workId);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
@@ -192,7 +192,7 @@ public class StudentController {
     @DeleteMapping("/work/{workId}")
     public ResponseEntity<Void> deleteUploadWork(@ApiIgnore LoginUser loginUser,
                                                  @ApiParam(value = "作业ID", required = true) @PathVariable String workId) {
-        logger.debug("delete Upload Work , workId: " + workId);
+        logger.debug("delete Upload Work , workId: {}", workId);
         uploadService.delUploadInfoByWorkId(loginUser.getNo(), workId);
         return ResponseEntity.noContent().build();
     }
@@ -224,7 +224,7 @@ public class StudentController {
                              @ApiParam(value = "学号", required = true) @PathVariable String studentNumber,
                              @ApiParam(value = "作业ID", required = true) @PathVariable String workId,
                              @ApiIgnore HttpServletResponse response) throws IOException {
-        logger.debug("down file, work id: " + workId);
+        logger.debug("down file, work id: {}", workId);
         Optional<File> fileOptional = fileService.getFile(studentNumber, workId);
         if (fileOptional.isPresent()) {
             File file = fileOptional.get();
@@ -258,14 +258,14 @@ public class StudentController {
                     String tempFilePath = configService.getConfig(Config.ConfigKey.TEMP_DIR).orElse(System.getProperty("java.io.tmpdir")) + File.separator + FileUtils.getFileMD5(file) + ".pdf";
                     File tempFile = new File(tempFilePath);
                     if (!tempFile.exists()) {
-                        logger.debug("start convert " + file.getPath() + " to pdf");
+                        logger.debug("start convert {} to pdf", file.getPath());
                         long lastTimeMillis = System.currentTimeMillis();
                         Office2PdfUtils.convert2Pdf(file, tempFile);
-                        logger.debug("end convert and use time: " + (System.currentTimeMillis() - lastTimeMillis));
+                        logger.debug("end convert and use time: {}", (System.currentTimeMillis() - lastTimeMillis));
                     }
                     if (tempFile.length() == 0) {
                         boolean delete = tempFile.delete();
-                        logger.debug("delete " + delete);
+                        logger.debug("delete {}", delete);
                         throw new RuntimeException("转换失败");
                     }
 
@@ -289,7 +289,7 @@ public class StudentController {
                 } else {
                     setContentType = contentTypeByExtensionName;
                 }
-                logger.debug("get contentType: " + setContentType);
+                logger.debug("get contentType: {}", setContentType);
                 response.setContentType(setContentType);
                 IOUtils.copy(fileInputStream, outputStream);
             } catch (Exception e) {
@@ -336,7 +336,7 @@ public class StudentController {
     @DeleteMapping("/notice/{noticeId}")
     public ResponseEntity<Void> delNoticeById(@ApiIgnore LoginUser loginUser,
                                               @ApiParam(value = "通知ID", required = true) @PathVariable String noticeId) {
-        logger.debug("del notice id " + noticeId);
+        logger.debug("del notice id {}", noticeId);
         noticeService.delNoticeById(noticeId);
         return ResponseEntity.noContent().build();
     }

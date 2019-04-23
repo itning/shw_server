@@ -165,10 +165,10 @@ public class RedisCache extends AbstractValueAdaptingCache {
         if (redisTemplate.hasKey(inKey)) {
             Boolean expire = redisTemplate.expire(inKey, 120, TimeUnit.MINUTES);
             if (expire == null || !expire) {
-                logger.warn("redis key: " + inKey + " expire(should true) is " + expire);
+                logger.warn("redis key: {} expire(should true) is {}", inKey, expire);
             }
         } else {
-            logger.warn("redis key: " + inKey + " does not exist");
+            logger.warn("redis key: {} does not exist", inKey);
         }
     }
 

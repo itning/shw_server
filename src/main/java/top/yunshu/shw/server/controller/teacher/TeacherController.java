@@ -101,7 +101,7 @@ public class TeacherController {
     @PostMapping("/group")
     public ResponseEntity<Group> addGroup(@ApiIgnore LoginUser loginUser,
                                           @ApiParam(value = "教师添加的组名", required = true) @RequestParam String groupName) {
-        logger.debug("add group , groupName: " + groupName);
+        logger.debug("add group , groupName: {}", groupName);
         return ResponseEntity.status(HttpStatus.CREATED).body(groupService.createGroup(groupName, loginUser.getName(), loginUser.getNo()));
     }
 
@@ -117,7 +117,7 @@ public class TeacherController {
     public ResponseEntity<Void> updateGroupName(@ApiIgnore LoginUser loginUser,
                                                 @ApiParam(value = "群组id", required = true) @PathVariable String id,
                                                 @ApiParam(value = "修改的新群组名", required = true) @PathVariable String name) {
-        logger.debug("update group , name: " + name);
+        logger.debug("update group , name: {}", name);
         groupService.updateGroup(id, name, loginUser.getNo());
         return ResponseEntity.noContent().build();
     }
@@ -131,7 +131,7 @@ public class TeacherController {
     @DeleteMapping("/group/{id}")
     public ResponseEntity<Void> deleteGroup(@ApiIgnore LoginUser loginUser,
                                             @ApiParam(value = "要删除的群组ID", required = true) @PathVariable String id) {
-        logger.debug("delete group , id: " + id);
+        logger.debug("delete group , id: {}", id);
         groupService.deleteGroup(id, loginUser.getNo());
         return ResponseEntity.noContent().build();
     }
@@ -196,7 +196,7 @@ public class TeacherController {
                                         @ApiParam(value = "群ID", required = true) @RequestParam String groupId,
                                         @ApiParam(value = "文件名规范", defaultValue = FileNameSpecificationUtils.NAME_AND_STUDENT_NUMBER)
                                         @RequestParam(required = false, defaultValue = FileNameSpecificationUtils.NAME_AND_STUDENT_NUMBER) String fileFormat) {
-        logger.debug("add work , workName: " + workName);
+        logger.debug("add work , workName: {}", workName);
         return ResponseEntity.status(HttpStatus.CREATED).body(workService.createWork(workName, groupId, fileFormat, true));
     }
 
@@ -212,7 +212,7 @@ public class TeacherController {
     public ResponseEntity<Void> updateWorkEnabled(@ApiIgnore LoginUser loginUser,
                                                   @ApiParam(value = "作业ID", required = true) @PathVariable String workId,
                                                   @ApiParam(value = "开启状态", required = true) @PathVariable String enabled) {
-        logger.debug("up work , work id: " + workId + " enabled: " + enabled);
+        logger.debug("up work , work id: {} enabled: {}", workId, enabled);
         workService.changeWorkEnabledStatus(loginUser.getNo(), workId, Boolean.parseBoolean(enabled));
         return ResponseEntity.noContent().build();
     }
@@ -229,7 +229,7 @@ public class TeacherController {
     public ResponseEntity<Void> updateWorkName(@ApiIgnore LoginUser loginUser,
                                                @ApiParam(value = "作业ID", required = true) @PathVariable String workId,
                                                @ApiParam(value = "作业名", required = true) @PathVariable String workName) {
-        logger.debug("up work , work id: " + workId + " name: " + workName);
+        logger.debug("up work , work id: {} name: {}", workId, workName);
         workService.changeWorkName(loginUser.getNo(), workId, workName);
         return ResponseEntity.noContent().build();
     }
@@ -244,7 +244,7 @@ public class TeacherController {
     @DeleteMapping("/work/{workId}")
     public ResponseEntity<Void> deleteWork(@ApiIgnore LoginUser loginUser,
                                            @ApiParam(value = "作业ID", required = true) @PathVariable String workId) {
-        logger.debug("del work , work id: " + workId);
+        logger.debug("del work , work id: {}", workId);
         workService.delWork(workId, loginUser.getNo());
         return ResponseEntity.noContent().build();
     }
@@ -262,7 +262,7 @@ public class TeacherController {
                                                                      @ApiParam(value = "作业ID", required = true) @PathVariable String workId,
                                                                      @ApiParam("分页信息") @PageableDefault(size = 20, sort = {"studentNumber"}, direction = Sort.Direction.ASC)
                                                                              Pageable pageable) {
-        logger.debug("get teacher work detail, work id " + workId);
+        logger.debug("get teacher work detail, work id {}", workId);
         return () -> ResponseEntity.ok(new RestModel<>(workService.getWorkDetailByWorkId(loginUser.getNo(), workId, pageable)));
     }
 
@@ -279,7 +279,7 @@ public class TeacherController {
     @GetMapping("/pack/{workId}")
     public ResponseEntity<RestModel> pack(@ApiIgnore LoginUser loginUser,
                                           @ApiParam(value = "作业ID", required = true) @PathVariable String workId) {
-        logger.debug("get teacher work detail, work id " + workId);
+        logger.debug("get teacher work detail, work id {}", workId);
         String s = packMap.get(workId);
         if (s == null) {
             fileService.unpackFiles(workId);
@@ -309,7 +309,7 @@ public class TeacherController {
     public void downloadAllFile(@ApiParam(value = "Range请求头(用于判断是否需要支持多线程下载和断点续传)", required = true) @RequestHeader(required = false) String range,
                                 @ApiParam(value = "作业ID", required = true) @PathVariable String workId,
                                 @ApiIgnore HttpServletResponse response) {
-        logger.debug("down file, work id: " + workId);
+        logger.debug("down file, work id: {}", workId);
         long sum = uploadService.getUploadSum(workId);
         String tempFilePath = configService.getConfig(Config.ConfigKey.TEMP_DIR).orElse(System.getProperty("java.io.tmpdir")) + File.separator + workId + sum + ".zip";
         File file = new File(tempFilePath);
@@ -330,7 +330,7 @@ public class TeacherController {
     @GetMapping("/down_now/{workId}")
     public void downloadAllFileNow(@ApiParam(value = "作业ID", required = true) @PathVariable String workId,
                                    @ApiIgnore HttpServletResponse response) {
-        logger.debug("down file, work id: " + workId);
+        logger.debug("down file, work id: {}", workId);
         Optional<String> config = configService.getConfig(Config.ConfigKey.FILE_REPOSITORY_PATH);
         if (!config.isPresent()) {
             throw new FileException("存储目录不存在，请联系管理员", HttpStatus.INTERNAL_SERVER_ERROR);
@@ -416,18 +416,18 @@ public class TeacherController {
                         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
                         ZipCompressedFileUtils.getInstance(file).preview(name, byteArrayOutputStream);
                         ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(byteArrayOutputStream.toByteArray());
-                        logger.debug("start convert " + file.getPath() + " to pdf");
+                        logger.debug("start convert {} to pdf", file.getPath());
                         long lastTimeMillis = System.currentTimeMillis();
                         FileOutputStream fileOutputStream = new FileOutputStream(tempFile);
                         Office2PdfUtils.convert2Pdf(byteArrayInputStream, fileOutputStream, extensionName);
-                        logger.debug("end convert and use time: " + (System.currentTimeMillis() - lastTimeMillis));
+                        logger.debug("end convert and use time: {}", (System.currentTimeMillis() - lastTimeMillis));
                         fileOutputStream.close();
                         byteArrayInputStream.close();
                         byteArrayOutputStream.close();
                     }
                     if (tempFile.length() == 0) {
                         boolean delete = tempFile.delete();
-                        logger.debug("deleted: " + delete);
+                        logger.debug("deleted: {}", delete);
                         throw new RuntimeException("转换失败");
                     }
                     response.setContentType(MediaType.APPLICATION_PDF_VALUE);
@@ -448,7 +448,7 @@ public class TeacherController {
                 } else {
                     setContentType = contentTypeByExtensionName;
                 }
-                logger.debug("get contentType: " + setContentType);
+                logger.debug("get contentType: {}", setContentType);
                 response.setContentType(setContentType);
                 response.setCharacterEncoding(encoding);
                 ZipCompressedFileUtils.getInstance(file).preview(name, outputStream);
@@ -473,7 +473,7 @@ public class TeacherController {
                                            @ApiParam(value = "学生ID", required = true) @PathVariable String studentId,
                                            @ApiParam(value = "作业ID", required = true) @PathVariable String workId,
                                            @ApiParam(value = "批阅信息", required = true) @RequestParam String review) {
-        logger.debug("review work , work id: " + workId + " student id: " + studentId);
+        logger.debug("review work , work id: {} student id: {}", workId, studentId);
         uploadService.reviewWork(loginUser, workId, studentId, review);
         return ResponseEntity.noContent().build();
     }
@@ -491,7 +491,7 @@ public class TeacherController {
     public Callable<ResponseEntity<RestModel>> getWorkReview(@ApiIgnore LoginUser loginUser,
                                                              @ApiParam(value = "学生ID", required = true) @PathVariable String studentId,
                                                              @ApiParam(value = "作业ID", required = true) @PathVariable String workId) {
-        logger.debug("get work review detail, work id " + workId + " student id: " + studentId);
+        logger.debug("get work review detail, work id {} student id: {}", workId, studentId);
         return () -> ResponseEntity.ok(new RestModel<>(uploadService.reviewWork(workId, studentId)));
     }
 }

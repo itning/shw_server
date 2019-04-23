@@ -102,7 +102,7 @@ public final class Office2PdfUtils {
             Document doc = new Document(inputStream);
             IWarningCallback callback = info -> {
                 if (info.getWarningType() == WarningType.FONT_SUBSTITUTION) {
-                    logger.warn("Font substitution: " + info.getDescription());
+                    logger.warn("Font substitution: {}", info.getDescription());
                 }
             };
             doc.setWarningCallback(callback);

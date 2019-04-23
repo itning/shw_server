@@ -31,7 +31,7 @@ public class ExceptionResolver {
     @ExceptionHandler(value = Exception.class)
     @ResponseBody
     public RestModel jsonErrorHandler(HttpServletResponse response, Exception e) {
-        logger.error("jsonErrorHandler->" + e.getClass().getSimpleName() + ":" + e.getMessage(), e);
+        logger.error("jsonErrorHandler->{}:{} {}", e.getClass().getSimpleName(), e.getMessage(), e);
         RestModel restModel = new RestModel();
         restModel.setCode(HttpStatus.SERVICE_UNAVAILABLE.value());
         restModel.setMsg(e.getMessage());
@@ -49,7 +49,7 @@ public class ExceptionResolver {
     @ExceptionHandler(value = BaseException.class)
     @ResponseBody
     public RestModel baseErrorHandler(HttpServletResponse response, BaseException e) {
-        logger.info("baseErrorHandler->" + e.getClass().getSimpleName() + ":" + e.getMessage());
+        logger.info("baseErrorHandler->{}:{}", e.getClass().getSimpleName(), e.getMessage());
         RestModel restModel = new RestModel();
         restModel.setCode(e.getCode().value());
         restModel.setMsg(e.getMessage());
@@ -67,7 +67,7 @@ public class ExceptionResolver {
     @ExceptionHandler(value = MissingServletRequestParameterException.class)
     @ResponseBody
     public RestModel missingServletRequestParameterExceptionHandler(HttpServletResponse response, MissingServletRequestParameterException e) {
-        logger.info("missingServletRequestParameterExceptionHandler->" + e.getMessage());
+        logger.info("missingServletRequestParameterExceptionHandler->{}", e.getMessage());
         RestModel restModel = new RestModel();
         restModel.setCode(HttpServletResponse.SC_BAD_REQUEST);
         restModel.setMsg(e.getMessage());
@@ -85,7 +85,7 @@ public class ExceptionResolver {
     @ExceptionHandler(value = NoHandlerFoundException.class)
     @ResponseBody
     public RestModel noHandlerFoundErrorHandler(HttpServletResponse response, NoHandlerFoundException e) {
-        logger.info("noHandlerFoundErrorHandler->" + e.getClass().getSimpleName() + ":" + e.getMessage());
+        logger.info("noHandlerFoundErrorHandler->{}:{}", e.getClass().getSimpleName(), e.getMessage());
         RestModel restModel = new RestModel();
         restModel.setCode(HttpStatus.NOT_FOUND.value());
         restModel.setMsg(e.getMessage());

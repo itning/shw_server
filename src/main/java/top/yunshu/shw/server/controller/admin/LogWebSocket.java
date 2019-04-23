@@ -96,7 +96,7 @@ public final class LogWebSocket {
 
     @OnMessage
     public void onMessage(String message, Session session) throws IOException {
-        logger.debug("onMessage " + message);
+        logger.debug("onMessage {}", message);
         //回复用户
         session.getBasicRemote().sendText("收到消息 ");
     }

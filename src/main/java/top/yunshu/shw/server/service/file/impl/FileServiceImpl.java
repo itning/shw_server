@@ -91,8 +91,8 @@ public class FileServiceImpl implements FileService {
                         //
                     }
                     if (tempDir.getFreeSpace() < filesSize) {
-                        logger.error("临时目录剩余: " + (tempDir.getFreeSpace() / 1024 / 1024) + "MB空间");
-                        logger.error("临时目录太小,需要 " + (filesSize / 1024 / 1024) + "MB空间");
+                        logger.error("临时目录剩余: {} MB空间", (tempDir.getFreeSpace() / 1024 / 1024));
+                        logger.error("临时目录太小,需要 {} MB空间", (filesSize / 1024 / 1024));
                         TeacherController.packMap.put(workId, "ERROR:" + "临时目录太小,需要 " + (filesSize / 1024 / 1024) + "MB空间");
                         throw new FileException("临时目录太小,需要 " + (filesSize / 1024 / 1024) + "MB空间", HttpStatus.INTERNAL_SERVER_ERROR);
                     }
@@ -111,7 +111,7 @@ public class FileServiceImpl implements FileService {
                         TeacherController.packMap.put(workId, "ERROR:" + e.getMessage());
                     }
                 });
-                logger.debug("spend: " + (System.currentTimeMillis() - start) / 1000 + "s");
+                logger.debug("spend: {}s", (System.currentTimeMillis() - start) / 1000);
                 zipOut.flush();
                 zipOut.close();
                 TeacherController.packMap.put(workId, "OK");

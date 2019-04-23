@@ -111,9 +111,9 @@ public final class FileUtils {
             outputStream.flush();
             response.flushBuffer();
             randomAccessFile.close();
-            logger.debug("下载完毕：" + startByte + "-" + endByte + "：" + transmitted);
+            logger.debug("下载完毕：{}-{}: {}", startByte, endByte, transmitted);
         } catch (ClientAbortException e) {
-            logger.debug("用户停止下载：" + startByte + "-" + endByte + "：" + transmitted);
+            logger.debug("用户停止下载：{}-{}: {}", startByte, endByte, transmitted);
         } catch (IOException e) {
             throw new FileException(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
