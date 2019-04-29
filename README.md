@@ -1,5 +1,8 @@
 # 作业管理系统服务端
 
+**V2版本目前正在施中**
+[点我](https://github.com/itning/shw_server/tree/master)查看主分支完成版本
+
 [![GitHub stars](https://img.shields.io/github/stars/itning/shw_server.svg?style=social&label=Stars)](https://github.com/itning/shw_server/stargazers)
 [![GitHub forks](https://img.shields.io/github/forks/itning/shw_server.svg?style=social&label=Fork)](https://github.com/itning/shw_server/network/members)
 [![GitHub watchers](https://img.shields.io/github/watchers/itning/shw_server.svg?style=social&label=Watch)](https://github.com/itning/shw_server/watchers)
