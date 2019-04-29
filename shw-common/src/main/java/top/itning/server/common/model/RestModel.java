@@ -1,6 +1,9 @@
 package top.itning.server.common.model;
 
+
 import org.springframework.http.HttpStatus;
+import org.springframework.web.reactive.function.server.ServerResponse;
+import reactor.core.publisher.Mono;
 
 import java.io.Serializable;
 
@@ -13,6 +16,30 @@ public class RestModel<T> implements Serializable {
     private int code;
     private String msg;
     private T data;
+
+    public static <T> Mono<RestModel> toMono(Mono<T> data) {
+        return data.map(RestModel::new);
+    }
+
+    public static <T> Mono<RestModel> toMono(HttpStatus status, String msg, Mono<T> data) {
+        return data.map(r -> new RestModel<>(status, msg, r));
+    }
+
+    public static <T> Mono<ServerResponse> ok(Mono<T> data) {
+        return ServerResponse.ok().body(toMono(data), RestModel.class);
+    }
+
+    public static <T> Mono<ServerResponse> created(Mono<T> data) {
+        return created("创建成功", data);
+    }
+
+    public static <T> Mono<ServerResponse> created(String msg, Mono<T> data) {
+        return ServerResponse.status(HttpStatus.CREATED).body(toMono(HttpStatus.CREATED, msg, data), RestModel.class);
+    }
+
+    public static Mono<ServerResponse> noContent() {
+        return ServerResponse.noContent().build();
+    }
 
     public RestModel() {
     }
