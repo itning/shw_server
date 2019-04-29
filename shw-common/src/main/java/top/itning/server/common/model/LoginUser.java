@@ -1,5 +1,10 @@
 package top.itning.server.common.model;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.lang.Nullable;
+import top.itning.server.common.exception.PermissionsException;
+import top.itning.server.common.exception.RoleException;
+
 import java.io.Serializable;
 
 /**
@@ -14,8 +19,42 @@ public class LoginUser implements Serializable {
     public static final String STUDENT_USER = "99";
     /**
      * 教师用户
+     * 不准确
      */
+    @Deprecated
     public static final String TEACHER_USER = "13";
+
+    /**
+     * 必须是学生身份
+     *
+     * @param userType 用户身份
+     * @throws PermissionsException 如果角色为空
+     * @throws RoleException        如果身份验证不通过
+     */
+    public static void mustStudentLogin(@Nullable String userType) {
+        if (userType == null) {
+            throw new PermissionsException("角色为空");
+        }
+        if (!userType.equals(LoginUser.STUDENT_USER)) {
+            throw new RoleException("FORBIDDEN", HttpStatus.FORBIDDEN);
+        }
+    }
+
+    /**
+     * 必须是教师身份
+     *
+     * @param userType 用户身份
+     * @throws PermissionsException 如果角色为空
+     * @throws RoleException        如果身份验证不通过
+     */
+    public static void mustTeacherLogin(@Nullable String userType) {
+        if (userType == null) {
+            throw new PermissionsException("角色为空");
+        }
+        if (userType.equals(LoginUser.STUDENT_USER)) {
+            throw new RoleException("FORBIDDEN", HttpStatus.FORBIDDEN);
+        }
+    }
 
     /**
      * id : ID
