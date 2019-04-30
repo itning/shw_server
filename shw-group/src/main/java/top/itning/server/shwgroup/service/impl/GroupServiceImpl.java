@@ -10,8 +10,8 @@ import reactor.core.publisher.Mono;
 import top.itning.server.common.exception.NoSuchFiledValueException;
 import top.itning.server.shwgroup.entity.Group;
 import top.itning.server.shwgroup.repository.GroupRepository;
-import top.itning.server.shwgroup.util.ReactiveMongoPageHelper;
 import top.itning.server.shwgroup.service.GroupService;
+import top.itning.server.shwgroup.util.ReactiveMongoPageHelper;
 
 import java.util.Collections;
 import java.util.Date;
@@ -73,5 +73,10 @@ public class GroupServiceImpl implements GroupService {
     public Mono<Page<Group>> findTeacherAllGroups(String teacherNumber, int page, int size) {
         Map<String, Object> map = Collections.singletonMap("teacher_number", teacherNumber);
         return reactiveMongoPageHelper.getAllWithCriteriaAndDescSortByPagination(page, size, "gmtCreate", map, Group.class);
+    }
+
+    @Override
+    public Mono<Group> findOneGroupById(String groupId) {
+        return groupRepository.findById(groupId);
     }
 }

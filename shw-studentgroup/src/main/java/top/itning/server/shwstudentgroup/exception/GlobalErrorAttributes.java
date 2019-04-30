@@ -1,4 +1,4 @@
-package top.itning.server.shwgroup.exception;
+package top.itning.server.shwstudentgroup.exception;
 
 
 import org.springframework.boot.web.reactive.error.DefaultErrorAttributes;

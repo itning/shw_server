@@ -30,7 +30,11 @@ public class RestModel<T> implements Serializable {
     }
 
     public static <T> Mono<ServerResponse> created(Mono<T> data) {
-        return created("创建成功", data);
+        return created(data, "创建成功");
+    }
+
+    public static <T> Mono<ServerResponse> created(Mono<T> data, String msg) {
+        return created(msg, data);
     }
 
     public static <T> Mono<ServerResponse> created(String msg, Mono<T> data) {

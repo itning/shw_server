@@ -58,4 +58,12 @@ public interface GroupService {
      * @return 教师群组
      */
     Mono<Page<Group>> findTeacherAllGroups(String teacherNumber, int page, int size);
+
+    /**
+     * 获取某个群组信息
+     *
+     * @param groupId 群组ID
+     * @return 群组
+     */
+    Mono<Group> findOneGroupById(String groupId);
 }

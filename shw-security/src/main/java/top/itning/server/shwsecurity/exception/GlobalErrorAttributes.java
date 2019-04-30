@@ -4,6 +4,7 @@ package top.itning.server.shwsecurity.exception;
 import org.springframework.boot.web.reactive.error.DefaultErrorAttributes;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.ServerRequest;
+import org.springframework.web.server.ResponseStatusException;
 import top.itning.server.common.exception.BaseException;
 
 import java.util.LinkedHashMap;
@@ -25,10 +26,17 @@ public class GlobalErrorAttributes extends DefaultErrorAttributes {
             errorAttributes.put("msg", baseException.getMsg());
             errorAttributes.put("data", "");
             return errorAttributes;
+        } else if (error instanceof ResponseStatusException) {
+            ResponseStatusException responseStatusException = (ResponseStatusException) error;
+            Map<String, Object> errorAttributes = new LinkedHashMap<>();
+            errorAttributes.put("code", responseStatusException.getStatus().value());
+            errorAttributes.put("msg", responseStatusException.getMessage());
+            errorAttributes.put("data", "");
+            return errorAttributes;
         } else {
             Map<String, Object> errorAttributes = super.getErrorAttributes(request, includeStackTrace);
-            errorAttributes.put("code", errorAttributes.getOrDefault("status", 500));
-            errorAttributes.put("msg", errorAttributes.getOrDefault("message", "unKnow"));
+            errorAttributes.put("code", errorAttributes.getOrDefault("status", 404));
+            errorAttributes.put("msg", error.getMessage());
             errorAttributes.put("data", "");
             return errorAttributes;
         }
