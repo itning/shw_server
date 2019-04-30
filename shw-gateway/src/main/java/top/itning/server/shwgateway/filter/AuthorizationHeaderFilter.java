@@ -29,7 +29,7 @@ import static org.springframework.cloud.netflix.zuul.filters.support.FilterConst
  * @date 2019/4/29 22:48
  */
 @Component
-public class JwtFilter extends ZuulFilter {
+public class AuthorizationHeaderFilter extends ZuulFilter {
     @Override
     public String filterType() {
         return PRE_TYPE;

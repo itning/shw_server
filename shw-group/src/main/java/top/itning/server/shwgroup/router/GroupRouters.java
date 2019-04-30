@@ -6,7 +6,7 @@ import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.ServerResponse;
 import top.itning.server.shwgroup.handler.GroupHandler;
 
-import static org.springframework.web.reactive.function.server.RequestPredicates.path;
+import static org.springframework.web.reactive.function.server.RequestPredicates.all;
 import static org.springframework.web.reactive.function.server.RouterFunctions.nest;
 import static org.springframework.web.reactive.function.server.RouterFunctions.route;
 
@@ -19,9 +19,12 @@ public class GroupRouters {
     @Bean
     RouterFunction<ServerResponse> userRouter(GroupHandler groupHandler) {
         return nest(
-                path("/group"),
+                all(),
                 route()
                         .POST("/", groupHandler::addGroup)
+                        .GET("/exist", groupHandler::isTeacherHaveAnyGroup)
+                        .DELETE("/{id}", groupHandler::deleteGroup)
+                        .PATCH("/{id}/{name}", groupHandler::updateGroupName)
                         .build()
         );
     }

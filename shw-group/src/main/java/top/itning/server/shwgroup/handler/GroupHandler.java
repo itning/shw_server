@@ -8,11 +8,10 @@ import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Mono;
 import top.itning.server.common.exception.NullFiledException;
-import top.itning.server.common.exception.PermissionsException;
 import top.itning.server.shwgroup.service.GroupService;
 
-import static top.itning.server.common.model.LoginUser.mustTeacherLogin;
-import static top.itning.server.common.model.RestModel.created;
+import static top.itning.server.common.model.RestModel.*;
+import static top.itning.server.common.util.Preconditions.*;
 
 /**
  * @author itning
@@ -29,12 +28,28 @@ public class GroupHandler {
 
     @NonNull
     public Mono<ServerResponse> addGroup(ServerRequest request) {
-        mustTeacherLogin(request.queryParam("userType").orElse(null));
-        String teacherName = request.queryParam("name").orElseThrow(() -> new PermissionsException("教师名为空"));
-        String teacherID = request.queryParam("no").orElseThrow(() -> new PermissionsException("教师ID为空"));
+        mustTeacherLogin(request);
         return request.formData()
                 .flatMap(m -> Mono.justOrEmpty(m.getFirst("groupName")))
                 .switchIfEmpty(Mono.error(new NullFiledException("群组名不能为空", HttpStatus.BAD_REQUEST)))
-                .flatMap(s -> created(groupService.createGroup(s, teacherName, teacherID)));
+                .flatMap(s -> created(groupService.createGroup(s, getName(request), getNo(request))));
+    }
+
+    @NonNull
+    public Mono<ServerResponse> isTeacherHaveAnyGroup(ServerRequest request) {
+        mustTeacherLogin(request);
+        return ok(groupService.isHaveAnyGroup(getNo(request)));
+    }
+
+    @NonNull
+    public Mono<ServerResponse> deleteGroup(ServerRequest request) {
+        mustTeacherLogin(request);
+        return groupService.deleteGroup(getNo(request), request.pathVariable("id")).flatMap(s -> noContent());
+    }
+
+    @NonNull
+    public Mono<ServerResponse> updateGroupName(ServerRequest request) {
+        mustTeacherLogin(request);
+        return groupService.updateGroupName(getNo(request), request.pathVariable("id"), request.pathVariable("name")).flatMap(s -> noContent());
     }
 }

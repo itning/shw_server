@@ -14,7 +14,7 @@ public class JwtUtilsTest {
         loginUser.setId("1");
         loginUser.setNo("2");
         loginUser.setLoginName("3");
-        loginUser.setUserType("4");
+        loginUser.setUserType("13");
         loginUser.setName("5");
         loginUser.setPhone("6");
         loginUser.setEmail("7");
