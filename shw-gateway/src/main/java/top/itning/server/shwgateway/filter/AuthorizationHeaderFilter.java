@@ -30,6 +30,11 @@ import static org.springframework.cloud.netflix.zuul.filters.support.FilterConst
  */
 @Component
 public class AuthorizationHeaderFilter extends ZuulFilter {
+    /**
+     * 忽略过滤路径
+     */
+    private static final String IGNORE_SERVER_PATH = "/user";
+
     @Override
     public String filterType() {
         return PRE_TYPE;
@@ -42,7 +47,8 @@ public class AuthorizationHeaderFilter extends ZuulFilter {
 
     @Override
     public boolean shouldFilter() {
-        return true;
+        RequestContext requestContext = RequestContext.getCurrentContext();
+        return !requestContext.getRequest().getServletPath().startsWith(IGNORE_SERVER_PATH);
     }
 
     @Override
