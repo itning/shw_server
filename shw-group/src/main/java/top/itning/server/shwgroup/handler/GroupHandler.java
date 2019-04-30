@@ -1,5 +1,6 @@
 package top.itning.server.shwgroup.handler;
 
+import org.apache.commons.lang.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.lang.NonNull;
@@ -51,5 +52,13 @@ public class GroupHandler {
     public Mono<ServerResponse> updateGroupName(ServerRequest request) {
         mustTeacherLogin(request);
         return groupService.updateGroupName(getNo(request), request.pathVariable("id"), request.pathVariable("name")).flatMap(s -> noContent());
+    }
+
+    @NonNull
+    public Mono<ServerResponse> getTeacherCreateGroups(ServerRequest request) {
+        mustTeacherLogin(request);
+        int page = NumberUtils.toInt(request.queryParam("page").orElse("0"));
+        int size = NumberUtils.toInt(request.queryParam("size").orElse("20"));
+        return ok(groupService.findTeacherAllGroups(getNo(request), page, size));
     }
 }

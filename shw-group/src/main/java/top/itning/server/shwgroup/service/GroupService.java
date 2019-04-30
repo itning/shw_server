@@ -1,5 +1,6 @@
 package top.itning.server.shwgroup.service;
 
+import org.springframework.data.domain.Page;
 import reactor.core.publisher.Mono;
 import top.itning.server.common.exception.NoSuchFiledValueException;
 import top.itning.server.shwgroup.entity.Group;
@@ -47,4 +48,14 @@ public interface GroupService {
      * @return 有返回<code>true</code>
      */
     Mono<Boolean> isHaveAnyGroup(String teacherNumber);
+
+    /**
+     * 分页获取教师群组
+     *
+     * @param teacherNumber 教师ID
+     * @param page          页码
+     * @param size          每页数量
+     * @return 教师群组
+     */
+    Mono<Page<Group>> findTeacherAllGroups(String teacherNumber, int page, int size);
 }

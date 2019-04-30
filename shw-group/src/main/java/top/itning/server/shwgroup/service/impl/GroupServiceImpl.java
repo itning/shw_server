@@ -3,15 +3,19 @@ package top.itning.server.shwgroup.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 import top.itning.server.common.exception.NoSuchFiledValueException;
 import top.itning.server.shwgroup.entity.Group;
 import top.itning.server.shwgroup.repository.GroupRepository;
+import top.itning.server.shwgroup.util.ReactiveMongoPageHelper;
 import top.itning.server.shwgroup.service.GroupService;
 
+import java.util.Collections;
 import java.util.Date;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -21,10 +25,12 @@ import java.util.UUID;
 @Service
 public class GroupServiceImpl implements GroupService {
     private final GroupRepository groupRepository;
+    private final ReactiveMongoPageHelper reactiveMongoPageHelper;
 
     @Autowired
-    public GroupServiceImpl(GroupRepository groupRepository) {
+    public GroupServiceImpl(GroupRepository groupRepository, ReactiveMongoPageHelper reactiveMongoPageHelper) {
         this.groupRepository = groupRepository;
+        this.reactiveMongoPageHelper = reactiveMongoPageHelper;
     }
 
     @Override
@@ -61,5 +67,11 @@ public class GroupServiceImpl implements GroupService {
         Group group = new Group();
         group.setTeacherNumber(teacherNumber);
         return groupRepository.exists(Example.of(group));
+    }
+
+    @Override
+    public Mono<Page<Group>> findTeacherAllGroups(String teacherNumber, int page, int size) {
+        Map<String, Object> map = Collections.singletonMap("teacher_number", teacherNumber);
+        return reactiveMongoPageHelper.getAllWithCriteriaAndDescSortByPagination(page, size, "gmtCreate", map, Group.class);
     }
 }
