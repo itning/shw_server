@@ -1,6 +1,7 @@
 package top.itning.server.shwstudentgroup.service;
 
 import org.springframework.data.domain.Page;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.itning.server.shwstudentgroup.dto.StudentGroupDTO;
 import top.itning.server.shwstudentgroup.entity.StudentGroup;
@@ -45,4 +46,12 @@ public interface StudentGroupService {
      * @return 如果有返回<code>true</code>
      */
     Mono<Boolean> isHaveGroup(String studentNumber);
+
+    /**
+     * 根据学号查询学生群组中的群组ID信息
+     *
+     * @param studentNumber 学号
+     * @return 群组ID集合
+     */
+    Flux<String> findGroupIdByStudentNumber(String studentNumber);
 }

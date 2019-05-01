@@ -14,9 +14,7 @@ import top.itning.server.shwgroup.service.GroupService;
 import top.itning.server.shwgroup.util.ReactiveMongoPageHelper;
 
 import java.util.Collections;
-import java.util.Date;
 import java.util.Map;
-import java.util.UUID;
 
 /**
  * @author itning
@@ -35,9 +33,7 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public Mono<Group> createGroup(String groupName, String teacherName, String teacherId) {
-        String id = UUID.randomUUID().toString().replace("-", "");
-        Date date = new Date();
-        return groupRepository.save(new Group(id, groupName, teacherName, teacherId, id, date, date));
+        return groupRepository.save(new Group(groupName, teacherName, teacherId));
     }
 
     @Override

@@ -6,8 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import static org.junit.Assert.*;
-
 @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -18,5 +16,10 @@ public class StudentGroupServiceTest {
     @Test
     public void testJoinGroup() {
         studentGroupService.joinGroup("2a867ab2efc04d5f912b0e9cd25f0c85", "").block();
+    }
+
+    @Test
+    public void testFindGroupIdByStudentNumber() {
+        studentGroupService.findGroupIdByStudentNumber("201601010317").collectList().block().forEach(System.out::println);
     }
 }

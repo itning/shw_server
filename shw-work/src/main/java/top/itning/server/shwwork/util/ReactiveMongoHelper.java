@@ -1,8 +1,12 @@
-package top.itning.server.shwstudentgroup.util;
+package top.itning.server.shwwork.util;
 
+
+import org.bson.Document;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
+import org.springframework.data.mongodb.core.query.BasicQuery;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.lang.NonNull;
@@ -11,6 +15,8 @@ import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -21,12 +27,14 @@ import java.util.Map;
  * @date 2019/4/30 15:47
  */
 @Component
-public class ReactiveMongoPageHelper {
+public class ReactiveMongoHelper {
     private final ReactiveMongoTemplate reactiveMongoTemplate;
+    private final ModelMapper modelMapper;
 
     @Autowired
-    public ReactiveMongoPageHelper(ReactiveMongoTemplate reactiveMongoTemplate) {
+    public ReactiveMongoHelper(ReactiveMongoTemplate reactiveMongoTemplate, ModelMapper modelMapper) {
         this.reactiveMongoTemplate = reactiveMongoTemplate;
+        this.modelMapper = modelMapper;
     }
 
     @NonNull
@@ -87,7 +95,51 @@ public class ReactiveMongoPageHelper {
     }
 
     @NonNull
-    public  <T> Page<T> getPage(@NonNull Pageable pageable, @NonNull List<T> content, long total) {
+    public <T> Page<T> getPage(@NonNull Pageable pageable, @NonNull List<T> content, long total) {
         return new PageImpl<>(content, pageable, total);
+    }
+
+    @NonNull
+    public <T> Flux<T> find(@NonNull Query query, @NonNull Class<T> entityClass) {
+        return reactiveMongoTemplate.find(query, entityClass);
+    }
+
+    @NonNull
+    public <T> Flux<T> findFieldsByQuery(@NonNull final Map<String, Object> fieldsMap, @NonNull final Map<String, Object> queryMap, @NonNull Class<T> entityClass) {
+        Document queryObject = new Document(queryMap);
+        Document fieldsObject = new Document(fieldsMap);
+        Query query = new BasicQuery(queryObject, fieldsObject);
+        return find(query, entityClass);
+    }
+
+    @NonNull
+    public <T> Flux<T> findFieldsByQuery(@NonNull final String queryKey, @NonNull final Object queryValue, @NonNull Class<T> entityClass, String... fields) {
+        Document queryObject = new Document(queryKey, queryValue);
+        Document fieldsObject = new Document();
+        for (String f : fields) {
+            fieldsObject.put(f, true);
+        }
+        Query query = new BasicQuery(queryObject, fieldsObject);
+        return find(query, entityClass);
+    }
+
+    /**
+     * 分页获取
+     *
+     * @param pageable    {@link Pageable}
+     * @param allContents 所有元素集合
+     * @return Page
+     */
+    public <T, V> Page<V> getPageWithAllContents(Pageable pageable, List<T> allContents, Type destinationType) {
+        //页数*每页条数
+        int to = (pageable.getPageNumber() + 1) * pageable.getPageSize();
+        int toIndex = to > allContents.size() ? allContents.size() : to;
+        List<T> works;
+        try {
+            works = allContents.subList(Math.toIntExact(pageable.getOffset()), toIndex);
+        } catch (Exception e) {
+            works = new ArrayList<>(0);
+        }
+        return new PageImpl<>(modelMapper.map(works, destinationType), pageable, allContents.size());
     }
 }

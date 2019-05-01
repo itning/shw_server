@@ -6,6 +6,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.util.Date;
+import java.util.UUID;
 
 /**
  * @author itning
@@ -54,14 +55,16 @@ public class Group {
     public Group() {
     }
 
-    public Group(String id, String groupName, String teacherName, String teacherNumber, String code, Date gmtCreate, Date gmtModified) {
+    public Group(String groupName, String teacherName, String teacherNumber) {
+        String id = UUID.randomUUID().toString().replace("-", "");
         this.id = id;
         this.groupName = groupName;
         this.teacherName = teacherName;
         this.teacherNumber = teacherNumber;
-        this.code = code;
-        this.gmtCreate = gmtCreate;
-        this.gmtModified = gmtModified;
+        this.code = id;
+        Date date = new Date();
+        this.gmtCreate = date;
+        this.gmtModified = date;
     }
 
     public String getId() {
