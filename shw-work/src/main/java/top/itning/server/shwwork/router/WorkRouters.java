@@ -23,6 +23,8 @@ public class WorkRouters {
                 route()
                         .GET("/un_done", workHandler::getAllUnDoneWorks)
                         .GET("/done", workHandler::getAllDoneWorks)
+                        .GET("/works", workHandler::getTeacherWorks)
+                        .GET("/work/{groupId}", workHandler::getTeacherWork)
                         .build()
         );
     }

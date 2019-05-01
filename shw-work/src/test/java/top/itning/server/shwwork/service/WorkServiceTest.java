@@ -30,4 +30,20 @@ public class WorkServiceTest {
         System.out.println(workDTOPage.getTotalPages());
         workDTOPage.getContent().forEach(System.out::println);
     }
+
+    @Test
+    public void testGetTeacherAllWork() {
+        Page<WorkDTO> workDTOPage = workService.getTeacherAllWork("0002", 0, 10).block();
+        System.out.println(workDTOPage.getTotalElements());
+        System.out.println(workDTOPage.getTotalPages());
+        workDTOPage.getContent().forEach(System.out::println);
+    }
+
+    @Test
+    public void testGetTeacherWork() {
+        Page<WorkDTO> workDTOPage = workService.getTeacherWork("0002", "2a867ab2efc04d5f912b0e9cd25f0c85", 0, 10).block();
+        System.out.println(workDTOPage.getTotalElements());
+        System.out.println(workDTOPage.getTotalPages());
+        workDTOPage.getContent().forEach(System.out::println);
+    }
 }

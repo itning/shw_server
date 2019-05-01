@@ -6,6 +6,7 @@ import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.itning.server.common.exception.NoSuchFiledValueException;
 import top.itning.server.shwgroup.entity.Group;
@@ -74,5 +75,12 @@ public class GroupServiceImpl implements GroupService {
     @Override
     public Mono<Group> findOneGroupById(String groupId) {
         return groupRepository.findById(groupId);
+    }
+
+    @Override
+    public Flux<Group> findByTeacherNumber(String teacherNumber) {
+        Group group = new Group();
+        group.setTeacherNumber(teacherNumber);
+        return groupRepository.findAll(Example.of(group));
     }
 }

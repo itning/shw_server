@@ -47,7 +47,7 @@ public class StudentGroupHandler {
     public Mono<ServerResponse> getAllGroups(ServerRequest request) {
         mustStudentLogin(request);
         int page = NumberUtils.toInt(request.queryParam("page").orElse("0"));
-        int size = NumberUtils.toInt(request.queryParam("size").orElse("20"));
+        int size = NumberUtils.toInt(request.queryParam("size").orElse("20"), 1);
         return ok(studentGroupService.findStudentAllGroups(getNo(request), page, size));
     }
 

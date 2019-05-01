@@ -10,8 +10,7 @@ import reactor.core.publisher.Mono;
 import top.itning.server.shwwork.service.WorkService;
 
 import static top.itning.server.common.model.RestModel.ok;
-import static top.itning.server.common.util.Preconditions.getNo;
-import static top.itning.server.common.util.Preconditions.mustStudentLogin;
+import static top.itning.server.common.util.Preconditions.*;
 
 /**
  * @author itning
@@ -30,7 +29,7 @@ public class WorkHandler {
     public Mono<ServerResponse> getAllUnDoneWorks(ServerRequest request) {
         mustStudentLogin(request);
         int page = NumberUtils.toInt(request.queryParam("page").orElse("0"));
-        int size = NumberUtils.toInt(request.queryParam("size").orElse("20"));
+        int size = NumberUtils.toInt(request.queryParam("size").orElse("20"), 1);
         return ok(workService.getStudentUnDoneWork(getNo(request), page, size));
 
     }
@@ -39,7 +38,23 @@ public class WorkHandler {
     public Mono<ServerResponse> getAllDoneWorks(ServerRequest request) {
         mustStudentLogin(request);
         int page = NumberUtils.toInt(request.queryParam("page").orElse("0"));
-        int size = NumberUtils.toInt(request.queryParam("size").orElse("20"));
+        int size = NumberUtils.toInt(request.queryParam("size").orElse("20"), 1);
         return ok(workService.getStudentDoneWork(getNo(request), page, size));
+    }
+
+    @NonNull
+    public Mono<ServerResponse> getTeacherWorks(ServerRequest request) {
+        mustTeacherLogin(request);
+        int page = NumberUtils.toInt(request.queryParam("page").orElse("0"));
+        int size = NumberUtils.toInt(request.queryParam("size").orElse("20"), 1);
+        return ok(workService.getTeacherAllWork(getNo(request), page, size));
+    }
+
+    @NonNull
+    public Mono<ServerResponse> getTeacherWork(ServerRequest request) {
+        mustTeacherLogin(request);
+        int page = NumberUtils.toInt(request.queryParam("page").orElse("0"));
+        int size = NumberUtils.toInt(request.queryParam("size").orElse("20"), 1);
+        return ok(workService.getTeacherWork(getNo(request), request.pathVariable("groupId"), page, size));
     }
 }

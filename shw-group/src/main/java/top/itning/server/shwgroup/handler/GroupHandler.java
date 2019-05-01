@@ -58,7 +58,7 @@ public class GroupHandler {
     public Mono<ServerResponse> getTeacherCreateGroups(ServerRequest request) {
         mustTeacherLogin(request);
         int page = NumberUtils.toInt(request.queryParam("page").orElse("0"));
-        int size = NumberUtils.toInt(request.queryParam("size").orElse("20"));
+        int size = NumberUtils.toInt(request.queryParam("size").orElse("20"), 1);
         return ok(groupService.findTeacherAllGroups(getNo(request), page, size));
     }
 }

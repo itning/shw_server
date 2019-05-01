@@ -1,6 +1,7 @@
 package top.itning.server.shwgroup.service;
 
 import org.springframework.data.domain.Page;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.itning.server.common.exception.NoSuchFiledValueException;
 import top.itning.server.shwgroup.entity.Group;
@@ -66,4 +67,12 @@ public interface GroupService {
      * @return 群组
      */
     Mono<Group> findOneGroupById(String groupId);
+
+    /**
+     * 通过教师ID查询群组
+     *
+     * @param teacherNumber 教师ID
+     * @return 群组
+     */
+    Flux<Group> findByTeacherNumber(String teacherNumber);
 }

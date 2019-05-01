@@ -43,6 +43,7 @@ public class GroupRouters {
                         path("/internal"),
                         route()
                                 .GET("/findOneGroupById/{id}", serverRequest -> ServerResponse.ok().body(groupService.findOneGroupById(serverRequest.pathVariable("id")), Group.class))
+                                .GET("/findByTeacherNumber/{id}", serverRequest -> ServerResponse.ok().body(groupService.findByTeacherNumber(serverRequest.pathVariable("id")), Group.class))
                                 .build()
                 );
     }

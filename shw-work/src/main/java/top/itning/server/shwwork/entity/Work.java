@@ -135,11 +135,6 @@ public class Work implements Cloneable {
                 '}';
     }
 
-    @Override
-    protected Object clone() throws CloneNotSupportedException {
-        return super.clone();
-    }
-
     public Work clones() {
         try {
             return (Work) this.clone();
