@@ -1,7 +1,8 @@
 # 作业管理系统服务端
 
 **V2版本目前正在编写中**
-[点我](https://github.com/itning/shw_server/tree/master)查看主分支完成版本
+
+**[点我](https://github.com/itning/shw_server/tree/master)查看主分支完成版本**
 
 [![GitHub stars](https://img.shields.io/github/stars/itning/shw_server.svg?style=social&label=Stars)](https://github.com/itning/shw_server/stargazers)
 [![GitHub forks](https://img.shields.io/github/forks/itning/shw_server.svg?style=social&label=Fork)](https://github.com/itning/shw_server/network/members)
@@ -18,9 +19,68 @@
 
 # 架构
 
-微服务架构，使用Spring Cloud 开发部署。
+微服务架构。使用Spring Cloud开发部署。
+
+项目采用微服务开发，采用JWT技术作为身份验证手段，前后端分离。目前前后端交互使用JSON方式，[GraphQL](https://graphql.org/)和[protobuf](https://github.com/protocolbuffers/protobuf)通信方式正在开发中。
 
 ![jiagou](https://raw.githubusercontent.com/itning/shw_server/v2/pic/jiagou.png)
+
+技术栈：
+
+| 技术栈  | 描述                                                         |
+| ------- | ------------------------------------------------------------ |
+| Eureka  | Eureka用于服务的注册与发现。Eureka是Netflix开源的一款提供服务注册和发现的产品，它提供了完整的Service Registry和Service Discovery实现。也是spring Cloud体系中最重要最核心的组件之一。 |
+| Ribbon  | Ribbon是Netflix发布的云中间层服务开源项目，其主要功能是提供客户端实现负载均衡算法。 |
+| Feign   | Feign支持服务的调用以及均衡负载。Feign是从Netflix中分离出来的轻量级项目，能够在类接口上添加注释，成为一个REST API 客户端。 |
+| Config  | Spring Cloud Config为分布式系统中的外部配置提供服务器和客户端支持。 |
+| Bus     | Spring Cloud Bus通过轻量消息代理连接各个分布的节点。         |
+| Stream  | Spring Cloud Stream 是一个构建消息驱动微服务的框架。         |
+| Zuul    | 微服务网关                                                   |
+| Hystrix | Hystrix处理服务的熔断防止故障扩散。Hystrix-dashboard 是一款针对Hystrix进行实时监控的工具，通过Hystrix Dashboard我们可以在直观地看到各Hystrix Command的请求响应时间, 请求成功率等数据。 |
+| Sleuth  | Spring Cloud Sleuth为服务之间调用提供链路追踪。通过Sleuth可以很清楚的了解到一个服务请求经过了哪些服务，每个服务处理花费了多长。从而让我们可以很方便的理清各微服务间的调用关系。 |
+| WebFlux | 异步非阻塞，函数式编程风格Web框架                            |
+
+服务（模块）简要功能说明：
+
+1. shw-gateway
+
+   网关服务。使用zuul框架实现的微服务网关，该网关拦截未经认证的请求并将请求转发到`shw-security`服务。
+
+2. shw-eureka
+
+   微服务发现与注册服务。
+
+3. shw-security
+
+   安全服务。使用CAS实现SSO进行统一登陆，发放token。token使用JWT技术实现。
+
+4. shw-group
+
+   群组服务。教师所创建的群组CRUD的业务逻辑实现。
+
+5. shw-studentgroup
+
+   学生群组服务。管理学生加入的群组。
+
+6. shw-upload
+
+   上传服务。学生上传作业文件，教师下载文件的业务逻辑服务。
+
+7. shw-work
+
+   作业服务。管理教师创建的作业，作业数据的CRUD。
+
+8. shw-notice
+
+   通知服务。管理教师发布的通知。
+
+9. shw-file
+
+   文件服务。文件的持久化服务。
+
+10. shw-common
+
+    公共模块。包括一些异常，工具类等等
 
 # 获取发布版本
 
