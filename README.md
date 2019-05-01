@@ -20,7 +20,7 @@
 
 微服务架构，使用过Spring Cloud 开发部署。
 
-![jiagou](https://raw.githubusercontent.com/itning/shw_server/master/pic/jiagou.png)
+![jiagou](https://raw.githubusercontent.com/itning/shw_server/v2/pic/jiagou.png)
 
 # 获取发布版本
 
