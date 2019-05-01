@@ -37,4 +37,12 @@ public interface StudentGroupService {
      * @return 群组分页信息
      */
     Mono<Page<StudentGroupDTO>> findStudentAllGroups(String studentNumber, int page, int size);
+
+    /**
+     * 检查学生是否有群组
+     *
+     * @param studentNumber 学号
+     * @return 如果有返回<code>true</code>
+     */
+    Mono<Boolean> isHaveGroup(String studentNumber);
 }

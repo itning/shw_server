@@ -50,4 +50,10 @@ public class StudentGroupHandler {
         int size = NumberUtils.toInt(request.queryParam("size").orElse("20"));
         return ok(studentGroupService.findStudentAllGroups(getNo(request), page, size));
     }
+
+    @NonNull
+    public Mono<ServerResponse> isStudentJoinAnyStudentGroup(ServerRequest request) {
+        mustStudentLogin(request);
+        return ok(studentGroupService.isHaveGroup(getNo(request)));
+    }
 }

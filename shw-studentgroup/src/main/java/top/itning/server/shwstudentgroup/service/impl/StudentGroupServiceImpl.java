@@ -4,8 +4,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
@@ -70,11 +68,19 @@ public class StudentGroupServiceImpl implements StudentGroupService {
         return reactiveMongoPageHelper.getAllWithCriteriaAndDescSortByPagination(page, size, "gmtCreate", map, StudentGroup.class)
                 .map(p -> new Tuple<>(p.getContent()
                         .parallelStream()
+                        //TODO Together Send Request With Cache
                         .map(s -> groupClient.findOneGroupById(s.getGroupID()))
                         .filter(Optional::isPresent)
                         .map(Optional::get)
                         .map(group -> modelMapper.map(group, StudentGroupDTO.class))
-                        .collect(Collectors.toList()), p.getTotalElements()))
-                .map(t -> reactiveMongoPageHelper.getPage(PageRequest.of(page, size, Sort.Direction.DESC, "gmtCreate"), t.getT1(), t.getT2()));
+                        .collect(Collectors.toList()), p))
+                .map(t -> reactiveMongoPageHelper.getPage(t.getT2().getPageable(), t.getT1(), t.getT2().getTotalElements()));
+    }
+
+    @Override
+    public Mono<Boolean> isHaveGroup(String studentNumber) {
+        StudentGroup studentGroup = new StudentGroup();
+        studentGroup.setStudentNumber(studentNumber);
+        return studentGroupRepository.count(Example.of(studentGroup)).map(c -> c != 0L);
     }
 }

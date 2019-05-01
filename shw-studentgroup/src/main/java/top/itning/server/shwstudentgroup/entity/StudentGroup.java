@@ -66,7 +66,6 @@ public class StudentGroup {
     }
 
     public void setStudentNumber(String studentNumber) {
-        this.id = studentNumber + "|" + this.groupID;
         this.studentNumber = studentNumber;
     }
 
@@ -75,7 +74,6 @@ public class StudentGroup {
     }
 
     public void setGroupID(String groupID) {
-        this.id = this.studentNumber + "|" + groupID;
         this.groupID = groupID;
     }
 

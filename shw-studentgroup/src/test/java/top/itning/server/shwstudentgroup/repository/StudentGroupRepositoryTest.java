@@ -1,8 +1,5 @@
 package top.itning.server.shwstudentgroup.repository;
 
-import java.util.Date;
-import java.util.UUID;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import top.itning.server.shwstudentgroup.entity.StudentGroup;
 
-import static org.junit.Assert.*;
+import java.util.UUID;
 
 @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
 @RunWith(SpringRunner.class)
@@ -21,11 +18,7 @@ public class StudentGroupRepositoryTest {
 
     @Test
     public void testSave() {
-        StudentGroup studentGroup = new StudentGroup();
-        studentGroup.setStudentNumber(UUID.randomUUID().toString());
-        studentGroup.setGroupID(UUID.randomUUID().toString());
-        studentGroup.setGmtCreate(new Date());
-        studentGroup.setGmtModified(new Date());
+        StudentGroup studentGroup = new StudentGroup(UUID.randomUUID().toString(), UUID.randomUUID().toString());
         studentGroupRepository.save(studentGroup).block();
     }
 }

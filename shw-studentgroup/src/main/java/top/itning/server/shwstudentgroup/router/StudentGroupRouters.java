@@ -24,6 +24,7 @@ public class StudentGroupRouters {
                         .POST("/", studentGroupHandler::addGroup)
                         .DELETE("/{groupId}", studentGroupHandler::dropOutGroup)
                         .GET("/groups", studentGroupHandler::getAllGroups)
+                        .GET("/exist", studentGroupHandler::isStudentJoinAnyStudentGroup)
                         .build()
         );
     }
