@@ -40,7 +40,7 @@ public class StudentGroupHandler {
     public Mono<ServerResponse> dropOutGroup(ServerRequest request) {
         mustStudentLogin(request);
         String groupId = request.pathVariable("groupId");
-        return studentGroupService.dropOutGroup(groupId, getNo(request)).flatMap(s -> noContent());
+        return studentGroupService.dropOutGroup(groupId, getNo(request)).thenReturn(noContent()).flatMap(s -> s);
     }
 
     @NonNull

@@ -1,15 +1,20 @@
 package top.itning.server.shwwork.handler;
 
+import org.apache.commons.lang.BooleanUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Mono;
+import top.itning.server.common.exception.NullFiledException;
 import top.itning.server.shwwork.service.WorkService;
 
-import static top.itning.server.common.model.RestModel.ok;
+import static top.itning.server.common.model.RestModel.*;
 import static top.itning.server.common.util.Preconditions.*;
 
 /**
@@ -56,5 +61,52 @@ public class WorkHandler {
         int page = NumberUtils.toInt(request.queryParam("page").orElse("0"));
         int size = NumberUtils.toInt(request.queryParam("size").orElse("20"), 1);
         return ok(workService.getTeacherWork(getNo(request), request.pathVariable("groupId"), page, size));
+    }
+
+    @NonNull
+    public Mono<ServerResponse> addWork(ServerRequest request) {
+        mustTeacherLogin(request);
+        return request.formData()
+                .flatMap(g -> {
+                    String workName = getOrThrowIfNull("workName", "作业名不能为空", g);
+                    String groupId = getOrThrowIfNull("groupId", "群组ID不能为空", g);
+                    String fileFormat = g.getFirst("fileFormat");
+                    if (fileFormat == null) {
+                        fileFormat = "0";
+                    }
+                    return created(workService.createWork(getNo(request), workName, groupId, fileFormat, true));
+                });
+    }
+
+    @NonNull
+    public Mono<ServerResponse> updateWorkEnabled(ServerRequest request) {
+        mustTeacherLogin(request);
+        Boolean enabled = BooleanUtils.toBooleanObject(request.pathVariable("enabled"));
+        if (enabled == null) {
+            throw new NullFiledException("开启状态参数值不正确", HttpStatus.BAD_REQUEST);
+        }
+        return workService.changeWorkEnabledStatus(getNo(request), request.pathVariable("workId"), enabled)
+                .thenReturn(noContent())
+                .flatMap(m -> m);
+    }
+
+    @NonNull
+    public Mono<ServerResponse> updateWorkName(ServerRequest request) {
+        mustTeacherLogin(request);
+        return workService.changeWorkName(getNo(request), request.pathVariable("workId"), request.pathVariable("workName")).thenReturn(noContent()).flatMap(s -> s);
+    }
+
+    @NonNull
+    public Mono<ServerResponse> deleteWork(ServerRequest request) {
+        mustTeacherLogin(request);
+        return workService.delWork(request.pathVariable("workId"), getNo(request)).thenReturn(noContent()).flatMap(s -> s);
+    }
+
+    private String getOrThrowIfNull(String key, String msg, MultiValueMap<String, String> map) {
+        String v = map.getFirst(key);
+        if (StringUtils.isBlank(v)) {
+            throw new NullFiledException(msg, HttpStatus.BAD_REQUEST);
+        }
+        return v;
     }
 }

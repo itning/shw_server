@@ -3,6 +3,7 @@ package top.itning.server.shwwork.service;
 import org.springframework.data.domain.Page;
 import reactor.core.publisher.Mono;
 import top.itning.server.shwwork.dto.WorkDTO;
+import top.itning.server.shwwork.entity.Work;
 
 /**
  * @author itning
@@ -49,4 +50,45 @@ public interface WorkService {
      * @return 作业信息集合
      */
     Mono<Page<WorkDTO>> getTeacherWork(String teacherNumber, String groupId, int page, int size);
+
+    /**
+     * 创建作业
+     *
+     * @param teacherNumber 教师编号
+     * @param workName      作业名
+     * @param groupId       所属群ID
+     * @param format        文件名规范
+     * @param enabled       是否开启
+     * @return 创建好的作业
+     */
+    Mono<Work> createWork(String teacherNumber, String workName, String groupId, String format, boolean enabled);
+
+    /**
+     * 更改作业开启状态
+     *
+     * @param teacherNumber 教师ID
+     * @param workId        作业ID
+     * @param enabled       是否开启
+     * @return 操作完成后的信号
+     */
+    Mono<Work> changeWorkEnabledStatus(String teacherNumber, String workId, boolean enabled);
+
+    /**
+     * 更改作业名称
+     *
+     * @param teacherNumber 教师ID
+     * @param workId        作业ID
+     * @param workName      新作业名
+     * @return 操作完成后的信号
+     */
+    Mono<Work> changeWorkName(String teacherNumber, String workId, String workName);
+
+    /**
+     * 删除作业
+     *
+     * @param workId        作业ID
+     * @param teacherNumber 教师编号
+     * @return 操作完成后的信号
+     */
+    Mono<Void> delWork(String workId, String teacherNumber);
 }

@@ -14,6 +14,7 @@ import top.itning.server.common.exception.NoSuchFiledValueException;
 import top.itning.server.common.exception.PermissionsException;
 import top.itning.server.shwwork.client.GroupClient;
 import top.itning.server.shwwork.client.StudentGroupClient;
+import top.itning.server.shwwork.client.entity.Group;
 import top.itning.server.shwwork.dto.WorkDTO;
 import top.itning.server.shwwork.entity.Work;
 import top.itning.server.shwwork.repository.WorkRepository;
@@ -112,5 +113,58 @@ public class WorkServiceImpl implements WorkService {
                 .flatMap(Flux::collectList)
                 .map(works -> reactiveMongoHelper.getPageWithAllContents(pageRequest, works, new TypeToken<List<WorkDTO>>() {
                 }.getType()));
+    }
+
+    @Override
+    public Mono<Work> createWork(String teacherNumber, String workName, String groupId, String format, boolean enabled) {
+        return Mono.justOrEmpty(groupClient.findOneGroupById(groupId))
+                .switchIfEmpty(Mono.error(new NoSuchFiledValueException("群ID: " + groupId + "不存在", HttpStatus.NOT_FOUND)))
+                .flatMap(group -> {
+                    if (!group.getTeacherNumber().equals(teacherNumber)) {
+                        throw new PermissionsException("not found");
+                    }
+                    return workRepository.save(new Work(groupId, workName, enabled, format));
+                });
+    }
+
+    @Override
+    public Mono<Work> changeWorkEnabledStatus(String teacherNumber, String workId, boolean enabled) {
+         return workRepository.findById(workId)
+                .switchIfEmpty(Mono.error(new NoSuchFiledValueException("作业ID " + workId + " 不存在", HttpStatus.NOT_FOUND)))
+                .flatMap(work -> {
+                    Group group = groupClient.findOneGroupById(work.getGroupId()).orElseThrow(() -> new NoSuchFiledValueException("群ID " + work.getGroupId() + " 不存在", HttpStatus.NOT_FOUND));
+                    if (!group.getTeacherNumber().equals(teacherNumber)) {
+                        throw new PermissionsException("not found");
+                    }
+                    work.setEnabled(enabled);
+                    return workRepository.save(work);
+                });
+    }
+
+    @Override
+    public Mono<Work> changeWorkName(String teacherNumber, String workId, String workName) {
+        return workRepository.findById(workId)
+                .switchIfEmpty(Mono.error(new NoSuchFiledValueException("作业ID " + workId + " 不存在", HttpStatus.NOT_FOUND)))
+                .flatMap(work -> {
+                    Group group = groupClient.findOneGroupById(work.getGroupId()).orElseThrow(() -> new NoSuchFiledValueException("群ID " + work.getGroupId() + " 不存在", HttpStatus.NOT_FOUND));
+                    if (!group.getTeacherNumber().equals(teacherNumber)) {
+                        throw new PermissionsException("not found");
+                    }
+                    work.setWorkName(workName);
+                    return workRepository.save(work);
+                });
+    }
+
+    @Override
+    public Mono<Void> delWork(String workId, String teacherNumber) {
+        return workRepository.findById(workId)
+                .switchIfEmpty(Mono.error(new NoSuchFiledValueException("作业ID " + workId + " 不存在", HttpStatus.NOT_FOUND)))
+                .flatMap(work -> {
+                    Group group = groupClient.findOneGroupById(work.getGroupId()).orElseThrow(() -> new NoSuchFiledValueException("群ID " + work.getGroupId() + " 不存在", HttpStatus.NOT_FOUND));
+                    if (!group.getTeacherNumber().equals(teacherNumber)) {
+                        throw new PermissionsException("not found");
+                    }
+                    return workRepository.delete(work);
+                });
     }
 }

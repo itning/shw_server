@@ -45,13 +45,13 @@ public class GroupHandler {
     @NonNull
     public Mono<ServerResponse> deleteGroup(ServerRequest request) {
         mustTeacherLogin(request);
-        return groupService.deleteGroup(getNo(request), request.pathVariable("id")).flatMap(s -> noContent());
+        return groupService.deleteGroup(getNo(request), request.pathVariable("id")).thenReturn(noContent()).flatMap(s -> s);
     }
 
     @NonNull
     public Mono<ServerResponse> updateGroupName(ServerRequest request) {
         mustTeacherLogin(request);
-        return groupService.updateGroupName(getNo(request), request.pathVariable("id"), request.pathVariable("name")).flatMap(s -> noContent());
+        return groupService.updateGroupName(getNo(request), request.pathVariable("id"), request.pathVariable("name")).thenReturn(noContent()).flatMap(s -> s);
     }
 
     @NonNull
