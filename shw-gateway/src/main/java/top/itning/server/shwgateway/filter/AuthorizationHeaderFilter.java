@@ -33,7 +33,7 @@ public class AuthorizationHeaderFilter extends ZuulFilter {
     /**
      * 忽略过滤路径
      */
-    private static final String IGNORE_SERVER_PATH = "/user";
+    private static final String IGNORE_SERVER_PATH = "/v2/user";
 
     @Override
     public String filterType() {
