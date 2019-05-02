@@ -36,7 +36,7 @@ public class StudentGroupRouters {
                 route()
                         .POST("/", studentGroupHandler::addGroup)
                         .DELETE("/{groupId}", studentGroupHandler::dropOutGroup)
-                        .GET("/groups", studentGroupHandler::getAllGroups)
+                        .GET("/", studentGroupHandler::getAllGroups)
                         .GET("/exist", studentGroupHandler::isStudentJoinAnyStudentGroup)
                         .build())
                 .andNest(

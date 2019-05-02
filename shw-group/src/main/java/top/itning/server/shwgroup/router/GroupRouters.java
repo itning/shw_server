@@ -33,7 +33,7 @@ public class GroupRouters {
                 all(),
                 route()
                         .POST("/", groupHandler::addGroup)
-                        .GET("/groups", groupHandler::getTeacherCreateGroups)
+                        .GET("/", groupHandler::getTeacherCreateGroups)
                         .GET("/exist", groupHandler::isTeacherHaveAnyGroup)
                         .DELETE("/{id}", groupHandler::deleteGroup)
                         .PATCH("/{id}/{name}", groupHandler::updateGroupName)
