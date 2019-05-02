@@ -9,9 +9,11 @@ import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Mono;
 import top.itning.server.common.exception.NullFiledException;
+import top.itning.server.shwgroup.entity.Group;
 import top.itning.server.shwgroup.service.GroupService;
 
-import static top.itning.server.common.model.RestModel.*;
+import static top.itning.server.common.model.RestModel.noContent;
+import static top.itning.server.common.model.RestModel.ok;
 import static top.itning.server.common.util.Preconditions.*;
 
 /**
@@ -33,7 +35,7 @@ public class GroupHandler {
         return request.formData()
                 .flatMap(m -> Mono.justOrEmpty(m.getFirst("groupName")))
                 .switchIfEmpty(Mono.error(new NullFiledException("群组名不能为空", HttpStatus.BAD_REQUEST)))
-                .flatMap(s -> created(groupService.createGroup(s, getName(request), getNo(request))));
+                .flatMap(s -> ServerResponse.status(HttpStatus.CREATED).body(groupService.createGroup(s, getName(request), getNo(request)), Group.class));
     }
 
     @NonNull

@@ -22,6 +22,7 @@ import top.itning.server.shwwork.service.WorkService;
 import top.itning.server.shwwork.util.ReactiveMongoHelper;
 
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -137,6 +138,7 @@ public class WorkServiceImpl implements WorkService {
                         throw new PermissionsException("not found");
                     }
                     work.setEnabled(enabled);
+                    work.setGmtModified(new Date());
                     return workRepository.save(work);
                 });
     }
@@ -151,6 +153,7 @@ public class WorkServiceImpl implements WorkService {
                         throw new PermissionsException("not found");
                     }
                     work.setWorkName(workName);
+                    work.setGmtModified(new Date());
                     return workRepository.save(work);
                 });
     }

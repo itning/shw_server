@@ -15,6 +15,7 @@ import top.itning.server.shwgroup.service.GroupService;
 import top.itning.server.shwgroup.util.ReactiveMongoPageHelper;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.Map;
 
 /**
@@ -55,6 +56,7 @@ public class GroupServiceImpl implements GroupService {
                 .switchIfEmpty(Mono.error(new NoSuchFiledValueException("id: " + groupId + " not found", HttpStatus.NOT_FOUND)))
                 .flatMap(group -> {
                     group.setGroupName(newName);
+                    group.setGmtModified(new Date());
                     return groupRepository.save(group);
                 });
     }
