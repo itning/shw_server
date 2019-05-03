@@ -3,6 +3,7 @@ package top.itning.server.shwwork.service;
 import org.springframework.data.domain.Page;
 import reactor.core.publisher.Mono;
 import top.itning.server.shwwork.dto.WorkDTO;
+import top.itning.server.shwwork.dto.WorkDetailsDTO;
 import top.itning.server.shwwork.entity.Work;
 
 /**
@@ -91,4 +92,15 @@ public interface WorkService {
      * @return 操作完成后的信号
      */
     Mono<Void> delWork(String workId, String teacherNumber);
+
+    /**
+     * 根据作业ID查询作业上交情况
+     *
+     * @param teacherNumber 教师编号
+     * @param workId        作业ID
+     * @param page          页码
+     * @param size          每页数量
+     * @return 作业上交情况集合
+     */
+    Mono<Page<WorkDetailsDTO>> getWorkDetailByWorkId(String teacherNumber, String workId, int page, int size);
 }

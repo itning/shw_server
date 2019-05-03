@@ -25,6 +25,7 @@ public class WorkRouters {
                         .GET("/done", workHandler::getAllDoneWorks)
                         .GET("/works", workHandler::getTeacherWorks)
                         .GET("/{groupId}", workHandler::getTeacherWork)
+                        .GET("/detail/{workId}", workHandler::getTeacherWorkDetails)
                         .POST("/", workHandler::addWork)
                         .PATCH("/enabled/{workId}/{enabled}", workHandler::updateWorkEnabled)
                         .PATCH("/name/{workId}/{workName}", workHandler::updateWorkName)

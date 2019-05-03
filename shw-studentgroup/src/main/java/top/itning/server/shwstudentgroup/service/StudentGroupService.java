@@ -6,6 +6,8 @@ import reactor.core.publisher.Mono;
 import top.itning.server.shwstudentgroup.dto.StudentGroupDTO;
 import top.itning.server.shwstudentgroup.entity.StudentGroup;
 
+import java.util.List;
+
 /**
  * @author itning
  * @date 2019/4/30 18:14
@@ -54,4 +56,22 @@ public interface StudentGroupService {
      * @return 群组ID集合
      */
     Flux<String> findGroupIdByStudentNumber(String studentNumber);
+
+    /**
+     * 根据GroupID查询群组内学生
+     *
+     * @param groupId 群组ID
+     * @param page    页码
+     * @param size    每页数量
+     * @return 学生集合
+     */
+    Mono<List<StudentGroup>> findAllByGroupID(String groupId, int page, int size);
+
+    /**
+     * 根据群ID计算数量
+     *
+     * @param groupId 群ID
+     * @return 数量
+     */
+    Mono<Long> countAllByGroupID(String groupId);
 }

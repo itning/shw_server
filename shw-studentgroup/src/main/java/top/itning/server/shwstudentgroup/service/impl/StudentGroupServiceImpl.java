@@ -19,6 +19,7 @@ import top.itning.server.shwstudentgroup.util.ReactiveMongoHelper;
 import top.itning.server.shwstudentgroup.util.Tuple;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -88,5 +89,18 @@ public class StudentGroupServiceImpl implements StudentGroupService {
     @Override
     public Flux<String> findGroupIdByStudentNumber(String studentNumber) {
         return reactiveMongoHelper.findFieldsByQuery("student_number", studentNumber, StudentGroup.class, "group_id").map(StudentGroup::getGroupID);
+    }
+
+    @Override
+    public Mono<List<StudentGroup>> findAllByGroupID(String groupId, int page, int size) {
+        return reactiveMongoHelper.getAllWithCriteriaByPagination(page, size, Collections.singletonMap("groupID", groupId), StudentGroup.class)
+                .map(Page::getContent);
+    }
+
+    @Override
+    public Mono<Long> countAllByGroupID(String groupId) {
+        StudentGroup studentGroup = new StudentGroup();
+        studentGroup.setGroupID(groupId);
+        return studentGroupRepository.count(Example.of(studentGroup));
     }
 }

@@ -102,6 +102,14 @@ public class WorkHandler {
         return workService.delWork(request.pathVariable("workId"), getNo(request)).thenReturn(noContent()).flatMap(s -> s);
     }
 
+    @NonNull
+    public Mono<ServerResponse> getTeacherWorkDetails(ServerRequest request) {
+        mustTeacherLogin(request);
+        int page = NumberUtils.toInt(request.queryParam("page").orElse("0"));
+        int size = NumberUtils.toInt(request.queryParam("size").orElse("20"), 1);
+        return ok(workService.getWorkDetailByWorkId(getNo(request), request.pathVariable("workId"), page, size));
+    }
+
     private String getOrThrowIfNull(String key, String msg, MultiValueMap<String, String> map) {
         String v = map.getFirst(key);
         if (StringUtils.isBlank(v)) {

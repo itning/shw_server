@@ -2,10 +2,7 @@ package top.itning.server.shwwork.service.impl;
 
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.ExampleMatcher;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
@@ -13,19 +10,25 @@ import reactor.core.publisher.Mono;
 import top.itning.server.common.exception.NoSuchFiledValueException;
 import top.itning.server.common.exception.PermissionsException;
 import top.itning.server.shwwork.client.GroupClient;
+import top.itning.server.shwwork.client.SecurityClient;
 import top.itning.server.shwwork.client.StudentGroupClient;
 import top.itning.server.shwwork.client.UploadClient;
 import top.itning.server.shwwork.client.entity.Group;
+import top.itning.server.shwwork.client.entity.Student;
+import top.itning.server.shwwork.client.entity.StudentGroup;
 import top.itning.server.shwwork.client.entity.Upload;
 import top.itning.server.shwwork.dto.WorkDTO;
+import top.itning.server.shwwork.dto.WorkDetailsDTO;
 import top.itning.server.shwwork.entity.Work;
 import top.itning.server.shwwork.repository.WorkRepository;
 import top.itning.server.shwwork.service.WorkService;
 import top.itning.server.shwwork.util.ReactiveMongoHelper;
+import top.itning.server.shwwork.util.Tuple3;
 
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author itning
@@ -38,14 +41,16 @@ public class WorkServiceImpl implements WorkService {
     private final ReactiveMongoHelper reactiveMongoHelper;
     private final GroupClient groupClient;
     private final UploadClient uploadClient;
+    private final SecurityClient securityClient;
 
     @Autowired
-    public WorkServiceImpl(WorkRepository workRepository, StudentGroupClient studentGroupClient, ReactiveMongoHelper reactiveMongoHelper, GroupClient groupClient, UploadClient uploadClient) {
+    public WorkServiceImpl(WorkRepository workRepository, StudentGroupClient studentGroupClient, ReactiveMongoHelper reactiveMongoHelper, GroupClient groupClient, UploadClient uploadClient, SecurityClient securityClient) {
         this.workRepository = workRepository;
         this.studentGroupClient = studentGroupClient;
         this.reactiveMongoHelper = reactiveMongoHelper;
         this.groupClient = groupClient;
         this.uploadClient = uploadClient;
+        this.securityClient = securityClient;
     }
 
     @Override
@@ -177,6 +182,37 @@ public class WorkServiceImpl implements WorkService {
                         throw new PermissionsException("not found");
                     }
                     return workRepository.delete(work);
+                });
+    }
+
+    @Override
+    public Mono<Page<WorkDetailsDTO>> getWorkDetailByWorkId(String teacherNumber, String workId, int page, int size) {
+        return workRepository.findById(workId)
+                .switchIfEmpty(Mono.error(new NoSuchFiledValueException("作业ID " + workId + " 不存在", HttpStatus.NOT_FOUND)))
+                .map(work -> {
+                    Group group = groupClient.findOneGroupById(work.getGroupId()).orElseThrow(() -> new NoSuchFiledValueException("群ID: " + work.getGroupId() + "不存在", HttpStatus.NOT_FOUND));
+                    if (!group.getTeacherNumber().equals(teacherNumber)) {
+                        throw new NoSuchFiledValueException("作业ID: " + workId + "不存在", HttpStatus.FORBIDDEN);
+                    }
+                    List<StudentGroup> studentGroupPage = studentGroupClient.findAllByGroupID(group.getId(), page, size);
+                    return new Tuple3<>(work, group, studentGroupPage);
+                })
+                .map(tuple3 -> {
+                    long count = studentGroupClient.countAllByGroupID(tuple3.getT2().getId());
+                    List<WorkDetailsDTO> workDetailsDTOList = tuple3.getT3().parallelStream().map(studentGroup -> {
+                        Upload upload = uploadClient.findOneById(studentGroup.getStudentNumber() + "|" + workId).orElse(null);
+                        Student student = securityClient.findStudentById(studentGroup.getStudentNumber()).orElse(new Student());
+                        student.setNo(studentGroup.getStudentNumber());
+                        student.setLoginName("");
+                        WorkDetailsDTO workDetailsDTO = new WorkDetailsDTO();
+                        workDetailsDTO.setUpload(upload);
+                        workDetailsDTO.setStudent(student);
+                        workDetailsDTO.setWorkName(tuple3.getT1().getWorkName());
+                        workDetailsDTO.setUp(upload != null);
+                        workDetailsDTO.setGroupName(tuple3.getT2().getGroupName());
+                        return workDetailsDTO;
+                    }).collect(Collectors.toList());
+                    return new PageImpl<>(workDetailsDTOList, PageRequest.of(page, size), count);
                 });
     }
 }
