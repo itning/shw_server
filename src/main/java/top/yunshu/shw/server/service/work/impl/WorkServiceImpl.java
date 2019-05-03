@@ -83,8 +83,9 @@ public class WorkServiceImpl implements WorkService {
                 .flatMap(Collection::stream)
                 .filter(work -> uploadDao.existsByStudentIdAndWorkId(studentId, work.getId()))
                 .peek(work -> {
-                    work.setGmtCreate(uploadDao.findUploadByStudentIdAndWorkId(studentId, work.getId()).getGmtCreate());
-                    work.setGmtModified(uploadDao.findUploadByStudentIdAndWorkId(studentId, work.getId()).getGmtModified());
+                    Upload upload = uploadDao.findUploadByStudentIdAndWorkId(studentId, work.getId());
+                    work.setGmtCreate(upload.getGmtCreate());
+                    work.setGmtModified(upload.getGmtModified());
                 })
                 .sorted(Comparator.comparing(Work::getGmtCreate).reversed())
                 .collect(Collectors.toList());
