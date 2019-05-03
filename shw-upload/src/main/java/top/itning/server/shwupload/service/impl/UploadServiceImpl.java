@@ -3,12 +3,14 @@ package top.itning.server.shwupload.service.impl;
 import com.google.common.collect.ImmutableMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 import top.itning.server.common.exception.NoSuchFiledValueException;
 import top.itning.server.shwupload.entity.Upload;
 import top.itning.server.shwupload.repository.UploadRepository;
 import top.itning.server.shwupload.service.UploadService;
+import top.itning.server.shwupload.stream.UploadMessage;
 import top.itning.server.shwupload.util.ReactiveMongoHelper;
 
 /**
@@ -19,11 +21,13 @@ import top.itning.server.shwupload.util.ReactiveMongoHelper;
 public class UploadServiceImpl implements UploadService {
     private final UploadRepository uploadRepository;
     private final ReactiveMongoHelper reactiveMongoHelper;
+    private final UploadMessage uploadMessage;
 
     @Autowired
-    public UploadServiceImpl(UploadRepository uploadRepository, ReactiveMongoHelper reactiveMongoHelper) {
+    public UploadServiceImpl(UploadRepository uploadRepository, ReactiveMongoHelper reactiveMongoHelper, UploadMessage uploadMessage) {
         this.uploadRepository = uploadRepository;
         this.reactiveMongoHelper = reactiveMongoHelper;
+        this.uploadMessage = uploadMessage;
     }
 
     @Override
@@ -33,7 +37,9 @@ public class UploadServiceImpl implements UploadService {
 
     @Override
     public Mono<Void> delUploadInfoByWorkId(String studentId, String workId) {
-        return uploadRepository.deleteById(studentId + "|" + workId);
+        //TODO 作业开启状态检查
+        String id = studentId + "|" + workId;
+        return uploadRepository.deleteById(id).doOnSuccess(v -> uploadMessage.delOutput().send(MessageBuilder.withPayload(id).build()));
     }
 
     @Override

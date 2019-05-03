@@ -1,7 +1,6 @@
 package top.itning.server.shwfile.service.impl;
 
 
-import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -16,7 +15,6 @@ import top.itning.server.shwfile.util.FileUtils;
  * @date 2019/5/3 11:16
  */
 @Service
-@EnableBinding(UploadMessage.class)
 public class FileServiceImpl implements FileService {
     private final FilePersistence filePersistence;
     private final UploadMessage uploadMessage;
