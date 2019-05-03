@@ -74,6 +74,15 @@ public class Upload {
         this.gmtModified = date;
     }
 
+    public Upload init() {
+        this.id = studentId + "|" + workId;
+        this.review = "";
+        Date date = new Date();
+        this.gmtCreate = date;
+        this.gmtModified = date;
+        return this;
+    }
+
     public String getId() {
         return id;
     }
