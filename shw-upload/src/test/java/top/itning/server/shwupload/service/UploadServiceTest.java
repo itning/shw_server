@@ -45,4 +45,10 @@ public class UploadServiceTest {
         assertNotNull(s);
         System.out.println(s);
     }
+
+    @Test
+    public void testFindOneById() {
+        Upload upload = uploadService.findOneById("1").block();
+        System.out.println(upload);
+    }
 }

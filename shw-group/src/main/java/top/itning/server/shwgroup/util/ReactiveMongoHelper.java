@@ -1,8 +1,10 @@
 package top.itning.server.shwgroup.util;
 
+import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
+import org.springframework.data.mongodb.core.query.BasicQuery;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.lang.NonNull;
@@ -21,11 +23,11 @@ import java.util.Map;
  * @date 2019/4/30 15:47
  */
 @Component
-public class ReactiveMongoPageHelper {
+public class ReactiveMongoHelper {
     private final ReactiveMongoTemplate reactiveMongoTemplate;
 
     @Autowired
-    public ReactiveMongoPageHelper(ReactiveMongoTemplate reactiveMongoTemplate) {
+    public ReactiveMongoHelper(ReactiveMongoTemplate reactiveMongoTemplate) {
         this.reactiveMongoTemplate = reactiveMongoTemplate;
     }
 
@@ -87,7 +89,50 @@ public class ReactiveMongoPageHelper {
     }
 
     @NonNull
-    private <T> Page<T> getPage(@NonNull Pageable pageable, @NonNull List<T> content, long total) {
+    public <T> Page<T> getPage(@NonNull Pageable pageable, @NonNull List<T> content, long total) {
         return new PageImpl<>(content, pageable, total);
+    }
+
+    @NonNull
+    public <T> Flux<T> find(@NonNull Query query, @NonNull Class<T> entityClass) {
+        return reactiveMongoTemplate.find(query, entityClass);
+    }
+
+    @NonNull
+    public <T> Mono<T> findOne(@NonNull Query query, @NonNull Class<T> entityClass) {
+        return reactiveMongoTemplate.findOne(query, entityClass);
+    }
+
+    @NonNull
+    public <T> Mono<T> findOneFieldsByQuery(@NonNull final Map<String, Object> queryMap, @NonNull Class<T> entityClass, String... fields) {
+        Document queryObject = new Document(queryMap);
+        Document fieldsObject = new Document();
+        for (String f : fields) {
+            fieldsObject.put(f, true);
+        }
+        Query query = new BasicQuery(queryObject, fieldsObject);
+        return findOne(query, entityClass);
+    }
+
+    @NonNull
+    public <T> Flux<T> findFieldsByQuery(@NonNull final Map<String, Object> queryMap, @NonNull Class<T> entityClass, String... fields) {
+        Document queryObject = new Document(queryMap);
+        Document fieldsObject = new Document();
+        for (String f : fields) {
+            fieldsObject.put(f, true);
+        }
+        Query query = new BasicQuery(queryObject, fieldsObject);
+        return find(query, entityClass);
+    }
+
+    @NonNull
+    public <T> Flux<T> findFieldsByQuery(@NonNull final String queryKey, @NonNull final Object queryValue, @NonNull Class<T> entityClass, String... fields) {
+        Document queryObject = new Document(queryKey, queryValue);
+        Document fieldsObject = new Document();
+        for (String f : fields) {
+            fieldsObject.put(f, true);
+        }
+        Query query = new BasicQuery(queryObject, fieldsObject);
+        return find(query, entityClass);
     }
 }

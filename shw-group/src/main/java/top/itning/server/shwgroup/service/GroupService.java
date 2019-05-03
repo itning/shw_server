@@ -75,4 +75,20 @@ public interface GroupService {
      * @return 群组
      */
     Flux<Group> findByTeacherNumber(String teacherNumber);
+
+    /**
+     * 根据群ID查询群名称
+     *
+     * @param groupId 群ID
+     * @return 群名称
+     */
+    Mono<String> findGroupNameByGroupId(String groupId);
+
+    /**
+     * 根据群ID查询群
+     *
+     * @param groupId 群ID
+     * @return 教师名
+     */
+    Mono<String> findTeacherNameById(String groupId);
 }

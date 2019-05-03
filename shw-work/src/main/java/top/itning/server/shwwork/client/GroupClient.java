@@ -33,4 +33,23 @@ public interface GroupClient {
      */
     @GetMapping("/internal/findOneGroupById/{id}")
     Optional<Group> findOneGroupById(@PathVariable String id);
+
+
+    /**
+     * 根据群ID查询群名称
+     *
+     * @param id 群ID
+     * @return 群名称
+     */
+    @GetMapping("/internal/findGroupNameByGroupId/{id}")
+    String findGroupNameByGroupId(@PathVariable String id);
+
+    /**
+     * 根据群ID查询群
+     *
+     * @param id 群ID
+     * @return 教师名
+     */
+    @GetMapping("/internal/findTeacherNameById/{id}")
+    String findTeacherNameById(@PathVariable String id);
 }

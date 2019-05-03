@@ -65,4 +65,10 @@ public class GroupServiceTest {
         System.out.println(page.getSize());
         page.getContent().forEach(System.out::println);
     }
+
+    @Test
+    public void testFindGroupNameByGroupId() {
+        String groupId = groupService.findGroupNameByGroupId("2a867ab2efc04d5f912b0e9cd25f0c85").block();
+        System.out.println(groupId);
+    }
 }

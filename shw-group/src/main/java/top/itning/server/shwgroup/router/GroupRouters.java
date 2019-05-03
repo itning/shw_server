@@ -44,6 +44,8 @@ public class GroupRouters {
                         route()
                                 .GET("/findOneGroupById/{id}", serverRequest -> ServerResponse.ok().body(groupService.findOneGroupById(serverRequest.pathVariable("id")), Group.class))
                                 .GET("/findByTeacherNumber/{id}", serverRequest -> ServerResponse.ok().body(groupService.findByTeacherNumber(serverRequest.pathVariable("id")), Group.class))
+                                .GET("/findGroupNameByGroupId/{id}", serverRequest -> ServerResponse.ok().body(groupService.findGroupNameByGroupId(serverRequest.pathVariable("id")), String.class))
+                                .GET("/findTeacherNameById/{id}", serverRequest -> ServerResponse.ok().body(groupService.findTeacherNameById(serverRequest.pathVariable("id")), String.class))
                                 .build()
                 );
     }

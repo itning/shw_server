@@ -35,4 +35,20 @@ public interface UploadService {
      * @return 批阅信息
      */
     Mono<String> reviewWork(String studentId, String workId);
+
+    /**
+     * 根据作业ID查询上传是否存在
+     *
+     * @param uploadId ID
+     * @return 存在返回<code>true</code>
+     */
+    Mono<Boolean> existsById(String uploadId);
+
+    /**
+     * 根据ID查询上传信息
+     *
+     * @param uploadId 上传信息ID
+     * @return 上传信息
+     */
+    Mono<Upload> findOneById(String uploadId);
 }

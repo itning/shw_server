@@ -12,7 +12,7 @@ import top.itning.server.common.exception.NoSuchFiledValueException;
 import top.itning.server.shwgroup.entity.Group;
 import top.itning.server.shwgroup.repository.GroupRepository;
 import top.itning.server.shwgroup.service.GroupService;
-import top.itning.server.shwgroup.util.ReactiveMongoPageHelper;
+import top.itning.server.shwgroup.util.ReactiveMongoHelper;
 
 import java.util.Collections;
 import java.util.Date;
@@ -25,12 +25,12 @@ import java.util.Map;
 @Service
 public class GroupServiceImpl implements GroupService {
     private final GroupRepository groupRepository;
-    private final ReactiveMongoPageHelper reactiveMongoPageHelper;
+    private final ReactiveMongoHelper reactiveMongoHelper;
 
     @Autowired
-    public GroupServiceImpl(GroupRepository groupRepository, ReactiveMongoPageHelper reactiveMongoPageHelper) {
+    public GroupServiceImpl(GroupRepository groupRepository, ReactiveMongoHelper reactiveMongoHelper) {
         this.groupRepository = groupRepository;
-        this.reactiveMongoPageHelper = reactiveMongoPageHelper;
+        this.reactiveMongoHelper = reactiveMongoHelper;
     }
 
     @Override
@@ -71,7 +71,7 @@ public class GroupServiceImpl implements GroupService {
     @Override
     public Mono<Page<Group>> findTeacherAllGroups(String teacherNumber, int page, int size) {
         Map<String, Object> map = Collections.singletonMap("teacher_number", teacherNumber);
-        return reactiveMongoPageHelper.getAllWithCriteriaAndDescSortByPagination(page, size, "gmtCreate", map, Group.class);
+        return reactiveMongoHelper.getAllWithCriteriaAndDescSortByPagination(page, size, "gmtCreate", map, Group.class);
     }
 
     @Override
@@ -84,5 +84,15 @@ public class GroupServiceImpl implements GroupService {
         Group group = new Group();
         group.setTeacherNumber(teacherNumber);
         return groupRepository.findAll(Example.of(group));
+    }
+
+    @Override
+    public Mono<String> findGroupNameByGroupId(String groupId) {
+        return reactiveMongoHelper.findOneFieldsByQuery(Collections.singletonMap("id", groupId), Group.class, "groupName").map(Group::getGroupName);
+    }
+
+    @Override
+    public Mono<String> findTeacherNameById(String groupId) {
+        return reactiveMongoHelper.findOneFieldsByQuery(Collections.singletonMap("id", groupId), Group.class, "teacherName").map(Group::getTeacherName);
     }
 }

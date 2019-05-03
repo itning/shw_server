@@ -42,4 +42,14 @@ public class UploadServiceImpl implements UploadService {
                 .switchIfEmpty(Mono.error(new NoSuchFiledValueException("作业上传信息不存在", HttpStatus.NOT_FOUND)))
                 .map(Upload::getReview);
     }
+
+    @Override
+    public Mono<Boolean> existsById(String uploadId) {
+        return uploadRepository.existsById(uploadId);
+    }
+
+    @Override
+    public Mono<Upload> findOneById(String uploadId) {
+        return uploadRepository.findById(uploadId);
+    }
 }

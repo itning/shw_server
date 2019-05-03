@@ -14,7 +14,9 @@ import top.itning.server.common.exception.NoSuchFiledValueException;
 import top.itning.server.common.exception.PermissionsException;
 import top.itning.server.shwwork.client.GroupClient;
 import top.itning.server.shwwork.client.StudentGroupClient;
+import top.itning.server.shwwork.client.UploadClient;
 import top.itning.server.shwwork.client.entity.Group;
+import top.itning.server.shwwork.client.entity.Upload;
 import top.itning.server.shwwork.dto.WorkDTO;
 import top.itning.server.shwwork.entity.Work;
 import top.itning.server.shwwork.repository.WorkRepository;
@@ -35,13 +37,15 @@ public class WorkServiceImpl implements WorkService {
     private final StudentGroupClient studentGroupClient;
     private final ReactiveMongoHelper reactiveMongoHelper;
     private final GroupClient groupClient;
+    private final UploadClient uploadClient;
 
     @Autowired
-    public WorkServiceImpl(WorkRepository workRepository, StudentGroupClient studentGroupClient, ReactiveMongoHelper reactiveMongoHelper, GroupClient groupClient) {
+    public WorkServiceImpl(WorkRepository workRepository, StudentGroupClient studentGroupClient, ReactiveMongoHelper reactiveMongoHelper, GroupClient groupClient, UploadClient uploadClient) {
         this.workRepository = workRepository;
         this.studentGroupClient = studentGroupClient;
         this.reactiveMongoHelper = reactiveMongoHelper;
         this.groupClient = groupClient;
+        this.uploadClient = uploadClient;
     }
 
     @Override
@@ -55,7 +59,7 @@ public class WorkServiceImpl implements WorkService {
                     work.setGroupId(groupId);
                     return workRepository.findAll(Example.of(work));
                 })
-                //TODO filter un done work in upload collection
+                .filter(work -> !uploadClient.existsById(studentId + "|" + work.getId()))
                 .sort(Comparator.comparing(Work::getGmtCreate).reversed())
                 .collectList()
                 .map(works -> reactiveMongoHelper.getPageWithAllContents(pageRequest, works, new TypeToken<List<WorkDTO>>() {
@@ -73,8 +77,13 @@ public class WorkServiceImpl implements WorkService {
                     work.setGroupId(groupId);
                     return workRepository.findAll(Example.of(work, matcher));
                 })
-                //TODO check upload collection exist
-                //TODO setGmtCreate setGmtModified in work
+                .filter(work -> uploadClient.existsById(studentId + "|" + work.getId()))
+                .map(work -> {
+                    Upload upload = uploadClient.findOneById(studentId + "|" + work.getId()).orElseThrow(() -> new NoSuchFiledValueException("上传信息不存在", HttpStatus.NOT_FOUND));
+                    work.setGmtCreate(upload.getGmtCreate());
+                    work.setGmtModified(upload.getGmtModified());
+                    return work;
+                })
                 .sort(Comparator.comparing(Work::getGmtCreate).reversed())
                 .collectList()
                 .map(works -> reactiveMongoHelper.getPageWithAllContents(pageRequest, works, new TypeToken<List<WorkDTO>>() {
@@ -130,7 +139,7 @@ public class WorkServiceImpl implements WorkService {
 
     @Override
     public Mono<Work> changeWorkEnabledStatus(String teacherNumber, String workId, boolean enabled) {
-         return workRepository.findById(workId)
+        return workRepository.findById(workId)
                 .switchIfEmpty(Mono.error(new NoSuchFiledValueException("作业ID " + workId + " 不存在", HttpStatus.NOT_FOUND)))
                 .flatMap(work -> {
                     Group group = groupClient.findOneGroupById(work.getGroupId()).orElseThrow(() -> new NoSuchFiledValueException("群ID " + work.getGroupId() + " 不存在", HttpStatus.NOT_FOUND));
