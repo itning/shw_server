@@ -82,6 +82,10 @@
 
     公共模块。包括一些异常，工具类等等
 
+消息队列系统:
+
+![msg](https://raw.githubusercontent.com/itning/shw_server/v2/pic/shw_msg.png)
+
 # 获取发布版本
 
 ## Releases
