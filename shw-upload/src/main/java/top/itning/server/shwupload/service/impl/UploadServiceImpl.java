@@ -79,6 +79,7 @@ public class UploadServiceImpl implements UploadService {
         Flux<Upload> uploadFlux = Flux.fromStream(workClient.getAllWorkInfoByGroupId(groupId).stream())
                 .map(Work::getId)
                 .flatMap(workId -> {
+                    uploadMessage.delOutput().send(MessageBuilder.withPayload(studentId + "|" + workId).build());
                     Upload u = upload.clones();
                     u.setStudentId(studentId);
                     return uploadRepository.findOne(Example.of(u, matcher));

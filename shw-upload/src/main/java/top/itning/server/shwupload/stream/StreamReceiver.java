@@ -34,7 +34,6 @@ public class StreamReceiver {
     @StreamListener(StudentGroupMessage.DROP_STUDENT_GROUP)
     public void receiver(String id) {
         String[] split = id.split("\\|");
-        System.out.println("退群" + id);
         if (ID_SPLIT_LENGTH == split.length) {
             uploadService.studentDropGroupFromMessage(split[0], split[1]).block();
         } else {
