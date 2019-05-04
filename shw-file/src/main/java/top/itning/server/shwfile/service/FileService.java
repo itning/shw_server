@@ -15,4 +15,12 @@ public interface FileService {
      * @param workId        作业ID
      */
     void uploadFile(MultipartFile file, String studentNumber, String workId);
+
+    /**
+     * 删除文件
+     *
+     * @param studentNumber 学号
+     * @param workId        作业ID
+     */
+    void delFile(String studentNumber, String workId);
 }

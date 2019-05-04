@@ -1,6 +1,8 @@
 package top.itning.server.shwfile.service.impl;
 
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import top.itning.server.shwfile.client.UploadClient;
@@ -15,6 +17,8 @@ import top.itning.server.shwfile.util.FileUtils;
  */
 @Service
 public class FileServiceImpl implements FileService {
+    private static final Logger logger = LoggerFactory.getLogger(FileServiceImpl.class);
+
     private final FilePersistence filePersistence;
     private final UploadClient uploadClient;
 
@@ -36,6 +40,14 @@ public class FileServiceImpl implements FileService {
             uploadClient.saveOne(fileUploadMetaData);
         } else {
             throw new RuntimeException("未知存储失败");
+        }
+    }
+
+    @Override
+    public void delFile(String studentNumber, String workId) {
+        boolean deleted = filePersistence.fileDel(studentNumber + workId);
+        if (!deleted) {
+            logger.warn("student number {} del work id {} failure", studentNumber, workId);
         }
     }
 }

@@ -12,9 +12,10 @@ import java.io.File;
  */
 @Component
 public class DefaultFilePersistenceImpl implements FilePersistence {
+    private String dir = "C:\\Users\\wangn\\Desktop";
+
     @Override
     public boolean file2disk(MultipartFile file, String saveFileName) {
-        String dir = "C:\\Users\\wangn\\Desktop";
         File saveFile = new File(dir + File.separator + saveFileName);
         try {
             file.transferTo(saveFile);
@@ -22,5 +23,11 @@ public class DefaultFilePersistenceImpl implements FilePersistence {
         } catch (Exception e) {
             return false;
         }
+    }
+
+    @Override
+    public boolean fileDel(String saveFileName) {
+        File saveFile = new File(dir + File.separator + saveFileName);
+        return saveFile.delete();
     }
 }
