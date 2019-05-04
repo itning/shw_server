@@ -3,6 +3,7 @@ package top.itning.server.shwupload.router;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.ServerResponse;
 import top.itning.server.shwupload.entity.Upload;
@@ -42,6 +43,7 @@ public class UploadRouters {
                         route()
                                 .GET("/existsById/{id}", serverRequest -> ServerResponse.ok().body(uploadService.existsById(serverRequest.pathVariable("id")), Boolean.class))
                                 .GET("/findOneById/{id}", serverRequest -> ServerResponse.ok().body(uploadService.findOneById(serverRequest.pathVariable("id")), Upload.class))
+                                .POST("/", serverRequest -> ServerResponse.status(HttpStatus.CREATED).body(serverRequest.bodyToMono(Upload.class).flatMap(uploadService::save), Upload.class))
                                 .build()
                 );
     }

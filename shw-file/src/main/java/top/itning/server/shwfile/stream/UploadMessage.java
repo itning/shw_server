@@ -10,7 +10,6 @@ import org.springframework.messaging.SubscribableChannel;
  * @date 2019/5/3 12:20
  */
 public interface UploadMessage {
-    String UPLOAD = "file_upload";
     String DELETE = "file_delete";
 
     /**
@@ -20,12 +19,4 @@ public interface UploadMessage {
      */
     @Input(DELETE)
     SubscribableChannel input();
-
-    /**
-     * 上传文件消息
-     *
-     * @return {@link MessageChannel}
-     */
-    @Output(UPLOAD)
-    MessageChannel uploadOutput();
 }

@@ -58,4 +58,10 @@ public class UploadServiceImpl implements UploadService {
     public Mono<Upload> findOneById(String uploadId) {
         return uploadRepository.findById(uploadId);
     }
+
+    @Override
+    public Mono<Upload> save(Upload upload) {
+        Upload u = upload.init();
+        return uploadRepository.save(u);
+    }
 }

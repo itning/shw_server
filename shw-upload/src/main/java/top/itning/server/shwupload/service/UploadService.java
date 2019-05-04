@@ -51,4 +51,12 @@ public interface UploadService {
      * @return 上传信息
      */
     Mono<Upload> findOneById(String uploadId);
+
+    /**
+     * 保存上传信息
+     *
+     * @param upload {@link Upload}
+     * @return 被保存的上传信息
+     */
+    Mono<Upload> save(Upload upload);
 }

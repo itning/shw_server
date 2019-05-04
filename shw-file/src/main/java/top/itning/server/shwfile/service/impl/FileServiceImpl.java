@@ -1,13 +1,12 @@
 package top.itning.server.shwfile.service.impl;
 
 
-import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import top.itning.server.shwfile.client.UploadClient;
 import top.itning.server.shwfile.persistence.FilePersistence;
 import top.itning.server.shwfile.pojo.FileUploadMetaData;
 import top.itning.server.shwfile.service.FileService;
-import top.itning.server.shwfile.stream.UploadMessage;
 import top.itning.server.shwfile.util.FileUtils;
 
 /**
@@ -17,11 +16,11 @@ import top.itning.server.shwfile.util.FileUtils;
 @Service
 public class FileServiceImpl implements FileService {
     private final FilePersistence filePersistence;
-    private final UploadMessage uploadMessage;
+    private final UploadClient uploadClient;
 
-    public FileServiceImpl(FilePersistence filePersistence, UploadMessage uploadMessage) {
+    public FileServiceImpl(FilePersistence filePersistence, UploadClient uploadClient) {
         this.filePersistence = filePersistence;
-        this.uploadMessage = uploadMessage;
+        this.uploadClient = uploadClient;
     }
 
     @Override
@@ -34,7 +33,7 @@ public class FileServiceImpl implements FileService {
             fileUploadMetaData.setMime(file.getContentType());
             fileUploadMetaData.setExtensionName(FileUtils.getExtensionName(file));
             fileUploadMetaData.setSize(file.getSize());
-            uploadMessage.uploadOutput().send(MessageBuilder.withPayload(fileUploadMetaData).build());
+            uploadClient.saveOne(fileUploadMetaData);
         } else {
             throw new RuntimeException("未知存储失败");
         }
