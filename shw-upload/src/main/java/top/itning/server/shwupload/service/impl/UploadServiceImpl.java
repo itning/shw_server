@@ -86,4 +86,18 @@ public class UploadServiceImpl implements UploadService {
                 });
         return uploadRepository.deleteAll(uploadFlux);
     }
+
+    @Override
+    public Mono<Void> teacherDelWorkFromMessage(String workId) {
+        Upload upload = new Upload();
+        upload.setWorkId(workId);
+        ExampleMatcher matcher = ExampleMatcher.matching().withIgnorePaths("size");
+        return uploadRepository.findAll(Example.of(upload, matcher))
+                .flatMap(u -> {
+                    System.out.println(u);
+                    uploadMessage.delOutput().send(MessageBuilder.withPayload(u.getStudentId() + "|" + workId).build());
+                    return uploadRepository.delete(u);
+                })
+                .then();
+    }
 }

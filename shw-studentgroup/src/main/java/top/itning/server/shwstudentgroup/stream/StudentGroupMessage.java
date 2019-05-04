@@ -11,7 +11,7 @@ public interface StudentGroupMessage {
     String DROP_STUDENT_GROUP = "drop_student_group";
 
     /**
-     * 上传删除消息
+     * 学生退出群组消息
      *
      * @return {@link MessageChannel}
      */

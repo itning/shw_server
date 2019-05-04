@@ -14,7 +14,7 @@ import top.itning.server.shwupload.service.UploadService;
  * @author itning
  */
 @Component
-@EnableBinding({UploadMessage.class, StudentGroupMessage.class})
+@EnableBinding({UploadMessage.class, StudentGroupMessage.class, DelWorkMessage.class})
 public class StreamReceiver {
     private static final Logger logger = LoggerFactory.getLogger(StreamReceiver.class);
     private static final int ID_SPLIT_LENGTH = 2;
@@ -32,12 +32,17 @@ public class StreamReceiver {
      * @param id studentId + "|" + groupId
      */
     @StreamListener(StudentGroupMessage.DROP_STUDENT_GROUP)
-    public void receiver(String id) {
+    public void receiverDropStudentGroupMessage(String id) {
         String[] split = id.split("\\|");
         if (ID_SPLIT_LENGTH == split.length) {
             uploadService.studentDropGroupFromMessage(split[0], split[1]).block();
         } else {
             logger.warn("get message error: message body is {}", id);
         }
+    }
+
+    @StreamListener(DelWorkMessage.DELETE)
+    public void receiverDelWorkMessage(String workId) {
+        uploadService.teacherDelWorkFromMessage(workId).block();
     }
 }

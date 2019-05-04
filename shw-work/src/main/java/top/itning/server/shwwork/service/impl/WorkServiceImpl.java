@@ -2,8 +2,10 @@ package top.itning.server.shwwork.service.impl;
 
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.data.domain.*;
 import org.springframework.http.HttpStatus;
+import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -22,6 +24,7 @@ import top.itning.server.shwwork.dto.WorkDetailsDTO;
 import top.itning.server.shwwork.entity.Work;
 import top.itning.server.shwwork.repository.WorkRepository;
 import top.itning.server.shwwork.service.WorkService;
+import top.itning.server.shwwork.stream.DelWorkMessage;
 import top.itning.server.shwwork.util.ReactiveMongoHelper;
 import top.itning.server.shwwork.util.Tuple3;
 
@@ -35,6 +38,7 @@ import java.util.stream.Collectors;
  * @date 2019/5/1 9:49
  */
 @Service
+@EnableBinding(DelWorkMessage.class)
 public class WorkServiceImpl implements WorkService {
     private final WorkRepository workRepository;
     private final StudentGroupClient studentGroupClient;
@@ -42,15 +46,17 @@ public class WorkServiceImpl implements WorkService {
     private final GroupClient groupClient;
     private final UploadClient uploadClient;
     private final SecurityClient securityClient;
+    private final DelWorkMessage delWorkMessage;
 
     @Autowired
-    public WorkServiceImpl(WorkRepository workRepository, StudentGroupClient studentGroupClient, ReactiveMongoHelper reactiveMongoHelper, GroupClient groupClient, UploadClient uploadClient, SecurityClient securityClient) {
+    public WorkServiceImpl(WorkRepository workRepository, StudentGroupClient studentGroupClient, ReactiveMongoHelper reactiveMongoHelper, GroupClient groupClient, UploadClient uploadClient, SecurityClient securityClient, DelWorkMessage delWorkMessage) {
         this.workRepository = workRepository;
         this.studentGroupClient = studentGroupClient;
         this.reactiveMongoHelper = reactiveMongoHelper;
         this.groupClient = groupClient;
         this.uploadClient = uploadClient;
         this.securityClient = securityClient;
+        this.delWorkMessage = delWorkMessage;
     }
 
     @Override
@@ -181,6 +187,7 @@ public class WorkServiceImpl implements WorkService {
                     if (!group.getTeacherNumber().equals(teacherNumber)) {
                         throw new PermissionsException("not found");
                     }
+                    delWorkMessage.delOutput().send(MessageBuilder.withPayload(work.getId()).build());
                     return workRepository.delete(work);
                 });
     }

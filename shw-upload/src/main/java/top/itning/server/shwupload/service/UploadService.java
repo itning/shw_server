@@ -61,9 +61,19 @@ public interface UploadService {
     Mono<Upload> save(Upload upload);
 
     /**
+     * 学生退出群组消息
+     *
      * @param studentId 学生学号
      * @param groupId   群组ID
      * @return 操作完成后的信号
      */
     Mono<Void> studentDropGroupFromMessage(String studentId, String groupId);
+
+    /**
+     * 教师删除作业消息
+     *
+     * @param workId 作业ID
+     * @return 操作完成后的信号
+     */
+    Mono<Void> teacherDelWorkFromMessage(String workId);
 }
