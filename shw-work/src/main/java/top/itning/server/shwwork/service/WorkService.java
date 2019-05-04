@@ -112,4 +112,12 @@ public interface WorkService {
      * @return 作业
      */
     Flux<Work> getAllWorkInfoByGroupId(String groupId);
+
+    /**
+     * 教师删除群消息
+     *
+     * @param groupId 群ID
+     * @return 操作完成后的信号
+     */
+    Mono<Void> teacherDelGroupFromMessage(String groupId);
 }

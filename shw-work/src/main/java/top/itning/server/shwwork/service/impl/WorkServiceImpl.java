@@ -2,7 +2,6 @@ package top.itning.server.shwwork.service.impl;
 
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.data.domain.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.messaging.support.MessageBuilder;
@@ -38,7 +37,6 @@ import java.util.stream.Collectors;
  * @date 2019/5/1 9:49
  */
 @Service
-@EnableBinding(DelWorkMessage.class)
 public class WorkServiceImpl implements WorkService {
     private final WorkRepository workRepository;
     private final StudentGroupClient studentGroupClient;
@@ -229,5 +227,18 @@ public class WorkServiceImpl implements WorkService {
         w.setGroupId(groupId);
         ExampleMatcher matcher = ExampleMatcher.matching().withIgnorePaths("enabled");
         return workRepository.findAll(Example.of(w, matcher));
+    }
+
+    @Override
+    public Mono<Void> teacherDelGroupFromMessage(String groupId) {
+        Work w = new Work();
+        w.setGroupId(groupId);
+        ExampleMatcher matcher = ExampleMatcher.matching().withIgnorePaths("enabled");
+        Flux<Work> workFlux = workRepository.findAll(Example.of(w, matcher))
+                .map(work -> {
+                    delWorkMessage.delOutput().send(MessageBuilder.withPayload(work.getId()).build());
+                    return work;
+                });
+        return workRepository.deleteAll(workFlux);
     }
 }

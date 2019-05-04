@@ -41,6 +41,11 @@ public class StreamReceiver {
         }
     }
 
+    /**
+     * 教师删除作业消息接收
+     *
+     * @param workId 作业ID
+     */
     @StreamListener(DelWorkMessage.DELETE)
     public void receiverDelWorkMessage(String workId) {
         uploadService.teacherDelWorkFromMessage(workId).block();
