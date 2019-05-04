@@ -2,11 +2,16 @@ package top.itning.server.shwupload.service.impl;
 
 import com.google.common.collect.ImmutableMap;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.http.HttpStatus;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.itning.server.common.exception.NoSuchFiledValueException;
+import top.itning.server.shwupload.client.WorkClient;
+import top.itning.server.shwupload.client.entity.Work;
 import top.itning.server.shwupload.entity.Upload;
 import top.itning.server.shwupload.repository.UploadRepository;
 import top.itning.server.shwupload.service.UploadService;
@@ -22,12 +27,14 @@ public class UploadServiceImpl implements UploadService {
     private final UploadRepository uploadRepository;
     private final ReactiveMongoHelper reactiveMongoHelper;
     private final UploadMessage uploadMessage;
+    private final WorkClient workClient;
 
     @Autowired
-    public UploadServiceImpl(UploadRepository uploadRepository, ReactiveMongoHelper reactiveMongoHelper, UploadMessage uploadMessage) {
+    public UploadServiceImpl(UploadRepository uploadRepository, ReactiveMongoHelper reactiveMongoHelper, UploadMessage uploadMessage, WorkClient workClient) {
         this.uploadRepository = uploadRepository;
         this.reactiveMongoHelper = reactiveMongoHelper;
         this.uploadMessage = uploadMessage;
+        this.workClient = workClient;
     }
 
     @Override
@@ -63,5 +70,19 @@ public class UploadServiceImpl implements UploadService {
     public Mono<Upload> save(Upload upload) {
         Upload u = upload.init();
         return uploadRepository.save(u);
+    }
+
+    @Override
+    public Mono<Void> studentDropGroupFromMessage(String studentId, String groupId) {
+        Upload upload = new Upload();
+        ExampleMatcher matcher = ExampleMatcher.matching().withIgnorePaths("size");
+        Flux<Upload> uploadFlux = Flux.fromStream(workClient.getAllWorkInfoByGroupId(groupId).stream())
+                .map(Work::getId)
+                .flatMap(workId -> {
+                    Upload u = upload.clones();
+                    u.setStudentId(studentId);
+                    return uploadRepository.findOne(Example.of(u, matcher));
+                });
+        return uploadRepository.deleteAll(uploadFlux);
     }
 }

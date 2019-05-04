@@ -1,6 +1,7 @@
 package top.itning.server.shwwork.service;
 
 import org.springframework.data.domain.Page;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.itning.server.shwwork.dto.WorkDTO;
 import top.itning.server.shwwork.dto.WorkDetailsDTO;
@@ -103,4 +104,12 @@ public interface WorkService {
      * @return 作业上交情况集合
      */
     Mono<Page<WorkDetailsDTO>> getWorkDetailByWorkId(String teacherNumber, String workId, int page, int size);
+
+    /**
+     * 根据群组ID获取所有作业信息
+     *
+     * @param groupId 群组ID
+     * @return 作业
+     */
+    Flux<Work> getAllWorkInfoByGroupId(String groupId);
 }

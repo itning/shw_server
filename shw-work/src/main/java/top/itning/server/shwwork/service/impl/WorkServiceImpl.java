@@ -215,4 +215,12 @@ public class WorkServiceImpl implements WorkService {
                     return new PageImpl<>(workDetailsDTOList, PageRequest.of(page, size), count);
                 });
     }
+
+    @Override
+    public Flux<Work> getAllWorkInfoByGroupId(String groupId) {
+        Work w = new Work();
+        w.setGroupId(groupId);
+        ExampleMatcher matcher = ExampleMatcher.matching().withIgnorePaths("enabled");
+        return workRepository.findAll(Example.of(w, matcher));
+    }
 }

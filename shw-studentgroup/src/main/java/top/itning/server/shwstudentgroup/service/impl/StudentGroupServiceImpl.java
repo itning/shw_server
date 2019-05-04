@@ -2,9 +2,11 @@ package top.itning.server.shwstudentgroup.service.impl;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -15,6 +17,7 @@ import top.itning.server.shwstudentgroup.dto.StudentGroupDTO;
 import top.itning.server.shwstudentgroup.entity.StudentGroup;
 import top.itning.server.shwstudentgroup.repository.StudentGroupRepository;
 import top.itning.server.shwstudentgroup.service.StudentGroupService;
+import top.itning.server.shwstudentgroup.stream.StudentGroupMessage;
 import top.itning.server.shwstudentgroup.util.ReactiveMongoHelper;
 import top.itning.server.shwstudentgroup.util.Tuple;
 
@@ -30,18 +33,21 @@ import java.util.stream.Collectors;
  * @date 2019/4/30 18:16
  */
 @Service
+@EnableBinding(StudentGroupMessage.class)
 public class StudentGroupServiceImpl implements StudentGroupService {
     private final GroupClient groupClient;
     private final StudentGroupRepository studentGroupRepository;
     private final ReactiveMongoHelper reactiveMongoHelper;
     private final ModelMapper modelMapper;
+    private final StudentGroupMessage studentGroupMessage;
 
     @Autowired
-    public StudentGroupServiceImpl(GroupClient groupClient, StudentGroupRepository studentGroupRepository, ReactiveMongoHelper reactiveMongoHelper, ModelMapper modelMapper) {
+    public StudentGroupServiceImpl(GroupClient groupClient, StudentGroupRepository studentGroupRepository, ReactiveMongoHelper reactiveMongoHelper, ModelMapper modelMapper, StudentGroupMessage studentGroupMessage) {
         this.groupClient = groupClient;
         this.studentGroupRepository = studentGroupRepository;
         this.reactiveMongoHelper = reactiveMongoHelper;
         this.modelMapper = modelMapper;
+        this.studentGroupMessage = studentGroupMessage;
     }
 
     @Override
@@ -61,7 +67,9 @@ public class StudentGroupServiceImpl implements StudentGroupService {
 
     @Override
     public Mono<Void> dropOutGroup(String groupId, String studentId) {
-        return studentGroupRepository.deleteById(studentId + "|" + groupId);
+        String id = studentId + "|" + groupId;
+        studentGroupMessage.dropOutStudentGroupOutput().send(MessageBuilder.withPayload(id).build());
+        return studentGroupRepository.deleteById(id);
     }
 
     @Override

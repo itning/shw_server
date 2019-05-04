@@ -11,7 +11,7 @@ import java.util.Date;
  * @date 2019/5/2 16:48
  */
 @Document(collection = "upload")
-public class Upload {
+public class Upload implements Cloneable {
     /**
      * studentId+|+workId
      */
@@ -81,6 +81,14 @@ public class Upload {
         this.gmtCreate = date;
         this.gmtModified = date;
         return this;
+    }
+
+    public Upload clones() {
+        try {
+            return (Upload) this.clone();
+        } catch (CloneNotSupportedException e) {
+            return new Upload();
+        }
     }
 
     public String getId() {

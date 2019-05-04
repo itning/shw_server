@@ -59,4 +59,11 @@ public interface UploadService {
      * @return 被保存的上传信息
      */
     Mono<Upload> save(Upload upload);
+
+    /**
+     * @param studentId 学生学号
+     * @param groupId   群组ID
+     * @return 操作完成后的信号
+     */
+    Mono<Void> studentDropGroupFromMessage(String studentId, String groupId);
 }
