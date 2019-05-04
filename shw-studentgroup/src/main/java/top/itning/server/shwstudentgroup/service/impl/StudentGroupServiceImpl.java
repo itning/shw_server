@@ -2,7 +2,6 @@ package top.itning.server.shwstudentgroup.service.impl;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -33,7 +32,6 @@ import java.util.stream.Collectors;
  * @date 2019/4/30 18:16
  */
 @Service
-@EnableBinding(StudentGroupMessage.class)
 public class StudentGroupServiceImpl implements StudentGroupService {
     private final GroupClient groupClient;
     private final StudentGroupRepository studentGroupRepository;
@@ -110,5 +108,17 @@ public class StudentGroupServiceImpl implements StudentGroupService {
         StudentGroup studentGroup = new StudentGroup();
         studentGroup.setGroupID(groupId);
         return studentGroupRepository.count(Example.of(studentGroup));
+    }
+
+    @Override
+    public Mono<Void> teacherDelGroupMessage(String groupId) {
+        StudentGroup studentGroup = new StudentGroup();
+        studentGroup.setGroupID(groupId);
+        Flux<StudentGroup> studentGroupFlux = studentGroupRepository.findAll(Example.of(studentGroup))
+                .map(s -> {
+                    studentGroupMessage.dropOutStudentGroupOutput().send(MessageBuilder.withPayload(s.getStudentNumber() + "|" + groupId).build());
+                    return s;
+                });
+        return studentGroupRepository.deleteAll(studentGroupFlux);
     }
 }

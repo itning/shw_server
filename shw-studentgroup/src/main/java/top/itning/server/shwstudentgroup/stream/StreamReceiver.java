@@ -1,10 +1,10 @@
-package top.itning.server.shwwork.stream;
+package top.itning.server.shwstudentgroup.stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.cloud.stream.annotation.StreamListener;
 import org.springframework.stereotype.Component;
-import top.itning.server.shwwork.service.WorkService;
+import top.itning.server.shwstudentgroup.service.StudentGroupService;
 
 /**
  * 消息接收
@@ -12,13 +12,13 @@ import top.itning.server.shwwork.service.WorkService;
  * @author itning
  */
 @Component
-@EnableBinding({DelWorkMessage.class, DelGroupMessage.class})
+@EnableBinding({DelGroupMessage.class, StudentGroupMessage.class})
 public class StreamReceiver {
-    private final WorkService workService;
+    private final StudentGroupService studentGroupService;
 
     @Autowired
-    public StreamReceiver(WorkService workService) {
-        this.workService = workService;
+    public StreamReceiver(StudentGroupService studentGroupService) {
+        this.studentGroupService = studentGroupService;
     }
 
     /**
@@ -28,6 +28,6 @@ public class StreamReceiver {
      */
     @StreamListener(DelGroupMessage.DELETE)
     public void receiverDelGroupMessage(String groupId) {
-        workService.teacherDelGroupFromMessage(groupId).block();
+        studentGroupService.teacherDelGroupMessage(groupId).block();
     }
 }

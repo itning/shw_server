@@ -92,12 +92,11 @@ public class UploadServiceImpl implements UploadService {
         Upload upload = new Upload();
         upload.setWorkId(workId);
         ExampleMatcher matcher = ExampleMatcher.matching().withIgnorePaths("size");
-        return uploadRepository.findAll(Example.of(upload, matcher))
-                .flatMap(u -> {
-                    System.out.println(u);
+        Flux<Upload> uploadFlux = uploadRepository.findAll(Example.of(upload, matcher))
+                .map(u -> {
                     uploadMessage.delOutput().send(MessageBuilder.withPayload(u.getStudentId() + "|" + workId).build());
-                    return uploadRepository.delete(u);
-                })
-                .then();
+                    return u;
+                });
+        return uploadRepository.deleteAll(uploadFlux);
     }
 }

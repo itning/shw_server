@@ -74,4 +74,12 @@ public interface StudentGroupService {
      * @return 数量
      */
     Mono<Long> countAllByGroupID(String groupId);
+
+    /**
+     * 教师删除群组
+     *
+     * @param groupId 群组ID
+     * @return 操作完成后的信号
+     */
+    Mono<Void> teacherDelGroupMessage(String groupId);
 }
