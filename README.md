@@ -86,6 +86,20 @@
 
 ![msg](https://raw.githubusercontent.com/itning/shw_server/v2/pic/shw_msg.png)
 
+为什么使用消息队列？
+
+1. 异步
+
+   教师与学生的一些操作在异步的环境下进行，增加了系统承载QPS。
+
+2. 解耦
+
+   服务与服务之间耦合度降低。
+
+3. 削峰
+
+   减轻高峰时间数据库压力。
+
 # 获取发布版本
 
 ## Releases
