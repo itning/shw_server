@@ -1,5 +1,6 @@
 package top.itning.server.shwupload.service;
 
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.itning.server.shwupload.entity.Upload;
 
@@ -76,4 +77,12 @@ public interface UploadService {
      * @return 操作完成后的信号
      */
     Mono<Void> teacherDelWorkFromMessage(String workId);
+
+    /**
+     * 根据作业ID查询所有上传信息
+     *
+     * @param workId 作业ID
+     * @return 上传信息
+     */
+    Flux<Upload> getAllUploadByWorkId(String workId);
 }

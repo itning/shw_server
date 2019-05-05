@@ -6,6 +6,8 @@ import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
+import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 import org.springframework.web.multipart.MultipartFile;
 import top.itning.server.common.exception.FileException;
 
@@ -55,7 +57,11 @@ public final class FileUtils {
      * @param range       请求头
      * @param response    {@link HttpServletResponse}
      */
-    public static void breakpointResume(File file, String contentType, String range, HttpServletResponse response) {
+    public static void breakpointResume(@NonNull File file,
+                                        @NonNull final String downFileName,
+                                        @NonNull final String contentType,
+                                        @Nullable String range,
+                                        @NonNull HttpServletResponse response) {
         long startByte = 0;
         long endByte = file.length() - 1;
         if (range != null && range.contains(RANGE_CONTAINS) && range.contains(RANGE_SEPARATOR)) {
@@ -91,7 +97,7 @@ public final class FileUtils {
             response.setHeader("Content-Range", "bytes " + startByte + "-" + endByte + "/" + file.length());
         }
         response.setContentType(contentType);
-        response.setHeader("Content-Disposition", "attachment;filename=" + new String(file.getName().getBytes(), StandardCharsets.ISO_8859_1));
+        response.setHeader("Content-Disposition", "attachment;filename=" + new String(downFileName.getBytes(), StandardCharsets.ISO_8859_1));
         response.setHeader("Content-Length", String.valueOf(contentLength));
         long transmitted = 0;
         try (RandomAccessFile randomAccessFile = new RandomAccessFile(file, "r");

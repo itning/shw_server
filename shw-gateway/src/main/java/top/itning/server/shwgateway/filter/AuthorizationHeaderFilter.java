@@ -33,7 +33,7 @@ public class AuthorizationHeaderFilter extends ZuulFilter {
     /**
      * 忽略过滤路径
      */
-    private static final String IGNORE_SERVER_PATH = "/v2/user";
+    private static final String[] IGNORE_SERVER_PATH = {"/v2/user", "/v2/file/down"};
 
     @Override
     public String filterType() {
@@ -48,7 +48,13 @@ public class AuthorizationHeaderFilter extends ZuulFilter {
     @Override
     public boolean shouldFilter() {
         RequestContext requestContext = RequestContext.getCurrentContext();
-        return !requestContext.getRequest().getServletPath().startsWith(IGNORE_SERVER_PATH);
+        String servletPath = requestContext.getRequest().getServletPath();
+        for (String path : IGNORE_SERVER_PATH) {
+            if (servletPath.startsWith(path)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     @Override

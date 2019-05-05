@@ -120,4 +120,12 @@ public interface WorkService {
      * @return 操作完成后的信号
      */
     Mono<Void> teacherDelGroupFromMessage(String groupId);
+
+    /**
+     * 获取一个作业信息
+     *
+     * @param workId 作业ID
+     * @return 作业信息
+     */
+    Mono<Work> getOneWorkById(String workId);
 }

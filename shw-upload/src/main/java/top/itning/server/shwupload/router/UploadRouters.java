@@ -43,6 +43,7 @@ public class UploadRouters {
                         route()
                                 .GET("/existsById/{id}", serverRequest -> ServerResponse.ok().body(uploadService.existsById(serverRequest.pathVariable("id")), Boolean.class))
                                 .GET("/findOneById/{id}", serverRequest -> ServerResponse.ok().body(uploadService.findOneById(serverRequest.pathVariable("id")), Upload.class))
+                                .GET("/getAllUploadByWorkId/{id}", serverRequest -> ServerResponse.ok().body(uploadService.getAllUploadByWorkId(serverRequest.pathVariable("id")), Upload.class))
                                 .POST("/", serverRequest -> ServerResponse.status(HttpStatus.CREATED).body(serverRequest.bodyToMono(Upload.class).flatMap(uploadService::save), Upload.class))
                                 .build()
                 );

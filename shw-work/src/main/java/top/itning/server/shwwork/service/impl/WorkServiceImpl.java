@@ -241,4 +241,9 @@ public class WorkServiceImpl implements WorkService {
                 });
         return workRepository.deleteAll(workFlux);
     }
+
+    @Override
+    public Mono<Work> getOneWorkById(String workId) {
+        return workRepository.findById(workId);
+    }
 }

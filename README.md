@@ -81,6 +81,10 @@
 10. shw-common
 
     公共模块。包括一些异常，工具类等等
+    
+11. shw-hystrix-dashboard
+
+    hystrix监控信息服务
 
 消息队列系统:
 

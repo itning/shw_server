@@ -99,4 +99,12 @@ public class UploadServiceImpl implements UploadService {
                 });
         return uploadRepository.deleteAll(uploadFlux);
     }
+
+    @Override
+    public Flux<Upload> getAllUploadByWorkId(String workId) {
+        Upload upload = new Upload();
+        upload.setWorkId(workId);
+        ExampleMatcher matcher = ExampleMatcher.matching().withIgnorePaths("size");
+        return uploadRepository.findAll(Example.of(upload, matcher));
+    }
 }

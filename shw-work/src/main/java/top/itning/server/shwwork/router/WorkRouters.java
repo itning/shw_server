@@ -46,6 +46,7 @@ public class WorkRouters {
                         path("/internal"),
                         route()
                                 .GET("/getAllWorkInfoByGroupId/{id}", serverRequest -> ServerResponse.ok().body(workService.getAllWorkInfoByGroupId(serverRequest.pathVariable("id")), Work.class))
+                                .GET("/getOneWorkById/{id}", serverRequest -> ServerResponse.ok().body(workService.getOneWorkById(serverRequest.pathVariable("id")), Work.class))
                                 .build()
                 );
     }
