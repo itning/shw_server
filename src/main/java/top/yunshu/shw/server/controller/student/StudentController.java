@@ -220,7 +220,7 @@ public class StudentController {
      */
     @ApiOperation("学生作业下载")
     @GetMapping("/down/{studentNumber}/{workId}")
-    public void downloadFile(@ApiParam(value = "Range请求头(用于判断是否需要支持多线程下载和断点续传)", required = true) @RequestHeader(required = false) String range,
+    public void downloadFile(@ApiParam("Range请求头(用于判断是否需要支持多线程下载和断点续传)") @RequestHeader(required = false) String range,
                              @ApiParam(value = "学号", required = true) @PathVariable String studentNumber,
                              @ApiParam(value = "作业ID", required = true) @PathVariable String workId,
                              @ApiIgnore HttpServletResponse response) throws IOException {
