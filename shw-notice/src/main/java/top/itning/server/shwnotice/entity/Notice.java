@@ -49,7 +49,7 @@ public class Notice {
     /**
      * 通知内容
      */
-    @Field("conten")
+    @Field("content")
     private String content;
     /**
      * 创建时间
