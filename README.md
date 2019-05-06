@@ -27,6 +27,10 @@
 
 技术栈：
 
+前端：Vue.JS
+
+后端：Spring Cloud
+
 | 技术栈  | 描述                                                         |
 | ------- | ------------------------------------------------------------ |
 | Eureka  | Eureka用于服务的注册与发现。Eureka是Netflix开源的一款提供服务注册和发现的产品，它提供了完整的Service Registry和Service Discovery实现。也是spring Cloud体系中最重要最核心的组件之一。 |
