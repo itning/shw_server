@@ -116,7 +116,7 @@
 
 数据库：
 
-![jiagou](https://raw.githubusercontent.com/itning/shw_server/v2/pic/er.png)
+![er](https://raw.githubusercontent.com/itning/shw_server/v2/pic/er.png)
 
 # 部署
 
