@@ -114,6 +114,10 @@
 
    减轻高峰时间数据库压力。
 
+数据库：
+
+![jiagou](https://raw.githubusercontent.com/itning/shw_server/v2/pic/er.png)
+
 # 部署
 
 开启rabbitmq
