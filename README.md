@@ -118,6 +118,14 @@
 
 ![er](https://raw.githubusercontent.com/itning/shw_server/v2/pic/er.png)
 
+登陆流程：
+
+![shw_login](https://raw.githubusercontent.com/itning/shw_server/v2/pic/shw_login.png)
+
+验证用户信息流程：
+
+![yanzheng](https://raw.githubusercontent.com/itning/shw_server/v2/pic/yanzheng.png)
+
 # 部署
 
 开启rabbitmq
