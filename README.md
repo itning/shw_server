@@ -23,6 +23,8 @@
 
 项目采用微服务开发，采用JWT技术作为身份验证手段，前后端分离。目前前后端交互使用JSON方式，[GraphQL](https://graphql.org/)和[protobuf](https://github.com/protocolbuffers/protobuf)通信方式正在开发中。
 
+![jiagou](https://raw.githubusercontent.com/itning/shw_server/v2/pic/kk.png)
+
 ![jiagou](https://raw.githubusercontent.com/itning/shw_server/v2/pic/jiagou.png)
 
 技术栈：
