@@ -4,6 +4,8 @@ import org.springframework.cloud.stream.annotation.Input;
 import org.springframework.messaging.SubscribableChannel;
 
 /**
+ * 学生群组消息
+ *
  * @author itning
  * @date 2019/5/4 12:04
  */
