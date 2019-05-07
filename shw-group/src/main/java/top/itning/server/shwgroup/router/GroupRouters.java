@@ -15,6 +15,8 @@ import static org.springframework.web.reactive.function.server.RouterFunctions.n
 import static org.springframework.web.reactive.function.server.RouterFunctions.route;
 
 /**
+ * 群组路由
+ *
  * @author itning
  * @date 2019/4/29 14:26
  */

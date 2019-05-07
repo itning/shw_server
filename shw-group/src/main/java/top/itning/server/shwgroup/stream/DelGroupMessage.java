@@ -4,6 +4,8 @@ import org.springframework.cloud.stream.annotation.Output;
 import org.springframework.messaging.MessageChannel;
 
 /**
+ * 删除群组消息
+ *
  * @author itning
  * @date 2019/5/4 14:19
  */

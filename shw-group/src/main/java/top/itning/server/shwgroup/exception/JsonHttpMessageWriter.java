@@ -14,6 +14,9 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * JSON格式消息写入器
+ * 该类解析MAP将其转换为JSON
+ *
  * @author itning
  * @date 2019/4/29 19:07
  */
