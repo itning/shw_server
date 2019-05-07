@@ -41,10 +41,24 @@ public class Preconditions {
         }
     }
 
+    /**
+     * 获取身份ID
+     *
+     * @param request {@link ServerRequest}
+     * @return 身份ID
+     * @throws PermissionsException 如果获取失败
+     */
     public static String getNo(ServerRequest request) {
         return request.queryParam("no").orElseThrow(() -> new PermissionsException("no is null"));
     }
 
+    /**
+     * 获取姓名
+     *
+     * @param request {@link ServerRequest}
+     * @return 姓名
+     * @throws PermissionsException 如果获取失败
+     */
     public static String getName(ServerRequest request) {
         return request.queryParam("name").orElseThrow(() -> new PermissionsException("name is null"));
     }
