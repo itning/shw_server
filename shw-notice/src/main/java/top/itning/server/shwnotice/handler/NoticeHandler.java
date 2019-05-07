@@ -13,6 +13,8 @@ import static top.itning.server.common.util.Preconditions.getNo;
 import static top.itning.server.common.util.Preconditions.mustStudentLogin;
 
 /**
+ * 通知处理器
+ *
  * @author itning
  * @date 2019/5/4 17:08
  */
