@@ -27,6 +27,8 @@ import java.net.URLEncoder;
 import java.util.*;
 
 /**
+ * 登陆处理器
+ *
  * @author itning
  * @date 2019/4/30 12:02
  */
@@ -73,6 +75,12 @@ public class LoginHandler {
         }
     }
 
+    /**
+     * 使用ticket进行登陆
+     *
+     * @param ticket ticken
+     * @return Mono<ServerResponse>
+     */
     private Mono<ServerResponse> doLoginWithTicket(String ticket) {
         Optional<String> bodyOptional = sendRequestAndGetResponseBody(ticket);
         if (bodyOptional.isPresent()) {
@@ -112,6 +120,11 @@ public class LoginHandler {
         }
     }
 
+    /**
+     * 重定向请求
+     *
+     * @return Mono<ServerResponse>
+     */
     private Mono<ServerResponse> sendRedirect() {
         String location = getRedirectLocation();
         return ServerResponse
@@ -124,6 +137,12 @@ public class LoginHandler {
                         "</body></html>"), String.class);
     }
 
+    /**
+     * 解析Body到MAP
+     *
+     * @param body 响应体
+     * @return MAP
+     */
     private Map<String, String> analysisBody2Map(String body) {
         Map<String, String> map = new HashMap<>(16);
         try {
@@ -143,6 +162,11 @@ public class LoginHandler {
         return map;
     }
 
+    /**
+     * 获取重定向路径
+     *
+     * @return 重定向路径
+     */
     private String getRedirectLocation() {
         try {
             return casProperties.getLoginUrl() + "?service=" + URLEncoder.encode(casProperties.getLocalServerUrl().toString(), "UTF-8");
@@ -152,6 +176,12 @@ public class LoginHandler {
         return "";
     }
 
+    /**
+     * 发送请求并获取响应体
+     *
+     * @param ticket ticket
+     * @return 响应体
+     */
     private Optional<String> sendRequestAndGetResponseBody(String ticket) {
         ResponseEntity<String> responseEntity = restTemplate.getForEntity(casProperties.getServerUrl() + "/serviceValidate?ticket={ticket}&service={local_server_url}", String.class, ticket, casProperties.getLocalServerUrl());
         return Optional.ofNullable(responseEntity.getBody());

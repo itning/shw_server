@@ -6,6 +6,8 @@ import org.springframework.stereotype.Component;
 import java.net.URI;
 
 /**
+ * CAS属性配置
+ *
  * @author itning
  * @date 2019/4/30 13:28
  */
