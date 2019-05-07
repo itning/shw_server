@@ -14,6 +14,8 @@ import static org.springframework.cloud.netflix.zuul.filters.support.FilterConst
 import static org.springframework.cloud.netflix.zuul.filters.support.FilterConstants.SEND_ERROR_FILTER_ORDER;
 
 /**
+ * 错误信息过滤
+ *
  * @author itning
  * @date 2019/4/30 2:53
  */

@@ -14,6 +14,10 @@ import static org.springframework.cloud.netflix.zuul.filters.support.FilterConst
 import static org.springframework.http.HttpHeaders.*;
 
 /**
+ * 跨域请求过滤器
+ * 该过滤器过滤{@link HttpMethod#OPTIONS}方法
+ * 返回准许跨域的响应
+ *
  * @author itning
  * @date 2019/5/2 19:57
  */

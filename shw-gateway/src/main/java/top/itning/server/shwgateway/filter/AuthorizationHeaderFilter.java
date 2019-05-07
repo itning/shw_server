@@ -25,6 +25,10 @@ import static org.springframework.cloud.netflix.zuul.filters.support.FilterConst
 import static org.springframework.cloud.netflix.zuul.filters.support.FilterConstants.PRE_TYPE;
 
 /**
+ * {@link HttpHeaders#AUTHORIZATION}请求头检查过滤器
+ * 该过滤器检查请求是否包含{@link HttpHeaders#AUTHORIZATION}请求头，并将
+ * 其转换为用户信息，如果转换失败将返回错误视图
+ *
  * @author itning
  * @date 2019/4/29 22:48
  */
