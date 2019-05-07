@@ -1,13 +1,10 @@
 package top.itning.server.shwstudentgroup.client.entrty;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
-
 import java.util.Date;
 
 /**
+ * 群组
+ *
  * @author itning
  * @date 2019/4/29 11:43
  */

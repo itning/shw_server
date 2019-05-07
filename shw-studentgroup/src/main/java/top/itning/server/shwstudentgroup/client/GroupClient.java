@@ -9,6 +9,8 @@ import top.itning.server.shwstudentgroup.client.entrty.Group;
 import java.util.Optional;
 
 /**
+ * 群组远程调用
+ *
  * @author itning
  * @date 2019/4/30 18:20
  */

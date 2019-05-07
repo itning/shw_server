@@ -9,6 +9,8 @@ import top.itning.server.shwstudentgroup.entity.StudentGroup;
 import java.util.List;
 
 /**
+ * 学生群组服务
+ *
  * @author itning
  * @date 2019/4/30 18:14
  */

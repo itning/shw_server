@@ -11,6 +11,9 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
+ * 错误信息属性填充
+ * 该类扩展{@link DefaultErrorAttributes}将错误信息封装在MAP中
+ *
  * @author itning
  * @date 2019/4/29 18:11
  */
