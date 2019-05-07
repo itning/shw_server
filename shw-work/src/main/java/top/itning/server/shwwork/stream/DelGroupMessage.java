@@ -5,6 +5,8 @@ import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.SubscribableChannel;
 
 /**
+ * 删除群组消息
+ *
  * @author itning
  * @date 2019/5/4 14:19
  */

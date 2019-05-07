@@ -3,6 +3,8 @@ package top.itning.server.shwwork.dto;
 import java.util.Date;
 
 /**
+ * 作业DTO
+ *
  * @author itning
  * @date 2019/5/1 9:47
  */

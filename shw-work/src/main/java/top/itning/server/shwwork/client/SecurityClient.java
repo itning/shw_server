@@ -9,6 +9,8 @@ import top.itning.server.shwwork.client.entity.Student;
 import java.util.Optional;
 
 /**
+ * Security远程调用
+ *
  * @author itning
  * @date 2019/5/3 15:57
  */

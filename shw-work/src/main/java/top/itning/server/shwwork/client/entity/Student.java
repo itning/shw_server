@@ -1,6 +1,8 @@
 package top.itning.server.shwwork.client.entity;
 
 /**
+ * 学生
+ *
  * @author itning
  * @date 2019/4/30 13:08
  */

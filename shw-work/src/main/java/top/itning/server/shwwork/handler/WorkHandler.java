@@ -18,6 +18,8 @@ import static top.itning.server.common.model.RestModel.*;
 import static top.itning.server.common.util.Preconditions.*;
 
 /**
+ * 作业处理器
+ *
  * @author itning
  * @date 2019/5/1 9:42
  */

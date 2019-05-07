@@ -5,6 +5,8 @@ import reactor.util.annotation.NonNull;
 import java.util.Objects;
 
 /**
+ * 包含两个对象的Tuple
+ *
  * @author itning
  * @date 2019/4/30 21:47
  */

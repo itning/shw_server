@@ -6,7 +6,7 @@ import top.itning.server.shwwork.client.entity.Upload;
 import java.io.Serializable;
 
 /**
- * 作业详情
+ * 作业详情DTO
  *
  * @author itning
  */
