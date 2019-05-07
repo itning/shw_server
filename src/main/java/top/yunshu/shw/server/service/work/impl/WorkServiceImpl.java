@@ -198,6 +198,14 @@ public class WorkServiceImpl implements WorkService {
             workDetailsModel.setUp(upload != null);
             workDetailsModel.setGroupName(group.getGroupName());
             return workDetailsModel;
+        }).sorted((o1, o2) -> {
+            if (!o1.isUp() && o2.isUp()) {
+                return -1;
+            } else if (o1.isUp() && !o2.isUp()) {
+                return 1;
+            } else {
+                return 0;
+            }
         }).collect(Collectors.toList());
         return new PageImpl<>(workDetailsModels, pageable, studentGroupDao.countAllByGroupID(work.getGroupId()));
     }
