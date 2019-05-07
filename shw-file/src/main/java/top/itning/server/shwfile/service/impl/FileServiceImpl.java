@@ -32,6 +32,8 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 /**
+ * 文件服务接口实现类
+ *
  * @author itning
  * @date 2019/5/3 11:16
  */

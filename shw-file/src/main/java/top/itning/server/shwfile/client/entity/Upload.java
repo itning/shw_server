@@ -3,6 +3,8 @@ package top.itning.server.shwfile.client.entity;
 import java.util.Date;
 
 /**
+ * 上传信息
+ *
  * @author itning
  * @date 2019/5/2 16:48
  */

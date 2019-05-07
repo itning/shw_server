@@ -4,6 +4,8 @@ import java.util.Date;
 import java.util.UUID;
 
 /**
+ * 作业信息
+ *
  * @author itning
  * @date 2019/5/1 9:36
  */

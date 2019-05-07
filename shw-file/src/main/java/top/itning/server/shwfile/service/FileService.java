@@ -5,6 +5,8 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletResponse;
 
 /**
+ * 文件服务接口
+ *
  * @author itning
  * @date 2019/5/3 11:16
  */

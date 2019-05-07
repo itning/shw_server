@@ -15,6 +15,10 @@ import java.util.List;
 import java.util.Optional;
 
 /**
+ * 文件持久化接口默认实现
+ * 该类将文件简单持久化到硬盘中
+ * 使用作业ID分文件夹
+ *
  * @author itning
  * @date 2019/5/3 11:56
  */

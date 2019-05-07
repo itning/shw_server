@@ -12,6 +12,8 @@ import top.itning.server.shwfile.service.FileService;
 import javax.servlet.http.HttpServletResponse;
 
 /**
+ * 文件控制器
+ *
  * @author itning
  * @date 2019/5/3 11:14
  */
