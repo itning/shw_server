@@ -91,7 +91,9 @@ public class GroupServiceImpl implements GroupService {
     @Caching(evict = {
             @CacheEvict(cacheNames = "groupOfStudent", key = "'regex:'+#studentId+'*'"),
             //学生加入群组,教师作业详情缓存清空
-            @CacheEvict(cacheNames = "workDetail", allEntries = true)
+            @CacheEvict(cacheNames = "workDetail", allEntries = true),
+            @CacheEvict(cacheNames = "studentDoneWork", key = "'regex:'+#studentId+'*'"),
+            @CacheEvict(cacheNames = "studentUndoneWork", key = "'regex:'+#studentId+'*'")
     })
     @Override
     public Group joinGroup(String code, String studentId) {
