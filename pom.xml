@@ -5,12 +5,12 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.1.5.RELEASE</version>
+        <version>2.1.6.RELEASE</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>top.yunshu</groupId>
     <artifactId>shw_server</artifactId>
-    <version>1.8.2-RELEASE</version>
+    <version>1.8.4-RELEASE</version>
     <name>shw_server</name>
     <description>Student HomeWork Management System</description>
 
