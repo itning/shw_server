@@ -134,7 +134,7 @@
 
 开启ziplin
 
-`docker run -d -e RABBIT_ADDRESSES=10.0.75.2 -p 9411:9411 openzipkin/zipkin`
+`docker run -d -e RABBIT_ADDRESSES=dockervm -p 9411:9411 openzipkin/zipkin`
 
 # API文档
 
