@@ -33,6 +33,22 @@ Redis缓存支持，使用``Spring Boot Admin``监控APP状态。
 
 缓存：Redis
 
+# 编译
+
+1. GIT克隆项目
+
+   ``git clone https://github.com/itning/shw_server.git``
+
+2. 更改分支
+
+   ``git checkout master``
+
+3. 安装本地依赖
+
+   请执行根目录下``install-aspose-dependency.bat``批处理文件
+
+4. Enjoy Project
+
 # 获取发布版本
 
 ## Releases
