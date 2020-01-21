@@ -29,7 +29,7 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-webflux</artifactId>
-            <version>5.1.6.RELEASE</version>
+            <version>5.2.0.RELEASE</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
