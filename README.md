@@ -39,7 +39,7 @@ Redis缓存支持，使用``Spring Boot Admin``监控APP状态。
 
    ``git clone https://github.com/itning/shw_server.git``
 
-2. 更改分支
+2. 更改分支（必须更改分支，否则默认是V2分支，V2分支是Spring Cloud版本。master分支是Spring Boot版本）
 
    ``git checkout master``
 
