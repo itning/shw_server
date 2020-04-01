@@ -4,8 +4,8 @@ server:
 spring:
   datasource:
     url: jdbc:mysql://localhost:3306/shw2${datasource_url_end_str}
-    username: root
-    password: kingston
+    username: ${env.MYSQL_USERNAME}
+    password: ${env.MYSQL_PASSWORD}
   jpa:
     show-sql: true
   redis:
