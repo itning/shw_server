@@ -18,7 +18,7 @@
     <properties>
         <java.version>1.8</java.version>
         <jjwt.version>0.9.1</jjwt.version>
-        <modelmapper.version>2.3.6</modelmapper.version>
+        <modelmapper.version>2.3.7</modelmapper.version>
         <cas.spring.boot.starter.version>1.1.0-RELEASE</cas.spring.boot.starter.version>
         <springfox.version>2.9.2</springfox.version>
         <jib.maven.plugin.version>1.2.0</jib.maven.plugin.version>
