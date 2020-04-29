@@ -6,6 +6,8 @@
 
 **主分支使用Spring Boot编写，请[点击查看](https://github.com/itning/shw_server/tree/master)**
 
+**前后端分离项目，前端：[shw_client](https://github.com/itning/shw_client)**
+
 [![GitHub stars](https://img.shields.io/github/stars/itning/shw_server.svg?style=social&label=Stars)](https://github.com/itning/shw_server/stargazers)
 [![GitHub forks](https://img.shields.io/github/forks/itning/shw_server.svg?style=social&label=Fork)](https://github.com/itning/shw_server/network/members)
 [![GitHub watchers](https://img.shields.io/github/watchers/itning/shw_server.svg?style=social&label=Watch)](https://github.com/itning/shw_server/watchers)
