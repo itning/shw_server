@@ -13,6 +13,9 @@
 [![HitCount](http://hits.dwyl.io/itning/shw_server.svg)](http://hits.dwyl.io/itning/shw_server)
 [![language](https://img.shields.io/badge/language-JAVA-green.svg)](https://github.com/itning/shw_server)
 
+
+**前后端分离项目，前端：[shw_client](https://github.com/itning/shw_client)**
+
 # 架构
 
 这是一个前后端分离项目，这里是后端工程。
