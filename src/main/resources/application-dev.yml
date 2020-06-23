@@ -4,19 +4,19 @@ server:
 spring:
   datasource:
     url: jdbc:mysql://localhost:3306/shw2${datasource_url_end_str}
-    username: ${env.MYSQL_USERNAME}
-    password: ${env.MYSQL_PASSWORD}
+    username: root
+    password: root
   jpa:
     show-sql: true
   redis:
-    host: locahost
+    host: localhost
     port: 6379
   boot:
     admin:
       client:
         url: http://localhost:8888
-        username: admin
-        password: admin
+        username: ${ADMIN_SERVER_USERNAME}
+        password: ${ADMIN_SERVER_PASSWORD}
 logging:
   level: debug
   level.top: debug
