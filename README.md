@@ -18,7 +18,7 @@
 [![GitHub last commit](https://img.shields.io/github/last-commit/itning/shw_server.svg)](https://github.com/itning/shw_server/commits)
 [![GitHub release](https://img.shields.io/github/release/itning/shw_server.svg)](https://github.com/itning/shw_server/releases)
 [![GitHub repo size in bytes](https://img.shields.io/github/repo-size/itning/shw_server.svg)](https://github.com/itning/shw_server)
-[![HitCount](http://hits.dwyl.io/itning/shw_server.svg)](http://hits.dwyl.io/itning/shw_server)
+[![HitCount](http://hits.dwyl.com/itning/shw_server.svg)](http://hits.dwyl.com/itning/shw_server)
 [![language](https://img.shields.io/badge/language-JAVA-green.svg)](https://github.com/itning/shw_server)
 
 # 架构
